@@ -3,9 +3,8 @@
 #include <SwerveModule.h>
 #include <Prefs.h>
 
-SwerveModule::SwerveModule(int driveMotorOne, int driveMotorTwo, int turnMotor):
+SwerveModule::SwerveModule(int driveMotorOne, int turnMotor):
 a_DriveMotorOne(driveMotorOne),
-a_DriveMotorTwo(driveMotorTwo),
 a_TurnMotor(turnMotor)
 {
 	a_TurnMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Relative, 0, 0);
@@ -16,8 +15,7 @@ void SwerveModule::UpdateRaw(float driveSpeed, float rotationSpeed)
 {
 	float scalar = 1.0; // Full Speed is 1.0
 
-	a_DriveMotorOne.Set(scalar * driveSpeed); // Because this method is just for
-	a_DriveMotorTwo.Set(scalar * driveSpeed); // mechanically testing the modules,
+	a_DriveMotorOne.Set(scalar * driveSpeed); // Because this method is just for testing mechanisms
 	a_TurnMotor.Set(scalar * rotationSpeed); // I've applied a scalar for safety.
 }
 
@@ -25,7 +23,6 @@ void SwerveModule::UpdateSpeed(float driveSpeed)
 {
 	float scalar = 1.0; // Full Speed is 1.0
 	a_DriveMotorOne.Set(scalar * driveSpeed);
-	a_DriveMotorTwo.Set(scalar * driveSpeed);
 }
 
 void SwerveModule::UpdateAngle(float desiredAngle) // -180 < angle < 180
@@ -139,9 +136,6 @@ float SwerveModule::GetCurrentOP(int id)
 	if(id == FL_DRIVE_ONE_ID) {
 	ret = a_DriveMotorOne.GetOutputCurrent();
 	}
-	else if(id == FL_DRIVE_TWO_ID) {
-	ret = a_DriveMotorTwo.GetOutputCurrent();
-	}
 	else if(id == FL_TURN_ID) {
 		ret = a_TurnMotor.GetOutputCurrent();
 	}
@@ -158,9 +152,6 @@ float SwerveModule::GetVoltageOP(int id)
 	float ret;
 	if(id == FL_DRIVE_ONE_ID) {
 	ret = a_DriveMotorOne.GetMotorOutputVoltage();
-	}
-	else if(id == FL_DRIVE_TWO_ID) {
-	ret = a_DriveMotorTwo.GetMotorOutputVoltage();
 	}
 	else if(id == FL_TURN_ID) {
 		ret = a_TurnMotor.GetMotorOutputVoltage();

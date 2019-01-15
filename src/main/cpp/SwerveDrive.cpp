@@ -6,10 +6,10 @@
 #include <Prefs.h>
 
 SwerveDrive::SwerveDrive(void):
-	FL_SwerveModule(FL_DRIVE_ONE_ID, FL_DRIVE_TWO_ID, FL_TURN_ID),
-	FR_SwerveModule(FR_DRIVE_ONE_ID, FR_DRIVE_TWO_ID, FR_TURN_ID),
-	BL_SwerveModule(BL_DRIVE_ONE_ID, BL_DRIVE_TWO_ID, BL_TURN_ID),
-	BR_SwerveModule(BR_DRIVE_ONE_ID, BR_DRIVE_TWO_ID, BR_TURN_ID)
+	FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
+	FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
+	BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
+	BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID)
 	{
 	}
 

@@ -5,8 +5,8 @@
 Robot::Robot(void):
 a_Gyro(frc::I2C::kMXP),
 a_Joystick1(JOYSTICK_PORT_ONE),
-FL_SwerveModule(FL_DRIVE_ONE_ID, FL_DRIVE_TWO_ID, FL_TURN_ID),
-FR_SwerveModule(FR_DRIVE_ONE_ID, FR_DRIVE_TWO_ID, FR_TURN_ID),
+FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
+FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
 a_SwerveDrive()
 {
 	cruiseControl = false;

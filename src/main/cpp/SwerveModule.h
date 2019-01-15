@@ -6,7 +6,7 @@
 
 class SwerveModule {
 public:
-	SwerveModule(int driveMotorOne, int driveMotorTwo, int turnMotor); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
+	SwerveModule(int driveMotorOne, int turnMotor); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
 
 	void UpdateSpeed(float driveSpeed);
 	void UpdateRaw(float driveSpeed, float rotationSpeed); // Method for mechanically testing swerve modules, will literally set the drive talons to a specific speed.
@@ -30,7 +30,6 @@ public:
 	~SwerveModule(void);
 private:
 	WPI_TalonSRX a_DriveMotorOne;
-	WPI_TalonSRX a_DriveMotorTwo;
 	WPI_TalonSRX a_TurnMotor;
 
 };
