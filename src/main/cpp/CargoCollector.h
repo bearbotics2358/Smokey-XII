@@ -10,23 +10,14 @@ class CargoCollector
 { 
 public:
     CargoCollector(void);
+    void CargoCollectBB(void);
     void CargoCollect(void);
     void CargoAbort(void);
     
-
-
-
-
-
-
-
-
 private:
 
 WPI_TalonSRX a_CollectMotor1;
 WPI_TalonSRX a_CollectMotor2;
-
-
 
 };
 

@@ -16,6 +16,11 @@
 
 #define JOYSTICK_PORT_ONE 1
 
+#define CARGO_BIG_ID 2
+#define CARGO_SMALL_ID 3
+
+#define COLLECT_SPEED 0.5 // Will change with testing
+
 #define COUNTS_PER_ROTATION 4096 // Encoder counts for one revolution
 #define GEAR_RATIO_SCALAR 2.8 // Gear Ratio from Drive Motor to Drive Wheel
 
