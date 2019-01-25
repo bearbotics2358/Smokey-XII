@@ -45,6 +45,15 @@ void SwerveDrive::CrabDrive(double xIn, double yIn, double zIn)
 	// SmartDashboard::PutNumber("Radius: ", radius);
 	FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAngle(theta);
+
+	FR_SwerveModule.UpdateSpeed(radius);
+	FR_SwerveModule.UpdateAngle(theta);
+
+	BL_SwerveModule.UpdateSpeed(radius);
+	BL_SwerveModule.UpdateAngle(theta);
+
+	BR_SwerveModule.UpdateSpeed(radius);
+	BR_SwerveModule.UpdateAngle(theta);
 }
 
 void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
@@ -75,15 +84,19 @@ void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
 
 	FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAnglePID(theta);
+	// FL_SwerveModule.SetTurnPID(10, 0, 0.5);
 
 	FR_SwerveModule.UpdateSpeed(radius);
 	FR_SwerveModule.UpdateAnglePID(theta);
+	// FR_SwerveModule.SetTurnPID(10, 0, 0.5);
 
-	// BL_SwerveModule.UpdateSpeed(radius);
-	// BL_SwerveModule.UpdateAnglePID(theta);
+	BL_SwerveModule.UpdateSpeed(radius);
+	BL_SwerveModule.UpdateAnglePID(theta);
+	// BL_SwerveModule.SetTurnPID(10, 0, 0.5);
 
-	// BR_SwerveModule.UpdateSpeed(radius);
-	// BR_SwerveModule.UpdateAnglePID(theta);
+	BR_SwerveModule.UpdateSpeed(radius);
+	BR_SwerveModule.UpdateAnglePID(theta);
+	 // BR_SwerveModule.SetTurnPID(10, 0, 0.5);
 }
 
 void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)

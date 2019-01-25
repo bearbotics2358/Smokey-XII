@@ -55,7 +55,7 @@ void SwerveModule::UpdateAngle(float desiredAngle) // -180 < angle < 180
 
 void SwerveModule::UpdateAnglePID(float angle)
 {
-	float counts = angle * (4096 / 360.0);
+	float counts = angle * (12288 / 360.0);
 	a_TurnMotor.Set(ControlMode::Position, counts);
 }
 

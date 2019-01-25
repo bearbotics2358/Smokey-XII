@@ -37,6 +37,8 @@ private:
 	frc::Joystick a_Joystick1;
 	SwerveModule FL_SwerveModule;
 	SwerveModule FR_SwerveModule;
+	SwerveModule BL_SwerveModule;
+	SwerveModule BR_SwerveModule;
 	SwerveDrive a_SwerveDrive;
 
 

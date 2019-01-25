@@ -4,7 +4,7 @@
 
 #include <WPILib.h>
 #include "ctre\Phoenix.h"
-
+#include <BeamBreak.h>
 
 class CargoCollector 
 { 
@@ -18,7 +18,7 @@ private:
 
 WPI_TalonSRX a_CollectMotor1;
 WPI_TalonSRX a_CollectMotor2;
-
+BeamBreak a_BeamBreak;
 };
 
 

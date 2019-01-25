@@ -21,8 +21,10 @@
 
 #define COLLECT_SPEED 0.5 // Will change with testing
 
-#define COUNTS_PER_ROTATION 4096 // Encoder counts for one revolution
+#define COUNTS_PER_ROTATION 12288 // Encoder counts for one revolution
 #define GEAR_RATIO_SCALAR 2.8 // Gear Ratio from Drive Motor to Drive Wheel
+
+#define IR_RECEIVER_PORT 0 // Random #, we'll update it later.
 
 #define WHEEL_CIRCUM_IN 9.4245
 #define WHEEL_CIRCUM_CM 23.9390

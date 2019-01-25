@@ -2,11 +2,14 @@
 #include <Prefs.h>
 #include <Robot.h>
 
+// (>-.-)>-)====>
 Robot::Robot(void):
 a_Gyro(frc::I2C::kMXP),
 a_Joystick1(JOYSTICK_PORT_ONE),
 FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
 FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
+BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
+BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_SwerveDrive()
 {
 	cruiseControl = false;
@@ -19,6 +22,13 @@ a_SwerveDrive()
 void Robot::RobotInit(void)
 {
 	FL_SwerveModule.ZeroEncoders();
+	FR_SwerveModule.ZeroEncoders();
+	BL_SwerveModule.ZeroEncoders();
+	BR_SwerveModule.ZeroEncoders();
+	FL_SwerveModule.SetTurnPID(5, 0, 0.05);
+	FR_SwerveModule.SetTurnPID(5, 0, 0.01);
+	BL_SwerveModule.SetTurnPID(5, 0, 0.01);
+	BR_SwerveModule.SetTurnPID(5, 0, 0.04);
 }
 
 void Robot::RobotPeriodic(void)
@@ -75,7 +85,7 @@ void Robot::TeleopPeriodic(void)
 	{
 		if(crabToggle)
 		{
-			a_SwerveDrive.CrabDrive(a_Joystick1.GetRawAxis(0), a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+			a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
 		}
 		else
 		{
@@ -114,9 +124,9 @@ void Robot::TeleopPeriodic(void)
 
 
 
-	angleCounts = FL_SwerveModule.GetAngleRaw();
+	angleCounts = FR_SwerveModule.GetAngleRaw();
 	distanceCounts = FL_SwerveModule.GetDistanceRaw();
-	calibratedAngle = FL_SwerveModule.GetAngle();
+	calibratedAngle = FR_SwerveModule.GetAngle();
 	distanceIn = FL_SwerveModule.GetDistanceIn();
 	distanceCm = FL_SwerveModule.GetDistanceCm();
 	// currentOutput1 = FL_SwerveModule.GetCurrentOP(FL_DRIVE_ONE_ID);
