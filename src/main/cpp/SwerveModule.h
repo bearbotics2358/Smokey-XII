@@ -15,7 +15,7 @@ public:
 	void UpdateTraj(float deltaDist, float angle);
 
 	void ZeroEncoders(void);
-	float GetAngleRaw(void);
+	int GetAngleRaw(void);
 	float GetAngle(void);
 
 	float GetDistanceRaw(void);

@@ -67,7 +67,12 @@ void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
 	double theta = (atan2(xInput, yInput)) * 180 / PI; // These two lines convert cartesian
 	double radius = sqrt(pow(xInput, 2) + pow(yInput, 2));  // to polar coords
 
-	if(radius < 0.42)
+	if(theta <= 0)
+	{
+		theta+=360;
+	}
+
+	if(radius < 0.32) // Dead zone
 	{
 		theta = 0;
 		radius = 0;
@@ -77,26 +82,22 @@ void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
 		{
 			radius = 1.0; // Makes sure magnitude doesn't go over 1
 		}
-	radius = radius * -1.00; // For testing purposes, we will scale the input
+	radius = radius * 0.15; // For testing purposes, we will scale the input
 
-	// SmartDashboard::PutNumber("Theta: ", theta);
+	frc::SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
 	FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAnglePID(theta);
-	// FL_SwerveModule.SetTurnPID(10, 0, 0.5);
 
 	FR_SwerveModule.UpdateSpeed(radius);
 	FR_SwerveModule.UpdateAnglePID(theta);
-	// FR_SwerveModule.SetTurnPID(10, 0, 0.5);
 
 	BL_SwerveModule.UpdateSpeed(radius);
 	BL_SwerveModule.UpdateAnglePID(theta);
-	// BL_SwerveModule.SetTurnPID(10, 0, 0.5);
 
 	BR_SwerveModule.UpdateSpeed(radius);
 	BR_SwerveModule.UpdateAnglePID(theta);
-	 // BR_SwerveModule.SetTurnPID(10, 0, 0.5);
 }
 
 void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
@@ -120,7 +121,7 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 		{
 			radius = 1.0; // Makes sure magnitude doesn't go over 1
 		}
-	radius = radius * -1.00; // For testing purposes, we will scale the input
+	radius = 1.0 * radius; // For testing purposes, we will scale the input
 
 	// SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);

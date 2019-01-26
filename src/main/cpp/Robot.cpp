@@ -12,6 +12,7 @@ BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_SwerveDrive()
 {
+	a_Gyro.Init();
 	cruiseControl = false;
 	crabToggle = false;
 	driveSpeed = 0;
@@ -21,14 +22,14 @@ a_SwerveDrive()
 
 void Robot::RobotInit(void)
 {
-	FL_SwerveModule.ZeroEncoders();
-	FR_SwerveModule.ZeroEncoders();
-	BL_SwerveModule.ZeroEncoders();
-	BR_SwerveModule.ZeroEncoders();
-	FL_SwerveModule.SetTurnPID(5, 0, 0.05);
-	FR_SwerveModule.SetTurnPID(5, 0, 0.01);
-	BL_SwerveModule.SetTurnPID(5, 0, 0.01);
-	BR_SwerveModule.SetTurnPID(5, 0, 0.04);
+	// FL_SwerveModule.ZeroEncoders();
+	// FR_SwerveModule.ZeroEncoders();
+	// BL_SwerveModule.ZeroEncoders();
+	// BR_SwerveModule.ZeroEncoders();
+	FL_SwerveModule.SetTurnPID(0.9, 0, 9);
+	FR_SwerveModule.SetTurnPID(0.9, 0, 9);
+	BL_SwerveModule.SetTurnPID(0.9, 0, 9);
+	BR_SwerveModule.SetTurnPID(0.9, 0, 9);
 }
 
 void Robot::RobotPeriodic(void)
@@ -85,7 +86,7 @@ void Robot::TeleopPeriodic(void)
 	{
 		if(crabToggle)
 		{
-			a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+			a_SwerveDrive.CrabDrivePID(-1 *a_Joystick1.GetRawAxis(0), -1 *a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
 		}
 		else
 		{
@@ -95,11 +96,11 @@ void Robot::TeleopPeriodic(void)
 
 	if(a_Joystick1.GetRawButton(11))
 	{
-		FL_SwerveModule.UpdateAngle(45);
+		FL_SwerveModule.UpdateAnglePID(350);
 	}
 	else if(a_Joystick1.GetRawButton(10))
 	{
-		FL_SwerveModule.UpdateAngle(137);
+		FL_SwerveModule.UpdateAnglePID(10);
 	}
 	else if(a_Joystick1.GetRawButton(7))
 	{
@@ -115,7 +116,7 @@ void Robot::TeleopPeriodic(void)
 	float calibratedAngle;
 	float distanceIn;
 	float distanceCm;
-	// float currentOutput1;
+	float currentOutput1;
 	// float currentOutput2;
 	// float currentOutput3;
 	// float voltageOutput1;
@@ -129,7 +130,7 @@ void Robot::TeleopPeriodic(void)
 	calibratedAngle = FR_SwerveModule.GetAngle();
 	distanceIn = FL_SwerveModule.GetDistanceIn();
 	distanceCm = FL_SwerveModule.GetDistanceCm();
-	// currentOutput1 = FL_SwerveModule.GetCurrentOP(FL_DRIVE_ONE_ID);
+	currentOutput1 = FR_SwerveModule.GetCurrentOP(FR_DRIVE_ONE_ID);
 	// currentOutput2 = FL_SwerveModule.GetCurrentOP(FL_DRIVE_TWO_ID);
 	// currentOutput3 = FL_SwerveModule.GetCurrentOP(FL_TURN_ID);
 	// voltageOutput1 = FL_SwerveModule.GetVoltageOP(FL_DRIVE_ONE_ID);
@@ -142,7 +143,7 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
 	frc::SmartDashboard::PutNumber("Distance (In): ", distanceIn);
 	frc::SmartDashboard::PutNumber("Distance (Cm): ", distanceCm);
-	// frc::SmartDashboard::PutNumber("Drive Current 1: ", currentOutput1);
+	frc::SmartDashboard::PutNumber("Drive Current 1: ", currentOutput1);
 	// frc::SmartDashboard::PutNumber("Drive Current 2: ", currentOutput2);
 	// frc::SmartDashboard::PutNumber("Turn Current: ", currentOutput3);
 	// frc::SmartDashboard::PutNumber("Drive Voltage 1: ", voltageOutput1);

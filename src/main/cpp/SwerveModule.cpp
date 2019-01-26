@@ -7,8 +7,8 @@ SwerveModule::SwerveModule(int driveMotorOne, int turnMotor):
 a_DriveMotorOne(driveMotorOne),
 a_TurnMotor(turnMotor)
 {
-	a_TurnMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Relative, 0, 0);
-
+	a_TurnMotor.ConfigFeedbackNotContinuous(false, 0);
+	a_TurnMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
 }
 
 void SwerveModule::UpdateRaw(float driveSpeed, float rotationSpeed)
@@ -21,7 +21,7 @@ void SwerveModule::UpdateRaw(float driveSpeed, float rotationSpeed)
 
 void SwerveModule::UpdateSpeed(float driveSpeed)
 {
-	float scalar = 1.0; // Full Speed is 1.0
+	float scalar = 1; // Full Speed is 1.0
 	a_DriveMotorOne.Set(scalar * driveSpeed);
 }
 
@@ -55,8 +55,21 @@ void SwerveModule::UpdateAngle(float desiredAngle) // -180 < angle < 180
 
 void SwerveModule::UpdateAnglePID(float angle)
 {
-	float counts = angle * (12288 / 360.0);
-	a_TurnMotor.Set(ControlMode::Position, counts);
+	if(abs(angle - GetAngle()) > 180) // if needed rotation is greater than 180
+	{
+		if(GetAngle() > 180)
+		{
+			angle+=360; 
+		}
+		else
+		{
+			angle -=360;
+		}
+	}
+	int counts = angle * (COUNTS_PER_ROTATION / 360); // Goal for rotation
+	int revolutions = GetAngleRaw() / COUNTS_PER_ROTATION; // Uses integer divison to find revolutions
+	int calculatedValue = counts + (revolutions * COUNTS_PER_ROTATION);
+	a_TurnMotor.Set(ControlMode::Position, calculatedValue);
 }
 
 void SwerveModule::UpdateTraj(float deltaDist, float angle)
@@ -70,9 +83,9 @@ void SwerveModule::ZeroEncoders(void)
 	a_TurnMotor.SetSelectedSensorPosition(0, 0, 0);
 }
 
-float SwerveModule::GetAngleRaw(void)
+int SwerveModule::GetAngleRaw(void)
 {
-	float ret;
+	int ret;
 	ret = a_TurnMotor.GetSelectedSensorPosition(0);
 	return ret;
 }
@@ -84,9 +97,17 @@ float SwerveModule::GetAngle(void)
 
 	float ret = ((count / COUNTS_PER_ROTATION) * 360); // Rotations * Degrees per rotation
 
-	ret = (-1 * (int) ret % 360); // Converts counts to int casts it between 0 and 360 degrees
-
-	if(ret > 180) // Restricting 0 to 360 to between +/- 180
+	ret = ((int) ret % 360); // Converts counts to int casts it between 0 and 360 degrees
+	/*
+	*     |-------0/360-------|
+	*     |                   |
+	*     |                   |
+	*     90                 270
+	*     |                   |
+	*     |                   |
+	*     |--------180--------|	
+	*/
+	/*if(ret > 180) // Restricting 0 to 360 to between +/- 180
 	{
 		ret -= 360;
 	}
@@ -94,7 +115,7 @@ float SwerveModule::GetAngle(void)
 	{
 		ret += 360;
 	}
-
+	*/
 
 	return ret;
 }
