@@ -1,4 +1,4 @@
-#include <WPILib.h>
+#include <frc/WPILib.h>
 #include <Prefs.h>
 #include <Robot.h>
 
@@ -22,10 +22,10 @@ a_SwerveDrive()
 
 void Robot::RobotInit(void)
 {
-	// FL_SwerveModule.ZeroEncoders();
-	// FR_SwerveModule.ZeroEncoders();
-	// BL_SwerveModule.ZeroEncoders();
-	// BR_SwerveModule.ZeroEncoders();
+	FL_SwerveModule.ZeroEncoders();
+	FR_SwerveModule.ZeroEncoders();
+	BL_SwerveModule.ZeroEncoders();
+	BR_SwerveModule.ZeroEncoders();
 	FL_SwerveModule.SetTurnPID(0.9, 0, 9);
 	FR_SwerveModule.SetTurnPID(0.9, 0, 9);
 	BL_SwerveModule.SetTurnPID(0.9, 0, 9);
@@ -34,7 +34,7 @@ void Robot::RobotInit(void)
 
 void Robot::RobotPeriodic(void)
 {
-
+	a_Gyro.Update();
 }
 
 void Robot::DisabledInit(void)
@@ -86,6 +86,10 @@ void Robot::TeleopPeriodic(void)
 	{
 		if(crabToggle)
 		{
+			if(a_Joystick1.GetRawButton(1))
+			{
+				a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);
+			}
 			a_SwerveDrive.CrabDrivePID(-1 *a_Joystick1.GetRawAxis(0), -1 *a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
 		}
 		else
@@ -108,7 +112,7 @@ void Robot::TeleopPeriodic(void)
 	}
 	else if(a_Joystick1.GetRawButton(6))
 	{
-		FL_SwerveModule.UpdateAngle(-45);
+		a_Gyro.Cal();
 	}
 
 	float angleCounts;
@@ -150,6 +154,9 @@ void Robot::TeleopPeriodic(void)
 	// frc::SmartDashboard::PutNumber("Drive Voltage 2: ", voltageOutput2);
 	// frc::SmartDashboard::PutNumber("Turn Voltage: ", voltageOutput3);
 	frc::SmartDashboard::PutBoolean("Cruise Control", cruiseControl);
+	frc::SmartDashboard::PutNumber("Gyro X:", a_Gyro.GetAngle(0));
+	frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
+	frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); // USE THIS ONE: Clockwise is negative
 }
 
 void Robot::AutonomousInit(void)
@@ -191,4 +198,4 @@ void Robot::TestPeriodic(void)
 }
 
 
-START_ROBOT_CLASS(Robot);
+START_ROBOT_CLASS(Robot)

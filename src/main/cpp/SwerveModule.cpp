@@ -1,4 +1,4 @@
-#include <WPILib.h>
+#include <frc/WPILib.h>
 #include "ctre/Phoenix.h"
 #include <SwerveModule.h>
 #include <Prefs.h>
@@ -55,7 +55,7 @@ void SwerveModule::UpdateAngle(float desiredAngle) // -180 < angle < 180
 
 void SwerveModule::UpdateAnglePID(float angle)
 {
-	if(abs(angle - GetAngle()) > 180) // if needed rotation is greater than 180
+	if(abs(angle - GetAngle()) > 180) // find coterminal if angle is greater than 180
 	{
 		if(GetAngle() > 180)
 		{
@@ -67,7 +67,18 @@ void SwerveModule::UpdateAnglePID(float angle)
 		}
 	}
 	int counts = angle * (COUNTS_PER_ROTATION / 360); // Goal for rotation
-	int revolutions = GetAngleRaw() / COUNTS_PER_ROTATION; // Uses integer divison to find revolutions
+	int revolutions;
+
+	if(GetAngleRaw() > 0)
+	{
+		revolutions = GetAngleRaw() / COUNTS_PER_ROTATION; // Uses integer divison to find revolutions
+	}
+	else // This if/else should handle the weird negative integer division in c++
+	{
+		revolutions = (-1 *GetAngleRaw()) / COUNTS_PER_ROTATION; 
+		revolutions = -1 * revolutions;
+	}
+
 	int calculatedValue = counts + (revolutions * COUNTS_PER_ROTATION);
 	a_TurnMotor.Set(ControlMode::Position, calculatedValue);
 }

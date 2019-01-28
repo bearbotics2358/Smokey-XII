@@ -1,5 +1,5 @@
 
-#include <WPILib.h>
+#include <frc/WPILib.h>
 #include "ctre\Phoenix.h"
 #include <SwerveDrive.h>
 #include <SwerveModule.h>
@@ -137,4 +137,18 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 
 	// BR_SwerveModule.UpdateSpeed(radius);
 	// BR_SwerveModule.UpdateAnglePID(theta);
+}
+
+void SwerveDrive::MakeshiftRotate(double input)
+{
+
+	FL_SwerveModule.UpdateAnglePID(-45);
+	BL_SwerveModule.UpdateAnglePID(45);
+	FR_SwerveModule.UpdateAnglePID(-135);
+	BR_SwerveModule.UpdateAnglePID(135);
+
+	FL_SwerveModule.UpdateSpeed(input);
+	BL_SwerveModule.UpdateSpeed(input);
+	FR_SwerveModule.UpdateSpeed(input);
+	BR_SwerveModule.UpdateSpeed(input);
 }

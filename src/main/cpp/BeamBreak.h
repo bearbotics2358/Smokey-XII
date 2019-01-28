@@ -1,7 +1,7 @@
 #ifndef SRC_BEAMBREAK_H_
 #define SRC_BEAMBREAK_H_
 
-#include <WPILib.h>
+#include <frc/WPILib.h>
 #include <Prefs.h>
 
 class BeamBreak

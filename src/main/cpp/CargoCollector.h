@@ -2,7 +2,7 @@
 #define SRC_CARGOCOLLECTOR_H_
 
 
-#include <WPILib.h>
+#include <frc/WPILib.h>
 #include "ctre\Phoenix.h"
 #include <BeamBreak.h>
 
