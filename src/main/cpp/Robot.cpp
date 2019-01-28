@@ -1,4 +1,4 @@
-#include <frc/WPILib.h>
+#include <frc/WPILib.h> // <WPILib.h> is deprecated
 #include <Prefs.h>
 #include <Robot.h>
 
@@ -90,7 +90,10 @@ void Robot::TeleopPeriodic(void)
 			{
 				a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);
 			}
-			a_SwerveDrive.CrabDrivePID(-1 *a_Joystick1.GetRawAxis(0), -1 *a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+			else
+			{
+				a_SwerveDrive.CrabDrivePID(-1 *a_Joystick1.GetRawAxis(0), -1 *a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+			}	
 		}
 		else
 		{
@@ -198,4 +201,4 @@ void Robot::TestPeriodic(void)
 }
 
 
-START_ROBOT_CLASS(Robot)
+START_ROBOT_CLASS(Robot) // TODO: write our own main as this is deprecated

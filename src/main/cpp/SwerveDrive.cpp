@@ -43,16 +43,16 @@ void SwerveDrive::CrabDrive(double xIn, double yIn, double zIn)
 
 	// SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
-	FL_SwerveModule.UpdateSpeed(radius);
+	// FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAngle(theta);
 
-	FR_SwerveModule.UpdateSpeed(radius);
+	// FR_SwerveModule.UpdateSpeed(radius);
 	FR_SwerveModule.UpdateAngle(theta);
 
-	BL_SwerveModule.UpdateSpeed(radius);
+	// BL_SwerveModule.UpdateSpeed(radius);
 	BL_SwerveModule.UpdateAngle(theta);
 
-	BR_SwerveModule.UpdateSpeed(radius);
+	// BR_SwerveModule.UpdateSpeed(radius);
 	BR_SwerveModule.UpdateAngle(theta);
 }
 

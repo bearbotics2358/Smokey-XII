@@ -75,7 +75,7 @@ void SwerveModule::UpdateAnglePID(float angle)
 	}
 	else // This if/else should handle the weird negative integer division in c++
 	{
-		revolutions = (-1 *GetAngleRaw()) / COUNTS_PER_ROTATION; 
+		revolutions = (-1 * GetAngleRaw()) / COUNTS_PER_ROTATION; 
 		revolutions = -1 * revolutions;
 	}
 
@@ -106,9 +106,23 @@ float SwerveModule::GetAngle(void)
 	float count;
 	count = GetAngleRaw(); // Returns raw value from the encoder
 
-	float ret = ((count / COUNTS_PER_ROTATION) * 360); // Rotations * Degrees per rotation
-
-	ret = ((int) ret % 360); // Converts counts to int casts it between 0 and 360 degrees
+	float ret;
+	if(count > 0)
+	{
+		ret = ((count / COUNTS_PER_ROTATION) * 360); // Rotations * Degrees per rotation
+	}
+	else
+	{
+		ret = -1 * ((abs(count)/COUNTS_PER_ROTATION) * 360);
+	}
+	if(ret > 0)
+	{
+		ret = ((int) ret % 360); // Converts counts to int casts it between 0 and 360 degrees
+	}
+	else
+	{
+		ret = -1 * ((int) abs(ret) % 360);
+	}
 	/*
 	*     |-------0/360-------|
 	*     |                   |
