@@ -82,21 +82,21 @@ void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
 		{
 			radius = 1.0; // Makes sure magnitude doesn't go over 1
 		}
-	radius = radius * 0.15; // For testing purposes, we will scale the input
+	radius = radius * 0.22; // For testing purposes, we will scale the input
 
 	frc::SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
-	FL_SwerveModule.UpdateSpeed(radius);
+	FL_SwerveModule.UpdateSpeedPID(radius*50);
 	FL_SwerveModule.UpdateAnglePID(theta);
 
-	FR_SwerveModule.UpdateSpeed(radius);
+	FR_SwerveModule.UpdateSpeedPID(radius*50);
 	FR_SwerveModule.UpdateAnglePID(theta);
 
-	BL_SwerveModule.UpdateSpeed(radius);
+	BL_SwerveModule.UpdateSpeedPID(radius*50);
 	BL_SwerveModule.UpdateAnglePID(theta);
 
-	BR_SwerveModule.UpdateSpeed(radius);
+	BR_SwerveModule.UpdateSpeedPID(radius*50);
 	BR_SwerveModule.UpdateAnglePID(theta);
 }
 

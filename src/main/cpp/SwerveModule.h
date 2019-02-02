@@ -9,6 +9,8 @@ public:
 	SwerveModule(int driveMotorOne, int turnMotor); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
 
 	void UpdateSpeed(float driveSpeed);
+	void UpdateSpeedPID(float driveSpeed);
+
 	void UpdateRaw(float driveSpeed, float rotationSpeed); // Method for mechanically testing swerve modules, will literally set the drive talons to a specific speed.
 	void UpdateAngle(float desiredAngle); // Angle in degrees
 	void UpdateAnglePID(float angle);
@@ -26,6 +28,7 @@ public:
 	float GetVoltageOP(int id);
 
 	void SetTurnPID(float p, float i, float d);
+	void SetDrivePID(float p, float i, float d);
 
 	~SwerveModule(void);
 private:

@@ -1,6 +1,7 @@
 #include <frc/WPILib.h> // <WPILib.h> is deprecated
 #include <Prefs.h>
 #include <Robot.h>
+#include <BeamBreak.h>
 
 // (>-.-)>-)====>
 Robot::Robot(void):
@@ -10,8 +11,10 @@ FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
 FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
 BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
+a_BeamBreak(),
 a_SwerveDrive()
 {
+	// (>>'-')>>	
 	a_Gyro.Init();
 	cruiseControl = false;
 	crabToggle = false;
@@ -26,10 +29,18 @@ void Robot::RobotInit(void)
 	FR_SwerveModule.ZeroEncoders();
 	BL_SwerveModule.ZeroEncoders();
 	BR_SwerveModule.ZeroEncoders();
+
 	FL_SwerveModule.SetTurnPID(0.9, 0, 9);
+	FL_SwerveModule.SetDrivePID(0.9, 0, 9);
+
 	FR_SwerveModule.SetTurnPID(0.9, 0, 9);
+	FR_SwerveModule.SetDrivePID(0.9, 0, 9);
+
 	BL_SwerveModule.SetTurnPID(0.9, 0, 9);
+	BL_SwerveModule.SetDrivePID(0.9, 0, 9);
+
 	BR_SwerveModule.SetTurnPID(0.9, 0, 9);
+	BR_SwerveModule.SetDrivePID(0.9, 0, 9);
 }
 
 void Robot::RobotPeriodic(void)
@@ -160,6 +171,11 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("Gyro X:", a_Gyro.GetAngle(0));
 	frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
 	frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); // USE THIS ONE: Clockwise is negative
+	frc::SmartDashboard::PutNumber("BL Drive Encoder:", BL_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_BeamBreak.GetStatus());
 }
 
 void Robot::AutonomousInit(void)

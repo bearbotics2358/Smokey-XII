@@ -1,5 +1,6 @@
 #include <frc/WPILib.h>
 #include <SwerveModule.h>
+#include <BeamBreak.h>
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
 
@@ -40,6 +41,7 @@ private:
 	SwerveModule BL_SwerveModule;
 	SwerveModule BR_SwerveModule;
 	SwerveDrive a_SwerveDrive;
+	BeamBreak a_BeamBreak;
 
 
 };

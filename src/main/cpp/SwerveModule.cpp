@@ -7,6 +7,8 @@ SwerveModule::SwerveModule(int driveMotorOne, int turnMotor):
 a_DriveMotorOne(driveMotorOne),
 a_TurnMotor(turnMotor)
 {
+	a_DriveMotorOne.ConfigSelectedFeedbackSensor(QuadEncoder, 0, 0);
+	a_DriveMotorOne.ConfigFeedbackNotContinuous(false, 0);
 	a_TurnMotor.ConfigFeedbackNotContinuous(false, 0);
 	a_TurnMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
 }
@@ -23,6 +25,11 @@ void SwerveModule::UpdateSpeed(float driveSpeed)
 {
 	float scalar = 1; // Full Speed is 1.0
 	a_DriveMotorOne.Set(scalar * driveSpeed);
+}
+
+void SwerveModule::UpdateSpeedPID(float driveSpeed)
+{
+	a_DriveMotorOne.Set(ControlMode::Velocity, driveSpeed);
 }
 
 void SwerveModule::UpdateAngle(float desiredAngle) // -180 < angle < 180
@@ -150,7 +157,7 @@ float SwerveModule::GetAngle(void)
 float SwerveModule::GetDistanceRaw(void)
 {
 	float ret;
-	ret = a_DriveMotorOne.GetSelectedSensorPosition(0);
+	ret = -1 *a_DriveMotorOne.GetSelectedSensorPosition(0);
 	return ret;
 }
 
@@ -215,6 +222,13 @@ void SwerveModule::SetTurnPID(float p, float i, float d)
 	a_TurnMotor.Config_kP(0, p, 0);
 	a_TurnMotor.Config_kI(0, i, 0);
 	a_TurnMotor.Config_kD(0, d, 0);
+}
+
+void SwerveModule::SetDrivePID(float p, float i, float d)
+{
+	a_DriveMotorOne.Config_kP(0, p, 0);
+	a_DriveMotorOne.Config_kI(0, i, 0);
+	a_DriveMotorOne.Config_kD(0, d, 0);
 }
 
 SwerveModule::~SwerveModule(void)
