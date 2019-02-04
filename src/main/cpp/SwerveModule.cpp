@@ -224,11 +224,12 @@ void SwerveModule::SetTurnPID(float p, float i, float d)
 	a_TurnMotor.Config_kD(0, d, 0);
 }
 
-void SwerveModule::SetDrivePID(float p, float i, float d)
+void SwerveModule::SetDrivePIDF(float p, float i, float d, float f)
 {
 	a_DriveMotorOne.Config_kP(0, p, 0);
 	a_DriveMotorOne.Config_kI(0, i, 0);
 	a_DriveMotorOne.Config_kD(0, d, 0);
+	a_DriveMotorOne.Config_kF(0, f, 0);
 }
 
 SwerveModule::~SwerveModule(void)

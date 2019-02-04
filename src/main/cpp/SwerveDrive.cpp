@@ -11,6 +11,7 @@ SwerveDrive::SwerveDrive(void):
 	BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 	BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID)
 	{
+
 	}
 
 SwerveDrive::~SwerveDrive(void)
@@ -82,21 +83,25 @@ void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
 		{
 			radius = 1.0; // Makes sure magnitude doesn't go over 1
 		}
-	radius = radius * 0.22; // For testing purposes, we will scale the input
+	radius = radius * 0.20; // For testing purposes, we will scale the input
 
 	frc::SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
-	FL_SwerveModule.UpdateSpeedPID(radius*50);
+	// FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAnglePID(theta);
 
-	FR_SwerveModule.UpdateSpeedPID(radius*50);
+	// FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	FR_SwerveModule.UpdateSpeed(radius);
 	FR_SwerveModule.UpdateAnglePID(theta);
 
-	BL_SwerveModule.UpdateSpeedPID(radius*50);
+	// BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	BL_SwerveModule.UpdateSpeed(radius);
 	BL_SwerveModule.UpdateAnglePID(theta);
 
-	BR_SwerveModule.UpdateSpeedPID(radius*50);
+	// BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	BR_SwerveModule.UpdateSpeed(radius);
 	BR_SwerveModule.UpdateAnglePID(theta);
 }
 
@@ -106,6 +111,11 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 	double yInput = yIn;
 	// double zInput;
 
+	// MAKES ROBOT "FIELD ORIENTED"???
+	float gyroRadians = gyroValue * PI / 180; // converts gyro degrees to radians
+	float temp = yInput * cos(gyroRadians) + xInput * sin(gyroRadians);
+	xInput = -yInput * sin(gyroRadians) + xInput *cos(gyroRadians);
+	yInput = temp;
 
 	// Atan2() returns the angle in radians so we convert it to degrees.
 	double theta = (atan2(xInput, yInput)) * 180 / PI; // These two lines convert cartesian
@@ -121,22 +131,26 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 		{
 			radius = 1.0; // Makes sure magnitude doesn't go over 1
 		}
-	radius = 1.0 * radius; // For testing purposes, we will scale the input
+	radius = 0.22 * radius; // For testing purposes, we will scale the input
 
 	// SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
-	FL_SwerveModule.UpdateSpeed(radius);
+	FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAnglePID(theta);
 
-	FR_SwerveModule.UpdateSpeed(radius);
+	FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FR_SwerveModule.UpdateSpeed(radius);
 	FR_SwerveModule.UpdateAnglePID(theta);
 
+	BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// BL_SwerveModule.UpdateSpeed(radius);
-	// BL_SwerveModule.UpdateAnglePID(theta);
+	BL_SwerveModule.UpdateAnglePID(theta);
 
+	BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// BR_SwerveModule.UpdateSpeed(radius);
-	// BR_SwerveModule.UpdateAnglePID(theta);
+	BR_SwerveModule.UpdateAnglePID(theta);
 }
 
 void SwerveDrive::MakeshiftRotate(double input)

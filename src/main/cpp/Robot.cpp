@@ -25,22 +25,24 @@ a_SwerveDrive()
 
 void Robot::RobotInit(void)
 {
+	/*
 	FL_SwerveModule.ZeroEncoders();
 	FR_SwerveModule.ZeroEncoders();
 	BL_SwerveModule.ZeroEncoders();
 	BR_SwerveModule.ZeroEncoders();
+	*/
 
 	FL_SwerveModule.SetTurnPID(0.9, 0, 9);
-	FL_SwerveModule.SetDrivePID(0.9, 0, 9);
+	FL_SwerveModule.SetDrivePIDF(0.28, 0, 0, 0.22);
 
 	FR_SwerveModule.SetTurnPID(0.9, 0, 9);
-	FR_SwerveModule.SetDrivePID(0.9, 0, 9);
+	FR_SwerveModule.SetDrivePIDF(0.25, 0, 0, 0.22);
 
 	BL_SwerveModule.SetTurnPID(0.9, 0, 9);
-	BL_SwerveModule.SetDrivePID(0.9, 0, 9);
+	BL_SwerveModule.SetDrivePIDF(0.28, 0, 0, 0.22);
 
 	BR_SwerveModule.SetTurnPID(0.9, 0, 9);
-	BR_SwerveModule.SetDrivePID(0.9, 0, 9);
+	BR_SwerveModule.SetDrivePIDF(0.25, 0, 0, 0.22);
 }
 
 void Robot::RobotPeriodic(void)
@@ -103,7 +105,7 @@ void Robot::TeleopPeriodic(void)
 			}
 			else
 			{
-				a_SwerveDrive.CrabDrivePID(-1 *a_Joystick1.GetRawAxis(0), -1 *a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+				a_SwerveDrive.CrabGyro(-1 *a_Joystick1.GetRawAxis(0), -1 *a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
 			}	
 		}
 		else
@@ -168,9 +170,7 @@ void Robot::TeleopPeriodic(void)
 	// frc::SmartDashboard::PutNumber("Drive Voltage 2: ", voltageOutput2);
 	// frc::SmartDashboard::PutNumber("Turn Voltage: ", voltageOutput3);
 	frc::SmartDashboard::PutBoolean("Cruise Control", cruiseControl);
-	frc::SmartDashboard::PutNumber("Gyro X:", a_Gyro.GetAngle(0));
-	frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
-	frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); // USE THIS ONE: Clockwise is negative
+	frc::SmartDashboard::PutNumber("Gyro Angle:", ((int)(a_Gyro.GetAngle(2) * 100))/100.0); // USE THIS ONE: Clockwise is negative
 	frc::SmartDashboard::PutNumber("BL Drive Encoder:", BL_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
@@ -196,24 +196,54 @@ void Robot::TestInit(void)
 
 void Robot::TestPeriodic(void)
 {
+	a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
+	float angleCounts;
+	float distanceCounts;
+	float calibratedAngle;
+	float distanceIn;
+	float distanceCm;
+	float currentOutput1;
+	// float currentOutput2;
+	// float currentOutput3;
+	// float voltageOutput1;
+	// float voltageOutput2;
+	// float voltageOutput3;
 
-	a_SwerveDrive.CrabDrivePID(a_Joystick1.GetRawAxis(0), a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
-	/*if(a_Joystick1.GetRawButton(6))
-	{
-		FL_SwerveModule.UpdateAnglePID(90);
-	}
-	else if(a_Joystick1.GetRawButton(7))
-	{
-		FL_SwerveModule.UpdateAnglePID(0);
-	}
-	else
-	{
-		FL_SwerveModule.UpdateAnglePID(270);
-	}
-	*/
-	double calibratedAngle = FR_SwerveModule.GetAngle() + 180;
+
+
+	angleCounts = FR_SwerveModule.GetAngleRaw();
+	distanceCounts = FL_SwerveModule.GetDistanceRaw();
+	calibratedAngle = FR_SwerveModule.GetAngle();
+	distanceIn = FL_SwerveModule.GetDistanceIn();
+	distanceCm = FL_SwerveModule.GetDistanceCm();
+	currentOutput1 = FR_SwerveModule.GetCurrentOP(FR_DRIVE_ONE_ID);
+	// currentOutput2 = FL_SwerveModule.GetCurrentOP(FL_DRIVE_TWO_ID);
+	// currentOutput3 = FL_SwerveModule.GetCurrentOP(FL_TURN_ID);
+	// voltageOutput1 = FL_SwerveModule.GetVoltageOP(FL_DRIVE_ONE_ID);
+	// voltageOutput2 = FL_SwerveModule.GetVoltageOP(FL_DRIVE_TWO_ID);
+	// voltageOutput3 = FL_SwerveModule.GetVoltageOP(FL_TURN_ID);
+
+
+	frc::SmartDashboard::PutNumber("Rotation Encoder: ", angleCounts);
+	frc::SmartDashboard::PutNumber("Distance Encoder: ", distanceCounts);
 	frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
-
+	frc::SmartDashboard::PutNumber("Distance (In): ", distanceIn);
+	frc::SmartDashboard::PutNumber("Distance (Cm): ", distanceCm);
+	frc::SmartDashboard::PutNumber("Drive Current 1: ", currentOutput1);
+	// frc::SmartDashboard::PutNumber("Drive Current 2: ", currentOutput2);
+	// frc::SmartDashboard::PutNumber("Turn Current: ", currentOutput3);
+	// frc::SmartDashboard::PutNumber("Drive Voltage 1: ", voltageOutput1);
+	// frc::SmartDashboard::PutNumber("Drive Voltage 2: ", voltageOutput2);
+	// frc::SmartDashboard::PutNumber("Turn Voltage: ", voltageOutput3);
+	frc::SmartDashboard::PutBoolean("Cruise Control", cruiseControl);
+	frc::SmartDashboard::PutNumber("Gyro X:", a_Gyro.GetAngle(0));
+	frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
+	frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); // USE THIS ONE: Clockwise is negative
+	frc::SmartDashboard::PutNumber("BL Drive Encoder:", BL_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_BeamBreak.GetStatus());
 }
 
 

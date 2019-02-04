@@ -28,7 +28,7 @@ public:
 	float GetVoltageOP(int id);
 
 	void SetTurnPID(float p, float i, float d);
-	void SetDrivePID(float p, float i, float d);
+	void SetDrivePIDF(float p, float i, float d, float f);
 
 	~SwerveModule(void);
 private:
