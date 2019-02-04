@@ -114,14 +114,14 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 	// MAKES ROBOT "FIELD ORIENTED"???
 	float gyroRadians = gyroValue * PI / 180; // converts gyro degrees to radians
 	float temp = yInput * cos(gyroRadians) + xInput * sin(gyroRadians);
-	xInput = -yInput * sin(gyroRadians) + xInput *cos(gyroRadians);
+	xInput = -yInput * sin(gyroRadians) + xInput * cos(gyroRadians);
 	yInput = temp;
 
 	// Atan2() returns the angle in radians so we convert it to degrees.
 	double theta = (atan2(xInput, yInput)) * 180 / PI; // These two lines convert cartesian
 	double radius = sqrt(pow(xInput, 2) + pow(yInput, 2));  // to polar coords
 
-	if(radius < 0.42)
+	if(radius < 0.33)
 	{
 		theta = 0;
 		radius = 0;
@@ -133,22 +133,22 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 		}
 	radius = 0.22 * radius; // For testing purposes, we will scale the input
 
-	// SmartDashboard::PutNumber("Theta: ", theta);
+	frc::SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
-	FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAnglePID(theta);
 
-	FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// FR_SwerveModule.UpdateSpeed(radius);
 	FR_SwerveModule.UpdateAnglePID(theta);
 
-	BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// BL_SwerveModule.UpdateSpeed(radius);
 	BL_SwerveModule.UpdateAnglePID(theta);
 
-	BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// BR_SwerveModule.UpdateSpeed(radius);
 	BR_SwerveModule.UpdateAnglePID(theta);
 }

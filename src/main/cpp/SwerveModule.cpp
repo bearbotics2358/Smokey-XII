@@ -9,8 +9,9 @@ a_TurnMotor(turnMotor)
 {
 	a_DriveMotorOne.ConfigSelectedFeedbackSensor(QuadEncoder, 0, 0);
 	a_DriveMotorOne.ConfigFeedbackNotContinuous(false, 0);
+	// a_DriveMotorOne.SetInverted(true);
 	a_TurnMotor.ConfigFeedbackNotContinuous(false, 0);
-	a_TurnMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
+	a_TurnMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Relative, 0, 0);
 }
 
 void SwerveModule::UpdateRaw(float driveSpeed, float rotationSpeed)
@@ -62,9 +63,9 @@ void SwerveModule::UpdateAngle(float desiredAngle) // -180 < angle < 180
 
 void SwerveModule::UpdateAnglePID(float angle)
 {
-	if(abs(angle - GetAngle()) > 180) // find coterminal if angle is greater than 180
+	if(abs(angle - GetAngle()) > 180) // find coterminal if distance is greater than 180
 	{
-		if(GetAngle() > 180)
+		if((GetAngle() > 180 && angle > 0)) // || (GetAngle() < -180 && angle < 0))
 		{
 			angle+=360; 
 		}
@@ -120,7 +121,7 @@ float SwerveModule::GetAngle(void)
 	}
 	else
 	{
-		ret = -1 * ((abs(count)/COUNTS_PER_ROTATION) * 360);
+		ret = -1 * ((-1 * count/COUNTS_PER_ROTATION) * 360);
 	}
 	if(ret > 0)
 	{
