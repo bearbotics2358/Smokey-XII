@@ -131,24 +131,24 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 		{
 			radius = 1.0; // Makes sure magnitude doesn't go over 1
 		}
-	radius = 0.22 * radius; // For testing purposes, we will scale the input
+	radius = 0.15 * radius; // For testing purposes, we will scale the input
 
 	frc::SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
-	// FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAnglePID(theta);
 
-	// FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// FR_SwerveModule.UpdateSpeed(radius);
 	FR_SwerveModule.UpdateAnglePID(theta);
 
-	// BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// BL_SwerveModule.UpdateSpeed(radius);
 	BL_SwerveModule.UpdateAnglePID(theta);
 
-	// BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
 	// BR_SwerveModule.UpdateSpeed(radius);
 	BR_SwerveModule.UpdateAnglePID(theta);
 }

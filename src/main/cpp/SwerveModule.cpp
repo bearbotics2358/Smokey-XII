@@ -65,7 +65,7 @@ void SwerveModule::UpdateAnglePID(float angle)
 {
 	if(abs(angle - GetAngle()) > 180) // find coterminal if distance is greater than 180
 	{
-		if((GetAngle() > 180 && angle > 0)) // || (GetAngle() < -180 && angle < 0))
+		if((GetAngle() > 180 && angle >= 0)  || (GetAngle() > -180 && angle < 0))
 		{
 			angle+=360; 
 		}
