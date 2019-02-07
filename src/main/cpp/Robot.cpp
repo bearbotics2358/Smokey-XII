@@ -68,6 +68,7 @@ void Robot::TeleopInit(void)
 void Robot::TeleopPeriodic(void)
 {
 	robotState = "Teleoperated";
+	printf("Test for Mr. D'Avello");
 
 	if(a_Joystick1.GetRawButton(2)) // Enable Cruise Control
 	{
@@ -101,11 +102,13 @@ void Robot::TeleopPeriodic(void)
 		{
 			if(a_Joystick1.GetRawButton(1))
 			{
-				a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);
+				// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);
+				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -1 * a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
 			}
 			else
 			{
-				a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
+				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(2));
+				// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
 				// a_SwerveDrive.CrabDrivePID(-1 *a_Joystick1.GetRawAxis(0), -1 *a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
 			}	
 		}
