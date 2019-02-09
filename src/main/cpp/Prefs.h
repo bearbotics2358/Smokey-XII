@@ -19,14 +19,23 @@
 #define CARGO_BIG_ID 2
 #define CARGO_SMALL_ID 3
 #define HATCH_ID 4
+#define VERTI_ID 5
+#define HORI_ID 6
+
 
 #define COLLECT_SPEED 0.5 // Will change with testing
-#define HATCH_POS_MAX 180 // DO NOT FORGET TO CHANGE
-#define HATCH_POS_MIN 0   // GET FROM TESTING WITH SENSORS
+#define HATCH_POS_MAX 180.0 // DO NOT FORGET TO CHANGE
+#define HATCH_POS_MIN 0.0   // GET FROM TESTING WITH POTENTIOMETER
+
+#define LIFTER_UP_POS 1000     // ????
+#define LIFTER_FORWARD_POS 100 // I've got no idea what these will be, need to be tested with the physical thing
+#define LIFTER_FINAl_POS 800   // But these will be the positions the lifter goes to
+
 
 #define COUNTS_PER_ROTATION 12288 // Encoder counts for one revolution
 #define GEAR_RATIO_SCALAR 2.8 // Gear Ratio from Drive Motor to Drive Wheel
-#define DEADZONE 0.42
+#define DEADZONE 0.33
+
 
 #define IR_RECEIVER_PORT 0 // Random #, we'll update it later.
 

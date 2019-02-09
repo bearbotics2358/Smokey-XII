@@ -11,17 +11,21 @@ class HatchCollector
 public:
     
     HatchCollector(void);
-    void HatchCollect(int speed);
-    double GetPositionRaw(void);
-    int GetPositionCalc(void);
+    void UpdateRaw(int val); 
+    void UpdateAngle(int angle);
+    float GetPositionRaw(void);
+    float GetPositionCalc(void);
+    void Disable(void);
 
 
    
 private:
 
 
-frc::AnalogInput a_Potentiometer;
-WPI_TalonSRX a_HatchMotor1;
+    frc::AnalogInput a_Potentiometer;
+    WPI_TalonSRX a_HatchMotor;
+
+    float Map(float x, float in_min, float in_max, float out_min, float out_max); // thx alocksis, this very useful <3
 
 };
 

@@ -10,15 +10,17 @@ class CargoCollector
 { 
 public:
     CargoCollector(void);
-    void CargoCollectBB(void);
+    void CargoCollectBB(int runoverride);
     void CargoCollect(void);
     void CargoAbort(void);
+    //void CargoKill(void);
     
 private:
 
 WPI_TalonSRX a_CargoMotor1;
 WPI_TalonSRX a_CargoMotor2;
 BeamBreak a_BeamBreak;
+
 
 };
 
