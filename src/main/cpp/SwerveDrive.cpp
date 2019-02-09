@@ -73,7 +73,7 @@ void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
 		theta+=360;
 	}
 
-	if(radius < 0.32) // Dead zone
+	if(radius < DEADZONE) // Dead zone
 	{
 		theta = 0;
 		radius = 0;
@@ -121,7 +121,7 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 	double theta = (atan2(xInput, yInput)) * 180 / PI; // These two lines convert cartesian
 	double radius = sqrt(pow(xInput, 2) + pow(yInput, 2));  // to polar coords
 
-	if(radius < 0.33)
+	if(radius < DEADZONE)
 	{
 		theta = 0;
 		radius = 0;
@@ -169,7 +169,7 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
 	// double theta = (atan2(xInput, yInput)) * 180 / PI; // These two lines convert cartesian
 	double radius = sqrt(pow(xInput, 2) + pow(yInput, 2));  // to polar coords
 
-	if(radius < 0.33)
+	if(radius < DEADZONE)
 	{
 		xInput = 0;
 		yInput = 0;	
