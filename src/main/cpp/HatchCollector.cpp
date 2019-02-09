@@ -5,7 +5,8 @@
 
 
 HatchCollector::HatchCollector():
-a_HatchMotor1(HATCH_ID)
+a_HatchMotor1(HATCH_ID),
+a_Potentiometer(0)
 
 {
 
@@ -15,8 +16,9 @@ a_HatchMotor1(HATCH_ID)
 
 void HatchCollector::HatchCollect(int speed) {
 
-
-
+if(a_Potentiometer.GetValue() < HATCH_POS_MAX && a_Potentiometer.GetValue() > HATCH_POS_MIN) {
+a_HatchMotor1.Set(speed);
+}
 
 }
 

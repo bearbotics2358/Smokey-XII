@@ -12,11 +12,15 @@ public:
     
     HatchCollector(void);
     void HatchCollect(int speed);
+    double GetPositionRaw(void);
+    int GetPositionCalc(void);
 
 
    
 private:
 
+
+frc::AnalogInput a_Potentiometer;
 WPI_TalonSRX a_HatchMotor1;
 
 };
