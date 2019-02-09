@@ -5,8 +5,8 @@
 
 
 CargoCollector::CargoCollector()
-: a_CollectMotor1(CARGO_SMALL_ID),
-a_CollectMotor2(CARGO_BIG_ID),
+: a_CargoMotor1(CARGO_SMALL_ID),
+a_CargoMotor2(CARGO_BIG_ID),
 a_BeamBreak()
 {
 
@@ -24,14 +24,14 @@ if(a_BeamBreak.GetStatus() == false){
 }
 
 void CargoCollector::CargoCollect(void){
-a_CollectMotor1.Set(COLLECT_SPEED);
-a_CollectMotor2.Set(COLLECT_SPEED);
+a_CargoMotor1.Set(COLLECT_SPEED);
+a_CargoMotor2.Set(COLLECT_SPEED);
 
 }
 
 void CargoCollector::CargoAbort(void) {
 
-a_CollectMotor1.Set(0);
-a_CollectMotor2.Set(0);
+a_CargoMotor1.Set(0);
+a_CargoMotor2.Set(0);
 
 }

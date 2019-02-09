@@ -16,9 +16,10 @@ public:
     
 private:
 
-WPI_TalonSRX a_CollectMotor1;
-WPI_TalonSRX a_CollectMotor2;
+WPI_TalonSRX a_CargoMotor1;
+WPI_TalonSRX a_CargoMotor2;
 BeamBreak a_BeamBreak;
+
 };
 
 

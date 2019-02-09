@@ -30,7 +30,7 @@ void SwerveDrive::CrabDrive(double xIn, double yIn, double zIn)
 	double theta = (atan2(xInput, yInput)) * 180 / PI; // These two lines convert cartesian
 	double radius = sqrt(pow(xInput, 2) + pow(yInput, 2));  // to polar coords
 
-	if(radius < 0.42)
+	if(radius < DEADZONE)
 	{
 		theta = 0;
 		radius = 0;

@@ -18,11 +18,15 @@
 
 #define CARGO_BIG_ID 2
 #define CARGO_SMALL_ID 3
+#define HATCH_ID 4
 
 #define COLLECT_SPEED 0.5 // Will change with testing
+#define HATCH_POS_MAX 180 // DO NOT FORGET TO CHANGE
+#define HATCH_POS_MIN 0   // GET FROM TESTING WITH SENSORS
 
 #define COUNTS_PER_ROTATION 12288 // Encoder counts for one revolution
 #define GEAR_RATIO_SCALAR 2.8 // Gear Ratio from Drive Motor to Drive Wheel
+#define DEADZONE 0.42
 
 #define IR_RECEIVER_PORT 0 // Random #, we'll update it later.
 
