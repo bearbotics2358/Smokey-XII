@@ -11,35 +11,40 @@ a_BeamBreak()
 
 {
 
-    a_CargoMotor1.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Relative, 0, 0);
+    a_CargoMotor1.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
 
-    a_CargoMotor2.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Relative, 0, 0);
+    a_CargoMotor2.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
     
 }
 
-void CargoCollector::CargoCollectBB(int runoverride){ // yeah i know this is dumb butt itll work well
+void CargoCollector::CargoCollectBB(bool runOverride){ // IT'S NOT DUMB JASON >:U (feel better from software <3)
 
-if(runoverride == 1){
-      CargoCollect();
-}else{
-    if(a_BeamBreak.GetStatus()){
-       CargoAbort();
-    }else if(a_BeamBreak.GetStatus() == false){
-      CargoCollect();
+    if(runOverride)
+    {
+        CargoCollect();
+    } 
+    else    
+    {
+        if(a_BeamBreak.GetStatus())
+        {
+            CargoAbort();
+        }
+        else if(a_BeamBreak.GetStatus() == false)
+        {
+            CargoCollect();
+        }
     }
-
 }
 
+void CargoCollector::CargoCollect(void)
+{
+    a_CargoMotor1.Set(ControlMode::Velocity, COLLECT_SPEED);
+    a_CargoMotor2.Set(ControlMode::Velocity, COLLECT_SPEED);
 }
 
-void CargoCollector::CargoCollect(void){
-a_CargoMotor1.Set(ControlMode::Velocity, COLLECT_SPEED);
-a_CargoMotor2.Set(ControlMode::Velocity, COLLECT_SPEED);
-
-}
-
-void CargoCollector::CargoAbort(void) {
-a_CargoMotor1.Set(ControlMode::Velocity, 0);
-a_CargoMotor2.Set(ControlMode::Velocity, 0);
-
+// :]
+void CargoCollector::CargoAbort(void) 
+{
+    a_CargoMotor1.Set(ControlMode::Velocity, 0);
+    a_CargoMotor2.Set(ControlMode::Velocity, 0);
 }

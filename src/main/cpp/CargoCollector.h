@@ -10,7 +10,7 @@ class CargoCollector
 { 
 public:
     CargoCollector(void);
-    void CargoCollectBB(int runoverride);
+    void CargoCollectBB(bool runOverride);
     void CargoCollect(void);
     void CargoAbort(void);
     //void CargoKill(void);
