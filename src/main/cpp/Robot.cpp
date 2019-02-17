@@ -7,6 +7,8 @@
 Robot::Robot(void):
 a_Gyro(frc::I2C::kMXP),
 a_Joystick1(JOYSTICK_PORT_ONE),
+a_Controller1(CONTROLLER_PORT_ONE),
+a_CargoCollector(),
 FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
 FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
 BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
@@ -18,6 +20,8 @@ a_SwerveDrive()
 	a_Gyro.Init();
 	cruiseControl = false;
 	crabToggle = false;
+	cargoToggle = false;
+	cargoLastInput = false;
 	driveSpeed = 0;
 	rotationSpeed = 0;
 	frc::SmartDashboard::init();
@@ -25,24 +29,24 @@ a_SwerveDrive()
 
 void Robot::RobotInit(void)
 {
-	/*
-	FL_SwerveModule.ZeroEncoders();
+	
+	/*FL_SwerveModule.ZeroEncoders();
 	FR_SwerveModule.ZeroEncoders();
 	BL_SwerveModule.ZeroEncoders();
 	BR_SwerveModule.ZeroEncoders();
 	*/
 
-	FL_SwerveModule.SetTurnPID(0.9, 0, 9);
-	FL_SwerveModule.SetDrivePIDF(0.28, 0, 0, 0.22);
+	FL_SwerveModule.SetTurnPID(0.9, 0, 1);
+	FL_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
 
-	FR_SwerveModule.SetTurnPID(0.9, 0, 9);
-	FR_SwerveModule.SetDrivePIDF(0.25, 0, 0, 0.22);
+	FR_SwerveModule.SetTurnPID(0.9, 0, 1);
+	FR_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
 
-	BL_SwerveModule.SetTurnPID(0.9, 0, 9);
-	BL_SwerveModule.SetDrivePIDF(0.28, 0, 0, 0.22);
+	BL_SwerveModule.SetTurnPID(0.9, 0, 1);
+	BL_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
 
-	BR_SwerveModule.SetTurnPID(0.9, 0, 9);
-	BR_SwerveModule.SetDrivePIDF(0.25, 0, 0, 0.22);
+	BR_SwerveModule.SetTurnPID(0.9, 0, 1);
+	BR_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
 }
 
 void Robot::RobotPeriodic(void)
@@ -68,7 +72,6 @@ void Robot::TeleopInit(void)
 void Robot::TeleopPeriodic(void)
 {
 	robotState = "Teleoperated";
-	printf("Test for Mr. D'Avello");
 
 	if(a_Joystick1.GetRawButton(2)) // Enable Cruise Control
 	{
@@ -79,7 +82,10 @@ void Robot::TeleopPeriodic(void)
 
 	if(a_Joystick1.GetRawButton(3)) // Disable Cruise Control
 	{
-		// cruiseControl = false;
+		FL_SwerveModule.ZeroEncoders();
+		FR_SwerveModule.ZeroEncoders();
+		BL_SwerveModule.ZeroEncoders();
+		BR_SwerveModule.ZeroEncoders();
 	}
 
 	if(a_Joystick1.GetRawButton(8))
@@ -102,14 +108,18 @@ void Robot::TeleopPeriodic(void)
 		{
 			if(a_Joystick1.GetRawButton(1))
 			{
-				// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);
-				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -1 * a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
+				// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);				
+				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -0.45 * a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(0));
+				// FL_SwerveModule.UpdateSpeed(0.2);
+				// BL_SwerveModule.UpdateSpeed(0.2);
 			}
 			else
 			{
-				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(2));
+				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
 				// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
-				// a_SwerveDrive.CrabDrivePID(-1 *a_Joystick1.GetRawAxis(0), -1 *a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+				// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+				// FR_SwerveModule.UpdateSpeed(0.2);
+				// BR_SwerveModule.UpdateSpeed(0.2);
 			}	
 		}
 		else
@@ -118,23 +128,40 @@ void Robot::TeleopPeriodic(void)
 		}
 	}
 
-	if(a_Joystick1.GetRawButton(11))
-	{
-		FL_SwerveModule.UpdateAnglePID(350);
-	}
-	else if(a_Joystick1.GetRawButton(10))
-	{
-		FL_SwerveModule.UpdateAnglePID(10);
-	}
-	else if(a_Joystick1.GetRawButton(7))
-	{
-		FL_SwerveModule.UpdateAngle(-137);
-	}
-	else if(a_Joystick1.GetRawButton(6))
+	if(a_Joystick1.GetRawButton(6))
 	{
 		a_Gyro.Cal();
 	}
 
+	if(a_Controller1.GetRawButton(2)) // Annoying logic for a toggle for our collector.
+	{
+		if(!cargoLastInput)
+		{
+			if(!cargoToggle)
+			{
+				cargoToggle = true;
+			}
+			else
+			{
+				cargoToggle = false;
+			}
+		}
+		cargoLastInput = true;
+	}
+	else
+	{
+		cargoLastInput = false;
+	}
+
+	if(cargoToggle)
+	{
+		a_CargoCollector.CargoCollectBB(a_Controller1.GetRawButton(1));
+	}
+	else
+	{
+		a_CargoCollector.CargoAbort();
+	}
+	
 	float angleCounts;
 	float distanceCounts;
 	float calibratedAngle;
@@ -162,7 +189,10 @@ void Robot::TeleopPeriodic(void)
 	// voltageOutput3 = FL_SwerveModule.GetVoltageOP(FL_TURN_ID);
 
 
-	frc::SmartDashboard::PutNumber("Rotation Encoder: ", angleCounts);
+	frc::SmartDashboard::PutNumber("FR Rotation: ", FR_SwerveModule.GetAngleRaw());
+	frc::SmartDashboard::PutNumber("FL Rotation: ", FL_SwerveModule.GetAngleRaw());
+	frc::SmartDashboard::PutNumber("BR Rotation: ", BR_SwerveModule.GetAngleRaw());
+	frc::SmartDashboard::PutNumber("BL Rotation: ", BL_SwerveModule.GetAngleRaw());
 	frc::SmartDashboard::PutNumber("Distance Encoder: ", distanceCounts);
 	frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
 	frc::SmartDashboard::PutNumber("Distance (In): ", distanceIn);
@@ -174,7 +204,10 @@ void Robot::TeleopPeriodic(void)
 	// frc::SmartDashboard::PutNumber("Drive Voltage 2: ", voltageOutput2);
 	// frc::SmartDashboard::PutNumber("Turn Voltage: ", voltageOutput3);
 	frc::SmartDashboard::PutBoolean("Cruise Control", cruiseControl);
-	frc::SmartDashboard::PutNumber("Gyro Angle:", ((int)(a_Gyro.GetAngle(2) * 100))/100.0); // USE THIS ONE: Clockwise is negative
+	// frc::SmartDashboard::PutNumber("Gyro X:", a_Gyro.GetAngle(0));
+	// frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
+	// frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); 
+	frc::SmartDashboard::PutNumber("Gyro Angle:", ((int)(a_Gyro.GetAngle(0) * 100))/100.0); // USE THIS ONE: Clockwise is negative
 	frc::SmartDashboard::PutNumber("BL Drive Encoder:", BL_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());

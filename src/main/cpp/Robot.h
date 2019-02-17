@@ -1,6 +1,7 @@
 #include <frc/WPILib.h>
 #include <SwerveModule.h>
 #include <BeamBreak.h>
+#include <CargoCollector.h>
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
 
@@ -31,16 +32,20 @@ private:
 	std::string robotState;
 	bool cruiseControl;
 	bool crabToggle;
+	bool cargoToggle;
+	bool cargoLastInput;
 	float driveSpeed;
 	float rotationSpeed;
 
 	JrimmyGyro a_Gyro;
 	frc::Joystick a_Joystick1;
+	frc::Joystick a_Controller1;
 	SwerveModule FL_SwerveModule;
 	SwerveModule FR_SwerveModule;
 	SwerveModule BL_SwerveModule;
 	SwerveModule BR_SwerveModule;
 	SwerveDrive a_SwerveDrive;
+	CargoCollector a_CargoCollector;
 	BeamBreak a_BeamBreak;
 
 

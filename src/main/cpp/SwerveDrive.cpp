@@ -89,19 +89,19 @@ void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
 	// FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	FL_SwerveModule.UpdateSpeed(radius);
+	// FL_SwerveModule.UpdateSpeed(radius);
 	FL_SwerveModule.UpdateAnglePID(theta);
 
 	// FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	FR_SwerveModule.UpdateSpeed(radius);
+	// FR_SwerveModule.UpdateSpeed(radius);
 	FR_SwerveModule.UpdateAnglePID(theta);
 
 	// BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	BL_SwerveModule.UpdateSpeed(radius);
+	// BL_SwerveModule.UpdateSpeed(radius);
 	BL_SwerveModule.UpdateAnglePID(theta);
 
 	// BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	BR_SwerveModule.UpdateSpeed(radius);
+	// BR_SwerveModule.UpdateSpeed(radius);
 	BR_SwerveModule.UpdateAnglePID(theta);
 }
 
@@ -201,7 +201,7 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
     	BR_Speed /= max;
     	BL_Speed /= max;
     }
-	double scalar = 0.22;
+	double scalar = 0.85;
 	FR_Speed *= scalar;
     FL_Speed *= scalar;
     BR_Speed *= scalar;

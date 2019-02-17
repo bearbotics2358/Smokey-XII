@@ -15,15 +15,18 @@
 #define BR_TURN_ID 31
 
 #define JOYSTICK_PORT_ONE 1
+#define CONTROLLER_PORT_ONE 2
 
-#define CARGO_BIG_ID 2
-#define CARGO_SMALL_ID 3
+#define CARGO_BACK_ID 2
+#define CARGO_FRONT_ID 3
 #define HATCH_ID 4
 #define VERTI_ID 5
 #define HORI_ID 6
 
 
-#define COLLECT_SPEED 0.5 // Will change with testing
+
+#define COLLECT_SPEED -0.2
+// Will change with testing
 #define HATCH_POS_MAX 180.0 // DO NOT FORGET TO CHANGE
 #define HATCH_POS_MIN 0.0   // GET FROM TESTING WITH POTENTIOMETER
 
@@ -33,6 +36,7 @@
 
 
 #define COUNTS_PER_ROTATION 12288 // Encoder counts for one revolution
+#define COUNTS_PER_DRIVE_ROTATION 705
 #define GEAR_RATIO_SCALAR 2.8 // Gear Ratio from Drive Motor to Drive Wheel
 #define DEADZONE 0.33
 
@@ -43,7 +47,7 @@
 #define WHEEL_CIRCUM_CM 23.9390
 
 #define DRIVE_TRAIN_SIDE_TO_SIDE 24.0
-#define DRIVE_TRAIN_FRONT_TO_BACK 16.25
+#define DRIVE_TRAIN_FRONT_TO_BACK 20.5
 
 #define PI 3.14159265358979
 

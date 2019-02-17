@@ -28,8 +28,13 @@ void SwerveModule::UpdateSpeed(float driveSpeed)
 	a_DriveMotorOne.Set(scalar * driveSpeed);
 }
 
-void SwerveModule::UpdateSpeedPID(float driveSpeed)
+void SwerveModule::UpdateSpeedPID(float driveSpeed) // Velocity PID-Based Closed Control Loop
 {
+	//    Rev     sec     COUNTS
+	// 5 ----- * ----- *  -------
+	//    Sec     10        Rev
+	double scalar = 0.2;
+	double speed = scalar * driveSpeed * (5.0 / 10.0 * COUNTS_PER_DRIVE_ROTATION);
 	a_DriveMotorOne.Set(ControlMode::Velocity, driveSpeed);
 }
 
@@ -158,7 +163,7 @@ float SwerveModule::GetAngle(void)
 float SwerveModule::GetDistanceRaw(void)
 {
 	float ret;
-	ret = -1 *a_DriveMotorOne.GetSelectedSensorPosition(0);
+	ret = -1 * a_DriveMotorOne.GetSelectedSensorPosition(0);
 	return ret;
 }
 
