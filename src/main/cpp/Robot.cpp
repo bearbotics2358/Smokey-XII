@@ -3,8 +3,14 @@
 #include <Robot.h>
 #include <BeamBreak.h>
 
+
+#define CAN_TEST
+
 // (>-.-)>-)====>
-Robot::Robot(void):
+Robot::Robot(void): 
+
+#ifndef CAN_TEST
+
 a_Gyro(frc::I2C::kMXP),
 a_Joystick1(JOYSTICK_PORT_ONE),
 FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
@@ -12,19 +18,33 @@ FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
 BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_BeamBreak(),
-a_SwerveDrive()
+a_SwerveDrive(),
+
+#endif
+
+a_FeatherOne(1)
+
 {
 	// (>>'-')>>	
+	
+#ifndef CAN_TEST
+	
 	a_Gyro.Init();
 	cruiseControl = false;
 	crabToggle = false;
 	driveSpeed = 0;
 	rotationSpeed = 0;
 	frc::SmartDashboard::init();
+
+#endif
+
 }
 
 void Robot::RobotInit(void)
 {
+
+#ifndef CAN_TEST
+
 	FL_SwerveModule.ZeroEncoders();
 	FR_SwerveModule.ZeroEncoders();
 	BL_SwerveModule.ZeroEncoders();
@@ -41,30 +61,66 @@ void Robot::RobotInit(void)
 
 	BR_SwerveModule.SetTurnPID(0.9, 0, 9);
 	BR_SwerveModule.SetDrivePID(0.9, 0, 9);
+
+#endif
+
 }
 
 void Robot::RobotPeriodic(void)
 {
+
+#ifndef CAN_TEST
+
 	a_Gyro.Update();
+
+#endif
+
 }
 
 void Robot::DisabledInit(void)
 {
+
+#ifndef CAN_TEST
+
 	robotState = "Disabled";
+
+#endif
+
 }
 
 void Robot::DisabledPeriodic(void)
 {
+
+#ifndef CAN_TEST
+
+
+
+#endif
 
 }
 
 void Robot::TeleopInit(void)
 {
 
+#ifndef CAN_TEST
+
+
+
+#endif
+
 }
 
 void Robot::TeleopPeriodic(void)
 {
+
+
+
+	printf("in Teleop Periodic\n");
+	frc::SmartDashboard::PutString("debug", "Hello World");
+
+#ifndef CAN_TEST
+
+
 	robotState = "Teleoperated";
 
 	if(a_Joystick1.GetRawButton(2)) // Enable Cruise Control
@@ -176,20 +232,36 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_BeamBreak.GetStatus());
+
+#endif
+
 }
 
 void Robot::AutonomousInit(void)
 {
+
+#ifndef CAN_TEST
+
 	robotState = "Autonomous";
+
+#endif
+
 }
 
 void Robot::AutonomousPeriodic(void)
 {
 
+#ifndef CAN_TEST
+
+
+
+#endif
+
 }
 
 void Robot::TestInit(void)
 {
+
 	robotState = "Test";
 
 }
@@ -197,7 +269,36 @@ void Robot::TestInit(void)
 void Robot::TestPeriodic(void)
 {
 
-	a_SwerveDrive.CrabDrivePID(a_Joystick1.GetRawAxis(0), a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+
+
+
+	// printf("in TestPeriodic\n");
+	frc::SmartDashboard::PutString("debug", "Hello World!");
+
+
+	frc::CANData data1;
+
+	bool ret = a_FeatherOne.ReadPacketNew(0, &data1);
+	
+	int i;
+
+	if(ret) {
+		char stemp[9];
+
+		for(i = 0; i < data1.length; i++) {
+			stemp[i] = data1.data[i];
+		}
+
+		stemp[i] = 0;
+
+		printf("%s\n", stemp);
+
+	}
+
+#ifndef CAN_TEST
+
+
+	// a_SwerveDrive.CrabDrivePID(a_Joystick1.GetRawAxis(0), a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
 	/*if(a_Joystick1.GetRawButton(6))
 	{
 		FL_SwerveModule.UpdateAnglePID(90);
@@ -211,8 +312,11 @@ void Robot::TestPeriodic(void)
 		FL_SwerveModule.UpdateAnglePID(270);
 	}
 	*/
-	double calibratedAngle = FR_SwerveModule.GetAngle() + 180;
-	frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
+
+	// double calibratedAngle = FR_SwerveModule.GetAngle() + 180;
+	// frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
+
+#endif	
 
 }
 

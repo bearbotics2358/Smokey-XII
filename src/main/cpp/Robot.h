@@ -3,9 +3,14 @@
 #include <BeamBreak.h>
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
+#include <frc/CAN.h>
 
 #ifndef SRC_ROBOT_H_
 #define SRC_ROBOT_H_
+
+
+#define CAN_TEST
+
 
 class Robot : public frc::IterativeRobot
 {
@@ -34,6 +39,8 @@ private:
 	float driveSpeed;
 	float rotationSpeed;
 
+#ifndef CAN_TEST
+
 	JrimmyGyro a_Gyro;
 	frc::Joystick a_Joystick1;
 	SwerveModule FL_SwerveModule;
@@ -42,6 +49,10 @@ private:
 	SwerveModule BR_SwerveModule;
 	SwerveDrive a_SwerveDrive;
 	BeamBreak a_BeamBreak;
+
+#endif
+
+	frc::CAN a_FeatherOne;
 
 
 };
