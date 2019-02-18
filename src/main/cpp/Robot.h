@@ -34,6 +34,7 @@ private:
 	bool crabToggle;
 	bool cargoToggle;
 	bool cargoLastInput;
+	bool cargoDirection;
 	float driveSpeed;
 	float rotationSpeed;
 

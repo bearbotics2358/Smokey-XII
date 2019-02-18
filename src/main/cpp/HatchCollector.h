@@ -21,8 +21,7 @@ public:
    
 private:
 
-
-    frc::AnalogInput a_Potentiometer;
+    // frc::AnalogInput a_Potentiometer;
     WPI_TalonSRX a_HatchMotor;
 
     float Map(float x, float in_min, float in_max, float out_min, float out_max); // thx alocksis, this very useful <3

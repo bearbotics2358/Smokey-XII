@@ -22,6 +22,7 @@ a_SwerveDrive()
 	crabToggle = false;
 	cargoToggle = false;
 	cargoLastInput = false;
+	cargoDirection = true;
 	driveSpeed = 0;
 	rotationSpeed = 0;
 	frc::SmartDashboard::init();
@@ -133,6 +134,17 @@ void Robot::TeleopPeriodic(void)
 		a_Gyro.Cal();
 	}
 
+
+	if(a_Controller1.GetRawButton(5))
+	{
+		cargoDirection = false;
+	}
+	else if(a_Controller1.GetRawButton(6))
+	{
+		cargoDirection = true;
+	}
+
+
 	if(a_Controller1.GetRawButton(2)) // Annoying logic for a toggle for our collector.
 	{
 		if(!cargoLastInput)
@@ -155,7 +167,7 @@ void Robot::TeleopPeriodic(void)
 
 	if(cargoToggle)
 	{
-		a_CargoCollector.CargoCollectBB(a_Controller1.GetRawButton(1));
+		a_CargoCollector.CargoCollectBB(a_Controller1.GetRawButton(1), cargoDirection);
 	}
 	else
 	{

@@ -5,12 +5,12 @@
 
 
 HatchCollector::HatchCollector():
-a_HatchMotor(HATCH_ID),
-a_Potentiometer(0)
+a_HatchMotor(HATCH_ID)
+// a_Potentiometer(0)
 
 {
 
-a_HatchMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
+a_HatchMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
 
 
 }
@@ -18,7 +18,7 @@ a_HatchMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
 void HatchCollector::UpdateRaw(int val) { 
 
 if(GetPositionRaw() < HATCH_POS_MAX && GetPositionRaw() > HATCH_POS_MIN) {
-    a_HatchMotor.Set(ControlMode::PercentOutput, val);
+    a_HatchMotor.Set(val);
 }
 else
 {
@@ -34,7 +34,7 @@ void HatchCollector::UpdateAngle(int angle){
 
 float HatchCollector::GetPositionRaw(void){
 
-float ret = a_Potentiometer.GetValue();
+float ret = a_HatchMotor.GetSelectedSensorPosition();
 return ret;
 
 }

@@ -24,11 +24,11 @@ a_BeamBreak()
     a_CargoMotor2.Config_kF(0.22, 0, 0);
 }
 
-void CargoCollector::CargoCollectBB(bool runOverride){ // IT'S NOT DUMB JASON >:U (feel better from software <3)
+void CargoCollector::CargoCollectBB(bool runOverride, bool dir){ // IT'S NOT DUMB JASON >:U (feel better from software <3)
 
     if(runOverride)
     {
-        CargoCollect();
+        CargoRun(dir);
     } 
     else    
     {
@@ -38,20 +38,27 @@ void CargoCollector::CargoCollectBB(bool runOverride){ // IT'S NOT DUMB JASON >:
         }
         else if(a_BeamBreak.GetStatus() == false)
         {
-            CargoCollect();
+            CargoRun(dir);
         }
     }
 }
 
-void CargoCollector::CargoCollect(void)
+void CargoCollector::CargoRun(bool dir)
 {
    //  a_CargoMotor1.Set(ControlMode::Velocity, COLLECT_SPEED);
    //  a_CargoMotor2.Set(ControlMode::Velocity, COLLECT_SPEED);
-    a_CargoMotor1.Set(COLLECT_SPEED);
-    a_CargoMotor2.Set(COLLECT_SPEED);
+    if(dir){
+        a_CargoMotor1.Set(COLLECT_SPEED);
+        a_CargoMotor2.Set(COLLECT_SPEED);
+    }
+    else
+    {
+        a_CargoMotor1.Set(-1 * COLLECT_SPEED);
+        a_CargoMotor2.Set(-1 * COLLECT_SPEED);
+    }
+    
 
 }
-
 // :]
 void CargoCollector::CargoAbort(void) 
 {
