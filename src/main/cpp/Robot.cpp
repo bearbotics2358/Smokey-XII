@@ -9,12 +9,14 @@ a_Gyro(frc::I2C::kMXP),
 a_Joystick1(JOYSTICK_PORT_ONE),
 a_Controller1(CONTROLLER_PORT_ONE),
 a_CargoCollector(),
+a_HatchCollector(),
 FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
 FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
 BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_BeamBreak(),
-a_SwerveDrive()
+a_SwerveDrive(),
+a_Feather(1)
 {
 	// (>>'-')>>	
 	a_Gyro.Init();
@@ -74,14 +76,11 @@ void Robot::TeleopPeriodic(void)
 {
 	robotState = "Teleoperated";
 
-	if(a_Joystick1.GetRawButton(2)) // Enable Cruise Control
-	{
-		// cruiseControl = true;
-		driveSpeed = a_Joystick1.GetRawAxis(1);
-		rotationSpeed = a_Joystick1.GetRawAxis(0);
-	}
+	unsigned char rxBuf[8];
+	frc::CANData dataOne;
+	bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
 
-	if(a_Joystick1.GetRawButton(3)) // Disable Cruise Control
+	if(a_Joystick1.GetRawButton(3)) // Zero Encoders
 	{
 		FL_SwerveModule.ZeroEncoders();
 		FR_SwerveModule.ZeroEncoders();
@@ -105,8 +104,8 @@ void Robot::TeleopPeriodic(void)
 	}
 	else
 	{
-		if(crabToggle)
-		{
+		// if(crabToggle)
+		// {
 			if(a_Joystick1.GetRawButton(1))
 			{
 				// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);				
@@ -122,11 +121,11 @@ void Robot::TeleopPeriodic(void)
 				// FR_SwerveModule.UpdateSpeed(0.2);
 				// BR_SwerveModule.UpdateSpeed(0.2);
 			}	
-		}
-		else
-		{
-			FL_SwerveModule.UpdateRaw(a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(0));
-		}
+		// }
+		// else
+		// {
+		// 	FL_SwerveModule.UpdateRaw(a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(0));
+		// }
 	}
 
 	if(a_Joystick1.GetRawButton(6))
@@ -135,11 +134,11 @@ void Robot::TeleopPeriodic(void)
 	}
 
 
-	if(a_Controller1.GetRawButton(5))
+	if(a_Controller1.GetRawButton(3))
 	{
 		cargoDirection = false;
 	}
-	else if(a_Controller1.GetRawButton(6))
+	else if(a_Controller1.GetRawButton(4))
 	{
 		cargoDirection = true;
 	}
@@ -173,27 +172,22 @@ void Robot::TeleopPeriodic(void)
 	{
 		a_CargoCollector.CargoAbort();
 	}
-	
-	float angleCounts;
-	float distanceCounts;
-	float calibratedAngle;
-	float distanceIn;
-	float distanceCm;
-	float currentOutput1;
-	// float currentOutput2;
-	// float currentOutput3;
-	// float voltageOutput1;
-	// float voltageOutput2;
-	// float voltageOutput3;
+
+	float crabbySpeed = 0.3;
+	if(a_Controller1.GetRawButton(5))
+		a_HatchCollector.UpdateRaw(crabbySpeed); // 5
+	else if(a_Controller1.GetRawButton(6))
+		a_HatchCollector.UpdateRaw(-crabbySpeed); // 6
+	else
+		a_HatchCollector.UpdateRaw(0);
 
 
-
-	angleCounts = FR_SwerveModule.GetAngleRaw();
-	distanceCounts = FL_SwerveModule.GetDistanceRaw();
-	calibratedAngle = FR_SwerveModule.GetAngle();
-	distanceIn = FL_SwerveModule.GetDistanceIn();
-	distanceCm = FL_SwerveModule.GetDistanceCm();
-	currentOutput1 = FR_SwerveModule.GetCurrentOP(FR_DRIVE_ONE_ID);
+	float angleCounts = FR_SwerveModule.GetAngleRaw();
+	float distanceCounts = FL_SwerveModule.GetDistanceRaw();
+	float calibratedAngle = FR_SwerveModule.GetAngle();
+	float distanceIn = FL_SwerveModule.GetDistanceIn();
+	float distanceCm = FL_SwerveModule.GetDistanceCm();
+	float currentOutput1 = FR_SwerveModule.GetCurrentOP(FR_DRIVE_ONE_ID);
 	// currentOutput2 = FL_SwerveModule.GetCurrentOP(FL_DRIVE_TWO_ID);
 	// currentOutput3 = FL_SwerveModule.GetCurrentOP(FL_TURN_ID);
 	// voltageOutput1 = FL_SwerveModule.GetVoltageOP(FL_DRIVE_ONE_ID);

@@ -3,6 +3,7 @@
 #define SRC_SWERVEDRIVE_H_
 
 #include <frc/WPILib.h>
+// #include <CAN.h>
 #include "ctre\Phoenix.h"
 #include <SwerveModule.h>
 
@@ -23,6 +24,8 @@ private:
 	SwerveModule FR_SwerveModule;
 	SwerveModule BL_SwerveModule;
 	SwerveModule BR_SwerveModule;
+
+	// frc::CAN a_Feather;
 };
 
 #endif /* SRC_SWERVEDRIVE_H_ */

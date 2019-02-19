@@ -25,7 +25,7 @@
 
 
 
-#define COLLECT_SPEED -0.2
+#define COLLECT_SPEED -0.5
 // Will change with testing
 #define HATCH_POS_MAX 180.0 // DO NOT FORGET TO CHANGE
 #define HATCH_POS_MIN 0.0   // GET FROM TESTING WITH POTENTIOMETER
@@ -38,10 +38,10 @@
 #define COUNTS_PER_ROTATION 12288 // Encoder counts for one revolution
 #define COUNTS_PER_DRIVE_ROTATION 705
 #define GEAR_RATIO_SCALAR 2.8 // Gear Ratio from Drive Motor to Drive Wheel
-#define DEADZONE 0.33
+#define DEADZONE 0.2
 
 
-#define IR_RECEIVER_PORT 0 // Random #, we'll update it later.
+#define IR_RECEIVER_PORT 1 // Random #, we'll update it later.
 
 #define WHEEL_CIRCUM_IN 9.4245
 #define WHEEL_CIRCUM_CM 23.9390

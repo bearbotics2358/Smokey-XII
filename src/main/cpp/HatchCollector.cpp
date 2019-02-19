@@ -15,15 +15,15 @@ a_HatchMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
 
 }
 
-void HatchCollector::UpdateRaw(int val) { 
+void HatchCollector::UpdateRaw(float val) { 
 
-if(GetPositionRaw() < HATCH_POS_MAX && GetPositionRaw() > HATCH_POS_MIN) {
+//if(GetPositionRaw() < HATCH_POS_MAX && GetPositionRaw() > HATCH_POS_MIN) {
     a_HatchMotor.Set(val);
-}
-else
-{
-    Disable();
-}
+//}
+//else
+//{
+//    Disable();
+//}
 
 }
 void HatchCollector::UpdateAngle(int angle){

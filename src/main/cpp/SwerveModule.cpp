@@ -33,7 +33,7 @@ void SwerveModule::UpdateSpeedPID(float driveSpeed) // Velocity PID-Based Closed
 	//    Rev     sec     COUNTS
 	// 5 ----- * ----- *  -------
 	//    Sec     10        Rev
-	double scalar = 0.2;
+	double scalar = 1.0;
 	double speed = scalar * driveSpeed * (5.0 / 10.0 * COUNTS_PER_DRIVE_ROTATION);
 	a_DriveMotorOne.Set(ControlMode::Velocity, driveSpeed);
 }

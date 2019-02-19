@@ -2,8 +2,10 @@
 #include <SwerveModule.h>
 #include <BeamBreak.h>
 #include <CargoCollector.h>
+#include <HatchCollector.h>
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
+#include <CAN.h>
 
 #ifndef SRC_ROBOT_H_
 #define SRC_ROBOT_H_
@@ -47,8 +49,9 @@ private:
 	SwerveModule BR_SwerveModule;
 	SwerveDrive a_SwerveDrive;
 	CargoCollector a_CargoCollector;
+	HatchCollector a_HatchCollector;
 	BeamBreak a_BeamBreak;
-
+	frc::CAN a_Feather;
 
 };
 

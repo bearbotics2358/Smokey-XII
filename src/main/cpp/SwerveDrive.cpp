@@ -6,13 +6,14 @@
 #include <Prefs.h>
 
 SwerveDrive::SwerveDrive(void):
-	FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
-	FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
-	BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
-	BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID)
-	{
+FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
+FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
+BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
+BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID)
+// a_Feather(1)
+{
 
-	}
+}
 
 SwerveDrive::~SwerveDrive(void)
 {
@@ -168,11 +169,10 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
 	// Atan2() returns the angle in radians so we convert it to degrees.
 	// double theta = (atan2(xInput, yInput)) * 180 / PI; // These two lines convert cartesian
 	double radius = sqrt(pow(xInput, 2) + pow(yInput, 2));  // to polar coords
-
+	bool inDeadzone = false;
 	if(radius < DEADZONE)
 	{
-		xInput = 0;
-		yInput = 0;	
+		inDeadzone = true;
 	}
 
 	double r =  sqrt((DRIVE_TRAIN_FRONT_TO_BACK * DRIVE_TRAIN_FRONT_TO_BACK) + (DRIVE_TRAIN_SIDE_TO_SIDE * DRIVE_TRAIN_SIDE_TO_SIDE));
@@ -201,25 +201,37 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
     	BR_Speed /= max;
     	BL_Speed /= max;
     }
-	double scalar = 0.85;
+	double scalar = 0.65;
 	FR_Speed *= scalar;
     FL_Speed *= scalar;
     BR_Speed *= scalar;
     BL_Speed *= scalar;
 
-	// FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	if(inDeadzone && zIn == 0)
+	{
+		FR_Speed = 0;
+		FL_Speed = 0;
+		BR_Speed = 0;
+		BL_Speed = 0;
+
+		FR_Angle = FR_SwerveModule.GetAngle();
+		FL_Angle = FL_SwerveModule.GetAngle();
+		BR_Angle = BR_SwerveModule.GetAngle();
+		BL_Angle = BL_SwerveModule.GetAngle();
+	}
+	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
 
-	// FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
  	FL_SwerveModule.UpdateSpeed(FL_Speed);
 	FL_SwerveModule.UpdateAnglePID(FL_Angle);
 
-	// BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
 	BL_SwerveModule.UpdateSpeed(BL_Speed);
 	BL_SwerveModule.UpdateAnglePID(BL_Angle);
 
-	// BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
 	BR_SwerveModule.UpdateSpeed(BR_Speed);
 	BR_SwerveModule.UpdateAnglePID(BR_Angle);
 }
