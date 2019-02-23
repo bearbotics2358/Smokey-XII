@@ -249,3 +249,23 @@ void SwerveDrive::MakeshiftRotate(double input)
 	FR_SwerveModule.UpdateSpeed(input);
 	BR_SwerveModule.UpdateSpeed(input);
 }
+
+void SwerveDrive::SetRobotAngle(double target, double current)
+{
+	// ------0/360------
+	// |               |   
+ 	// |               |
+	// 90             270
+	// |               |
+	// |               |
+	// --------180-----|
+	float pGain = 0.25;
+
+	FL_SwerveModule.UpdateAnglePID(-45);
+	BL_SwerveModule.UpdateAnglePID(45);
+	FR_SwerveModule.UpdateAnglePID(-135);
+	BR_SwerveModule.UpdateAnglePID(135);
+
+	float error = target - current; 
+	float output = pGain * output; // TODO: Finish this and test it
+}

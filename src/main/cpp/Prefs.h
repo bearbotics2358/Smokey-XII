@@ -36,7 +36,7 @@
 
 
 #define COUNTS_PER_ROTATION 12288 // Encoder counts for one revolution
-#define COUNTS_PER_DRIVE_ROTATION 705
+#define COUNTS_PER_DRIVE_ROTATION -705
 #define GEAR_RATIO_SCALAR 2.8 // Gear Ratio from Drive Motor to Drive Wheel
 #define DEADZONE 0.2
 

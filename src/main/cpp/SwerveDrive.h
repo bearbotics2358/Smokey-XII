@@ -18,7 +18,9 @@ public:
 	void CrabDrivePID(double xIn, double yIn, double zIn); // (No Rotation)
 	void CrabGyro(double xIn, double yIn, double zIn, double gyroValue);
 	void SwerveDriveUpdate(double xIn, double yIn, double zIn, double gyroValue);
+
 	void MakeshiftRotate(double input);
+	void SetRobotAngle(double target, double current);
 private:
 	SwerveModule FL_SwerveModule;
 	SwerveModule FR_SwerveModule;
