@@ -11,6 +11,7 @@ class HatchCollector
 public:
     
     HatchCollector(void);
+    void SetHatchPID(float p, float i, float d);
     void UpdateRaw(float val); 
     void UpdateAngle(int angle);
     float GetPositionRaw(void);

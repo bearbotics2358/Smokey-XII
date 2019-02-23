@@ -27,8 +27,9 @@
 
 #define COLLECT_SPEED -0.5
 // Will change with testing
-#define HATCH_POS_MAX 180.0 // DO NOT FORGET TO CHANGE
-#define HATCH_POS_MIN 0.0   // GET FROM TESTING WITH POTENTIOMETER
+#define HATCH_POS_MAX 4734.0 // DO NOT FORGET TO CHANGE
+#define HATCH_POS_MID 4532.0
+#define HATCH_POS_MIN 3210.0   // GET FROM TESTING WITH POTENTIOMETER
 
 #define LIFTER_UP_POS 1000     // ????
 #define LIFTER_FORWARD_POS 100 // I've got no idea what these will be, need to be tested with the physical thing

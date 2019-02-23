@@ -173,13 +173,16 @@ void Robot::TeleopPeriodic(void)
 		a_CargoCollector.CargoAbort();
 	}
 
-	float crabbySpeed = 0.3;
-	if(a_Controller1.GetRawButton(5))
+	float crabbySpeed = 0.5;
+	/*if(a_Controller1.GetRawButton(5))
 		a_HatchCollector.UpdateRaw(crabbySpeed); // 5
 	else if(a_Controller1.GetRawButton(6))
 		a_HatchCollector.UpdateRaw(-crabbySpeed); // 6
 	else
 		a_HatchCollector.UpdateRaw(0);
+	*/
+	a_HatchCollector.UpdateRaw(crabbySpeed * a_Controller1.GetRawAxis(1));
+
 
 
 	float angleCounts = FR_SwerveModule.GetAngleRaw();
@@ -218,6 +221,7 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("Hatch Encoder:", a_HatchCollector.GetPositionRaw());
 	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_BeamBreak.GetStatus());
 }
 

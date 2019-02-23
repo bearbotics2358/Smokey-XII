@@ -15,10 +15,17 @@ a_HatchMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
 
 }
 
+void HatchCollector::SetHatchPID(float p, float i, float d)
+{
+    a_HatchMotor.Config_kP(0, p, 0);
+	a_HatchMotor.Config_kI(0, i, 0);
+	a_HatchMotor.Config_kD(0, d, 0);
+}
+
 void HatchCollector::UpdateRaw(float val) { 
 
 //if(GetPositionRaw() < HATCH_POS_MAX && GetPositionRaw() > HATCH_POS_MIN) {
-    a_HatchMotor.Set(-val);
+    a_HatchMotor.Set(ControlMode::PercentOutput, val);
 //}
 //else
 //{
@@ -28,6 +35,8 @@ void HatchCollector::UpdateRaw(float val) {
 }
 void HatchCollector::UpdateAngle(int angle){
     // will write after pid and testing  
+    float angleCalc = Map(angle, -1.0, 1.0, HATCH_POS_MIN, HATCH_POS_MAX);
+    a_HatchMotor.Set(ControlMode::Position, angleCalc);
 
 
 }
