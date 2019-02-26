@@ -24,19 +24,32 @@ void HatchCollector::SetHatchPID(float p, float i, float d)
 
 void HatchCollector::UpdateRaw(float val) { 
 
-//if(GetPositionRaw() < HATCH_POS_MAX && GetPositionRaw() > HATCH_POS_MIN) {
+if(GetPositionRaw() > HATCH_POS_MAX && GetPositionRaw() < HATCH_POS_MIN) {
+   if((GetPositionRaw() < HATCH_POS_MAX && val > 0) || (GetPositionRaw() > HATCH_POS_MIN && val > 0)) 
+   {
+        Disable();
+   } 
+   else
+   {
     a_HatchMotor.Set(ControlMode::PercentOutput, val);
-//}
-//else
-//{
-//    Disable();
-//}
+   }
+    
+}
+else
+{
+    a_HatchMotor.Set(ControlMode::PercentOutput, val);
+}
 
 }
 void HatchCollector::UpdateAngle(int angle){
     // will write after pid and testing  
-    float angleCalc = Map(angle, -1.0, 1.0, HATCH_POS_MIN, HATCH_POS_MAX);
-    a_HatchMotor.Set(ControlMode::Position, angleCalc);
+    // float angleCalc = Map(angle, -1.0, 1.0, HATCH_POS_MIN, HATCH_POS_MAX);
+    
+    
+    a_HatchMotor.Set(ControlMode::Position, angle);
+
+
+
 
 
 }

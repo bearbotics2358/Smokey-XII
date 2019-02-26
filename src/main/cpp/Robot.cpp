@@ -50,6 +50,9 @@ void Robot::RobotInit(void)
 
 	BR_SwerveModule.SetTurnPID(0.9, 0, 1);
 	BR_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
+
+
+	a_HatchCollector.SetHatchPID(0.4, 0.00014, 0);
 }
 
 void Robot::RobotPeriodic(void)
@@ -79,6 +82,12 @@ void Robot::TeleopPeriodic(void)
 	unsigned char rxBuf[8];
 	frc::CANData dataOne;
 	bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
+
+
+
+
+
+
 
 	if(a_Joystick1.GetRawButton(3)) // Zero Encoders
 	{
@@ -173,15 +182,53 @@ void Robot::TeleopPeriodic(void)
 		a_CargoCollector.CargoAbort();
 	}
 
-	float crabbySpeed = 0.5;
-	/*if(a_Controller1.GetRawButton(5))
-		a_HatchCollector.UpdateRaw(crabbySpeed); // 5
-	else if(a_Controller1.GetRawButton(6))
-		a_HatchCollector.UpdateRaw(-crabbySpeed); // 6
+	float crabbySpeed = 0.3;
+
+	if(a_Controller1.GetRawAxis(3) == 0)
+	{
+		a_HatchCollector.UpdateRaw(crabbySpeed * a_Controller1.GetRawAxis(2)); 
+	}
+	else if(a_Controller1.GetRawAxis(2) == 0)
+	{
+		a_HatchCollector.UpdateRaw(-crabbySpeed * a_Controller1.GetRawAxis(3));	
+	}
 	else
-		a_HatchCollector.UpdateRaw(0);
+	{
+		a_HatchCollector.Disable();
+	}
+	
+	if(a_Controller1.GetRawButton(6))
+ 	{
+		if(a_HatchCollector.GetPositionRaw() > HATCH_POS_MID)
+		{
+			a_HatchCollector.SetHatchPID(0.5, 0.025, 3);
+		}
+		else
+		{
+			a_HatchCollector.SetHatchPID(0.4, 0.00014, 0);
+		}
+		a_HatchCollector.UpdateAngle((HATCH_POS_MAX) + 100);
+ 	}
+	else if(a_Controller1.GetRawButton(5))
+	{
+		a_HatchCollector.SetHatchPID(0.4, 0.00014, 0);
+		a_HatchCollector.UpdateAngle(HATCH_POS_MID);
+	}
+	
+	/*
+	if(a_Controller1.GetRawButton(5))
+	{
+		a_HatchCollector.UpdateAngle(HATCH_POS_MID);
+	}
+	
+	if(a_Controller1.GetRawButton(6))
+	{
+		a_HatchCollector.UpdateAngle(HATCH_POS_MAX);
+	}
 	*/
-	a_HatchCollector.UpdateRaw(crabbySpeed * a_Controller1.GetRawAxis(1));
+	// hello -Jawad
+	
+	// a_HatchCollector.UpdateRaw(crabbySpeed * a_Controller1.GetRawAxis(1));
 
 
 

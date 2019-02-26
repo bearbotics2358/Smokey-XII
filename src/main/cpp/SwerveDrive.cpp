@@ -236,7 +236,7 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
 	BR_SwerveModule.UpdateAnglePID(BR_Angle);
 }
 
-void SwerveDrive::MakeshiftRotate(double input)
+void SwerveDrive::MakeshiftRotate(float input)
 {
 
 	FL_SwerveModule.UpdateAnglePID(-45);
@@ -250,7 +250,7 @@ void SwerveDrive::MakeshiftRotate(double input)
 	BR_SwerveModule.UpdateSpeed(input);
 }
 
-void SwerveDrive::SetRobotAngle(double target, double current)
+void SwerveDrive::SetRobotAngle(float target, float current)
 {
 	// ------0/360------
 	// |               |   
@@ -259,13 +259,27 @@ void SwerveDrive::SetRobotAngle(double target, double current)
 	// |               |
 	// |               |
 	// --------180-----|
+
+	if(current < 0)
+		current = 360 - ((int) (-1 * current) % 360); // Limits 
+	else
+		current = (int) current % 360;
+
 	float pGain = 0.25;
 
-	FL_SwerveModule.UpdateAnglePID(-45);
-	BL_SwerveModule.UpdateAnglePID(45);
-	FR_SwerveModule.UpdateAnglePID(-135);
-	BR_SwerveModule.UpdateAnglePID(135);
-
-	float error = target - current; 
-	float output = pGain * output; // TODO: Finish this and test it
+	if(abs(target - current) >= 180)
+	{
+		if(current > 180)
+		{
+			target+=360; 
+		}
+		else
+		{
+			target -=360;
+		}
+	}
+	float error = target - current; // Positive should be counter-clockwise
+	float outputMax = 0.9;
+	float forJason = outputMax * pGain * (error / 360.0); // P * error + I * intergral + D * derivative
+	MakeshiftRotate(forJason); // TODO: Finish this and test it
 }
