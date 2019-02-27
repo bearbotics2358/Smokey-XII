@@ -52,4 +52,12 @@
 
 #define PI 3.14159265358979
 
+// COMP CONSTANTS:
+#define COMP_FL_TURN_PGAIN 0.9
+#define COMP_BL_TURN_PGAIN 0.9
+#define COMP_BR_TURN_PGAIN 0.9
+#define COMP_FR_TURN_PGAIN 0.9
+
+#define COMP_DGAIN 1
+
 #endif

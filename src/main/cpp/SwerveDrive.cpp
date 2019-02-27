@@ -12,7 +12,7 @@ BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID)
 // a_Feather(1)
 {
-
+	integral = 0;
 }
 
 SwerveDrive::~SwerveDrive(void)
@@ -222,18 +222,27 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
 	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
+	frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
+	// FR_SwerveModule.UpdateAngle(FR_Angle);
 
 	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
  	FL_SwerveModule.UpdateSpeed(FL_Speed);
 	FL_SwerveModule.UpdateAnglePID(FL_Angle);
+	frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
+	// FL_SwerveModule.UpdateAngle(FL_Angle);
 
 	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
 	BL_SwerveModule.UpdateSpeed(BL_Speed);
 	BL_SwerveModule.UpdateAnglePID(BL_Angle);
+	frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
+	// BL_SwerveModule.UpdateAngle(BL_Angle);
 
 	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
 	BR_SwerveModule.UpdateSpeed(BR_Speed);
 	BR_SwerveModule.UpdateAnglePID(BR_Angle);
+	frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
+	// BR_SwerveModule.UpdateAngle(BR_Angle);
+
 }
 
 void SwerveDrive::MakeshiftRotate(float input)
@@ -265,7 +274,8 @@ void SwerveDrive::SetRobotAngle(float target, float current)
 	else
 		current = (int) current % 360;
 
-	float pGain = 0.25;
+	float pGain = 1.75;
+	float iGain = 0.75;
 
 	if(abs(target - current) >= 180)
 	{
@@ -278,8 +288,9 @@ void SwerveDrive::SetRobotAngle(float target, float current)
 			target -=360;
 		}
 	}
-	float error = target - current; // Positive should be counter-clockwise
-	float outputMax = 0.9;
-	float forJason = outputMax * pGain * (error / 360.0); // P * error + I * intergral + D * derivative
+	float error = (current - target) / 360.0; // Positive should be counter-clockwise
+	integral += (error * 0.02);
+	float outputMax = 0.75;
+	float forJason = outputMax * (pGain * (error) + (iGain * integral)); // P * error + I * intergral + D * derivative
 	MakeshiftRotate(forJason); // TODO: Finish this and test it
 }

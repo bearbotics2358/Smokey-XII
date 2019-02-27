@@ -22,6 +22,7 @@ public:
 	void MakeshiftRotate(float input);
 	void SetRobotAngle(float target, float current);
 private:
+	float integral;
 	SwerveModule FL_SwerveModule;
 	SwerveModule FR_SwerveModule;
 	SwerveModule BL_SwerveModule;

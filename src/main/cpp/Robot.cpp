@@ -79,9 +79,9 @@ void Robot::TeleopPeriodic(void)
 {
 	robotState = "Teleoperated";
 
-	unsigned char rxBuf[8];
-	frc::CANData dataOne;
-	bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
+	// unsigned char rxBuf[8];
+	// frc::CANData dataOne;
+	// bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
 
 
 
@@ -113,28 +113,38 @@ void Robot::TeleopPeriodic(void)
 	}
 	else
 	{
-		// if(crabToggle)
-		// {
+		if(crabToggle)
+		{
 			if(a_Joystick1.GetRawButton(1))
 			{
 				// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);				
 				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -0.45 * a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(0));
 				// FL_SwerveModule.UpdateSpeed(0.2);
 				// BL_SwerveModule.UpdateSpeed(0.2);
+				// BR_SwerveModule.UpdateRaw(0, 0.2);
+	
 			}
-			else
+			else // NEGATIVE Z TURNS ROBOT TO THE LEFT
 			{
 				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
 				// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
 				// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
 				// FR_SwerveModule.UpdateSpeed(0.2);
+				// BR_SwerveModule.UpdateRaw(0, 0);
 				// BR_SwerveModule.UpdateSpeed(0.2);
 			}	
-		// }
-		// else
-		// {
-		// 	FL_SwerveModule.UpdateRaw(a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(0));
-		// }
+		}
+		else
+		{
+		 	if(a_Joystick1.GetRawButton(10))
+			{
+				a_SwerveDrive.SetRobotAngle(90, a_Gyro.GetAngle(0));
+			}
+			else
+			{
+				a_SwerveDrive.MakeshiftRotate(0);
+			}
+		}
 	}
 
 	if(a_Joystick1.GetRawButton(6))
@@ -246,7 +256,7 @@ void Robot::TeleopPeriodic(void)
 
 
 	frc::SmartDashboard::PutNumber("FR Rotation: ", FR_SwerveModule.GetAngleRaw());
-	frc::SmartDashboard::PutNumber("FL Rotation: ", FL_SwerveModule.GetAngleRaw());
+	frc::SmartDashboard::PutNumber("FL Rotation: ", FL_SwerveModule.GetAngle());
 	frc::SmartDashboard::PutNumber("BR Rotation: ", BR_SwerveModule.GetAngleRaw());
 	frc::SmartDashboard::PutNumber("BL Rotation: ", BL_SwerveModule.GetAngleRaw());
 	frc::SmartDashboard::PutNumber("Distance Encoder: ", distanceCounts);
