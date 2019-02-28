@@ -27,6 +27,7 @@ a_Feather(1)
 	cargoDirection = true;
 	driveSpeed = 0;
 	rotationSpeed = 0;
+	targetAngle = -999;
 	frc::SmartDashboard::init();
 }
 
@@ -84,11 +85,6 @@ void Robot::TeleopPeriodic(void)
 	// bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
 
 
-
-
-
-
-
 	if(a_Joystick1.GetRawButton(3)) // Zero Encoders
 	{
 		FL_SwerveModule.ZeroEncoders();
@@ -117,32 +113,48 @@ void Robot::TeleopPeriodic(void)
 		{
 			if(a_Joystick1.GetRawButton(1))
 			{
+				targetAngle = -999;
 				// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);				
 				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -0.45 * a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(0));
-				// FL_SwerveModule.UpdateSpeed(0.2);
-				// BL_SwerveModule.UpdateSpeed(0.2);
-				// BR_SwerveModule.UpdateRaw(0, 0.2);
+				// a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 90, a_Gyro.GetAngle(0));
 	
 			}
-			else // NEGATIVE Z TURNS ROBOT TO THE LEFT
+			else // POSITIVE Z TURNS ROBOT TO THE LEFT
 			{
-				a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
+				if(targetAngle == -999)
+				{
+					targetAngle = a_Gyro.GetAngle(0);
+						if(targetAngle < 0)
+							targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
+						else
+							targetAngle = (int) targetAngle % 360;
+				}
+				// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
 				// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
 				// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
-				// FR_SwerveModule.UpdateSpeed(0.2);
-				// BR_SwerveModule.UpdateRaw(0, 0);
-				// BR_SwerveModule.UpdateSpeed(0.2);
+				a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0));
 			}	
 		}
 		else
 		{
 		 	if(a_Joystick1.GetRawButton(10))
 			{
-				a_SwerveDrive.SetRobotAngle(90, a_Gyro.GetAngle(0));
+				if(targetAngle == -999)
+				{
+					targetAngle = a_Gyro.GetAngle(0);
+						if(targetAngle < 0)
+							targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
+						else
+							targetAngle = (int) targetAngle % 360;
+				}
+				a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0));
+				// a_SwerveDrive.SetRobotAngle(90, a_Gyro.GetAngle(0));
 			}
 			else
 			{
-				a_SwerveDrive.MakeshiftRotate(0);
+				targetAngle = -999;
+				// a_SwerveDrive.MakeshiftRotate(0);
+				a_SwerveDrive.SwerveRobotOriented(0, 0, 0);
 			}
 		}
 	}

@@ -39,6 +39,7 @@ private:
 	bool cargoDirection;
 	float driveSpeed;
 	float rotationSpeed;
+	float targetAngle;
 
 	JrimmyGyro a_Gyro;
 	frc::Joystick a_Joystick1;

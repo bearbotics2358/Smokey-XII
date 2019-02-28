@@ -245,6 +245,91 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
 
 }
 
+void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
+{
+	double xInput = xIn;
+	double yInput = yIn;
+	double zInput = zIn;
+
+	// Atan2() returns the angle in radians so we convert it to degrees.
+	// double theta = (atan2(xInput, yInput)) * 180 / PI; // These two lines convert cartesian
+	double radius = sqrt(pow(xInput, 2) + pow(yInput, 2));  // to polar coords
+	bool inDeadzone = false;
+	if(radius < DEADZONE)
+	{
+		inDeadzone = true;
+	}
+
+	double r =  sqrt((DRIVE_TRAIN_FRONT_TO_BACK * DRIVE_TRAIN_FRONT_TO_BACK) + (DRIVE_TRAIN_SIDE_TO_SIDE * DRIVE_TRAIN_SIDE_TO_SIDE));
+
+	double a = xInput - zInput * (DRIVE_TRAIN_FRONT_TO_BACK / r);
+	double b = xInput + zInput * (DRIVE_TRAIN_FRONT_TO_BACK / r);
+	double c = yInput - zInput * (DRIVE_TRAIN_SIDE_TO_SIDE / r);
+	double d = yInput + zInput * (DRIVE_TRAIN_SIDE_TO_SIDE / r);
+
+	double FL_Speed = sqrt(b*b + c*c);
+    double FR_Speed = sqrt(b*b + d*d);
+    double BL_Speed = sqrt(a*a + d*d);
+    double BR_Speed = sqrt(a*a + c*c);
+
+	double FL_Angle = atan2(b,c) * 180/PI;
+    double FR_Angle = atan2(b,d) * 180/PI;
+    double BR_Angle = atan2(a,d) * 180/PI;
+    double BL_Angle = atan2(a,c) * 180/PI;
+
+	double max = std::max(std::max(FR_Speed, FL_Speed), std::max(BR_Speed, BL_Speed));
+
+    if(max > 1)
+	{
+    	FR_Speed /= max;
+    	FL_Speed /= max;
+    	BR_Speed /= max;
+    	BL_Speed /= max;
+    }
+	double scalar = 0.65;
+	FR_Speed *= scalar;
+    FL_Speed *= scalar;
+    BR_Speed *= scalar;
+    BL_Speed *= scalar;
+
+	if(inDeadzone && zIn == 0)
+	{
+		FR_Speed = 0;
+		FL_Speed = 0;
+		BR_Speed = 0;
+		BL_Speed = 0;
+
+		FR_Angle = FR_SwerveModule.GetAngle();
+		FL_Angle = FL_SwerveModule.GetAngle();
+		BR_Angle = BR_SwerveModule.GetAngle();
+		BL_Angle = BL_SwerveModule.GetAngle();
+	}
+	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
+	FR_SwerveModule.UpdateSpeed(FR_Speed);
+	FR_SwerveModule.UpdateAnglePID(FR_Angle);
+	frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
+	// FR_SwerveModule.UpdateAngle(FR_Angle);
+
+	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
+ 	FL_SwerveModule.UpdateSpeed(FL_Speed);
+	FL_SwerveModule.UpdateAnglePID(FL_Angle);
+	frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
+	// FL_SwerveModule.UpdateAngle(FL_Angle);
+
+	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
+	BL_SwerveModule.UpdateSpeed(BL_Speed);
+	BL_SwerveModule.UpdateAnglePID(BL_Angle);
+	frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
+	// BL_SwerveModule.UpdateAngle(BL_Angle);
+
+	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
+	BR_SwerveModule.UpdateSpeed(BR_Speed);
+	BR_SwerveModule.UpdateAnglePID(BR_Angle);
+	frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
+	// BR_SwerveModule.UpdateAngle(BR_Angle);
+
+}
+
 void SwerveDrive::MakeshiftRotate(float input)
 {
 
@@ -293,4 +378,48 @@ void SwerveDrive::SetRobotAngle(float target, float current)
 	float outputMax = 0.75;
 	float forJason = outputMax * (pGain * (error) + (iGain * integral)); // P * error + I * intergral + D * derivative
 	MakeshiftRotate(forJason); // TODO: Finish this and test it
+}
+
+void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue)
+{
+	// ------0/360------
+	// |               |   
+ 	// |               |
+	// 90             270
+	// |               |
+	// |               |
+	// --------180-----|
+
+	float current = gyroValue;
+
+	if(current < 0)
+		current = 360 - ((int) (-1 * current) % 360); // Limits 
+	else
+		current = (int) current % 360;
+
+	float pGain = 2.25;
+	float iGain = 0.5;
+
+	if(abs(target - current) >= 180)
+	{
+		if(current > 180)
+		{
+			target+=360; 
+		}
+		else
+		{
+			target -=360;
+		}
+	}
+	float error = (current - target) / 360.0; // Positive should be counter-clockwise
+	integral += (error * 0.02);
+	float outputMax = 0.75;
+	float forJason = outputMax * (pGain * (error) + (iGain * integral)); // P * error + I * intergral + D * derivative
+
+	double radius = sqrt(pow(xIn, 2) + pow(yIn, 2));  // to polar coords
+	if(radius < DEADZONE)
+		forJason = 0;
+
+	// SwerveRobotOriented(xIn, yIn, -forJason);
+	SwerveDriveUpdate(xIn, yIn, -forJason, gyroValue);
 }
