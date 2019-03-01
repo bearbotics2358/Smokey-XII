@@ -16,6 +16,7 @@ BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_BeamBreak(),
 a_SwerveDrive(),
+a_Gunnar("RIOclient", "localhost", 1183),
 a_Feather(1)
 {
 	// (>>'-')>>	
@@ -72,8 +73,8 @@ void Robot::DisabledPeriodic(void)
 }
 
 void Robot::TeleopInit(void)
-{
-
+{	
+	a_Gunnar.loop_start();
 }
 
 void Robot::TeleopPeriodic(void)
@@ -102,7 +103,12 @@ void Robot::TeleopPeriodic(void)
 				targetAngle = (int) targetAngle % 360;
 	}
 
-	if(a_Joystick1.GetRawButton(1))
+
+	if(a_Joystick1.GetRawButton(2))
+	{
+		a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0));
+	}
+	else if(a_Joystick1.GetRawButton(1))
 	{
 		targetAngle = -999;
 		// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);				
@@ -211,7 +217,10 @@ void Robot::TeleopPeriodic(void)
 	
 	// a_HatchCollector.UpdateRaw(crabbySpeed * a_Controller1.GetRawAxis(1));
 
-
+	// Stops Vision Data Loop
+	if(a_Controller1.GetRawButton(10)) {
+		a_Gunnar.loop_stop();
+	}
 
 	float angleCounts = FR_SwerveModule.GetAngleRaw();
 	float distanceCounts = FL_SwerveModule.GetDistanceRaw();
@@ -251,11 +260,14 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("Hatch Encoder:", a_HatchCollector.GetPositionRaw());
 	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_BeamBreak.GetStatus());
+	frc::SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
+	frc::SmartDashboard::PutNumber("Vision Angle:", a_Gunnar.GetAngle());
 }
 
 void Robot::AutonomousInit(void)
 {
 	robotState = "Autonomous";
+	a_Gunnar.loop_start();
 }
 
 void Robot::AutonomousPeriodic(void)
