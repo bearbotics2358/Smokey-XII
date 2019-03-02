@@ -83,8 +83,7 @@ void Robot::TeleopPeriodic(void)
 	// frc::CANData dataOne;
 	// bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
 	a_Follower1.Update();
-	frc::SmartDashboard::PutBoolean("data?", a_Follower1.IsThereALine());
-	frc::SmartDashboard::PutNumber("the data?", a_Follower1.GetPosInches());
+
 
 	if(a_Joystick1.GetRawButton(3)) // Zero Encoders
 	{
