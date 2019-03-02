@@ -3,6 +3,7 @@
 #include <BeamBreak.h>
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
+#include <LineFollower.h>
 #include <frc/CAN.h>
 
 #ifndef SRC_ROBOT_H_
@@ -52,7 +53,7 @@ private:
 
 #endif
 
-	frc::CAN a_FeatherOne;
+	LineFollower a_Follower1;
 
 
 };

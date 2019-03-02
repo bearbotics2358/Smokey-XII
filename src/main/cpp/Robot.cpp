@@ -20,9 +20,11 @@ BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_BeamBreak(),
 a_SwerveDrive(),
 
+//(>-.-)> --   - - - >
+
 #endif
 
-a_FeatherOne(1)
+a_Follower1(1)
 
 {
 	// (>>'-')>>	
@@ -266,122 +268,9 @@ void Robot::TestInit(void)
 
 }
 
-// **********************************************************************************************
-// Added for CAN Line Follower
-// Should be moved to a new class, such as LineFollowerCAN
-//
-// Variables and constants should be in the class .h file
-// decodeLineFollowerMsg() and other code in class .cpp file
-
-
-/*
-Calculate CAN ID for Line Follower msg transmission
-NOTE: Confirm CAN ID matches the notebook - if not, the one in the notebook is correct
-
-The Manufacturer (8 bits)
-The Device Type (5 bits)
-An API ID (10 bits)
-The Device ID (6 bits)
-
-For Team created modules, FIRST says that 
-Manufacturer - HAL_CAN_Man_kTeamUse = 8
-Device Type - HAL_CAN_Dev_kMiscellaneous = 10
-API ID is up to us
-Device ID is unique to each module of a specific type (e.g., we can have more than 1 line follower)
-
-CAN ID: (Mfr ID): 0000 1000  (Device Type): 01010  (API ID): 00 0000 0000 (Device ID):00 0001 
-CAN ID: 0 0001 0000 1010   0000 0000   0000 0001 
-which is: 0x010a0001
-*/
-#define CAN_ID 0x010a0001
-// CAN MASK is 1 bits in all 29 bit positions, except for the Device ID
-#define CAN_MASK 0x01ffffc0
-// all CAN followers will have the following result when ANDed with the CAN_MASK
-#define CAN_FOLLOWER 0x010a0000
-
-unsigned char rxBuf[8];
-
-#define NUM_SENSORS            32   // number of sensors used
-int sensorOutput[NUM_SENSORS];        // 1 or 0
-
-// position of center of tape in inches
-float fpos = 0;
-
-// TOF sensor distance
-int tof_distance = 0;
-
-
-
-void decodeLineFollowerMsg()
-{
-  int i;
-  int j;
-  int16_t i16;
-
-  // decode sensorOutput[] from bytes 0-3
-  for(i = 0; i < 4; i++)
-  {
-    // get 8 sensor values from each byte
-    for(j = 0; j < 8; j++) {
-      sensorOutput[i * 8 + j] = (rxBuf[i] >> (7 - j)) & 0x01;
-    }
-  }
-  for(i = 0; i < NUM_SENSORS; i++) {
-		printf(" %d ", sensorOutput[i]);
-  }
-  printf("\n");
-
-  // decode position
-  // first, get the value as sent
-  i16 = (rxBuf[4] << 8) | rxBuf[5];
-  printf("pos (as sent): %d\n", i16);
-
-  fpos = (i16 * 8.0)/25.4; // convert to inches - 8mm per sensor
-  printf("pos (inches): %6.2f", fpos);
-
-  // decode time of flight distance
-  tof_distance = (rxBuf[6] << 8) | rxBuf[7];
-  printf("tof_distance: %d\n", tof_distance);
-}
-
-
-
-// **********************************************************************************************
-
-
 
 void Robot::TestPeriodic(void)
 {
-
-
-
-
-// **********************************************************************************************
-// Added for CAN Line Follower
-// Should be moved to a new class, such as LineFollowerCAN
-
-	// printf("in TestPeriodic\n");
-	frc::SmartDashboard::PutString("debug", "Hello World!");
-
-
-	frc::CANData data1;
-
-	bool ret = a_FeatherOne.ReadPacketNew(0, &data1);
-	
-	int i;
-
-	if(ret) {
-		char stemp[9];
-
-		for(i = 0; i < data1.length; i++) {
-			rxBuf[i] = data1.data[i];
-		}
-
-		decodeLineFollowerMsg();
-	}
-
-// **********************************************************************************************
-
 
 #ifndef CAN_TEST
 
