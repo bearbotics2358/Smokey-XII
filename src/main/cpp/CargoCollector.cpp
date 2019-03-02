@@ -68,3 +68,8 @@ void CargoCollector::CargoAbort(void)
     a_CargoMotor2.Set(0);
 
 }
+
+bool CargoCollector::GetCollectStatus(void)
+{
+    return a_BeamBreak.GetStatus();
+}

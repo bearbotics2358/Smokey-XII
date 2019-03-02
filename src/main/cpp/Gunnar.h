@@ -1,3 +1,5 @@
+
+#if 0 
 #ifndef SRC_GUNNAR_H_
 #define SRC_GUNNAR_H_
 
@@ -22,5 +24,7 @@ class Gunnar : public mosqpp::mosquittopp
 
 
 
+
+#endif
 
 #endif

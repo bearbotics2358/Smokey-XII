@@ -14,6 +14,8 @@ public:
     void CargoRun(bool dir);
     void CargoAbort(void);
     //void CargoKill(void);
+    bool GetCollectStatus(void);
+
     
 private:
 

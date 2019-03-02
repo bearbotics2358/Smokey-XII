@@ -14,6 +14,8 @@ Contributors:
    Roger Light - initial implementation and documentation.
 */
 
+#if 0
+
 #ifndef MOSQUITTOPP_H
 #define MOSQUITTOPP_H
 
@@ -103,4 +105,6 @@ class mosqpp_EXPORT mosquittopp {
 };
 
 }
+#endif
+
 #endif

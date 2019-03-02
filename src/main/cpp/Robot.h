@@ -6,7 +6,7 @@
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
 #include <CAN.h>
-#include <Gunnar.h>
+// #include <Gunnar.h>
 
 #ifndef SRC_ROBOT_H_
 #define SRC_ROBOT_H_
@@ -52,9 +52,8 @@ private:
 	SwerveDrive a_SwerveDrive;
 	CargoCollector a_CargoCollector;
 	HatchCollector a_HatchCollector;
-	BeamBreak a_BeamBreak;
 	frc::CAN a_Feather;
-	Gunnar a_Gunnar; // vision over MQTT
+	// Gunnar a_Gunnar; // vision over MQTT
 
 };
 

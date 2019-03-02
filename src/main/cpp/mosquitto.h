@@ -16,7 +16,7 @@ Contributors:
 
 
 */
-
+#if 0
 #ifndef MOSQUITTO_H
 #define MOSQUITTO_H
 #ifdef __cplusplus
@@ -1534,4 +1534,5 @@ libmosq_EXPORT int mosquitto_sub_topic_check(const char *topic);
 }
 #endif
 
+#endif
 #endif

@@ -1,3 +1,6 @@
+
+#if 0
+
 #include <Gunnar.h>
 #include <cstdio>
 #include <cstring>
@@ -61,5 +64,5 @@ float Gunnar::GetAngle()
 
 
 
-
+#endif
 

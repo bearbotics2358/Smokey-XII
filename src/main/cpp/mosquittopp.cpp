@@ -14,6 +14,8 @@ Contributors:
    Roger Light - initial implementation and documentation.
 */
 
+#if 0
+
 #include <cstdlib>
 #include <mosquitto.h>
 #include <mosquittopp.h>
@@ -306,3 +308,5 @@ int mosquittopp::tls_psk_set(const char *psk, const char *identity, const char *
 }
 
 }
+
+#endif

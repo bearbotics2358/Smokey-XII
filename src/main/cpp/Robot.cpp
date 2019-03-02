@@ -1,7 +1,6 @@
 #include <frc/WPILib.h> // <WPILib.h> is deprecated
 #include <Prefs.h>
 #include <Robot.h>
-#include <BeamBreak.h>
 
 // (>-.-)>-)====>
 Robot::Robot(void):
@@ -14,9 +13,8 @@ FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
 FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
 BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
-a_BeamBreak(),
 a_SwerveDrive(),
-a_Gunnar("RIOclient", "localhost", 1183),
+// a_Gunnar("RIOclient", "localhost", 1183),
 a_Feather(1)
 {
 	// (>>'-')>>	
@@ -74,7 +72,7 @@ void Robot::DisabledPeriodic(void)
 
 void Robot::TeleopInit(void)
 {	
-	a_Gunnar.loop_start();
+	// a_Gunnar.loop_start();
 }
 
 void Robot::TeleopPeriodic(void)
@@ -228,7 +226,7 @@ void Robot::TeleopPeriodic(void)
 
 	// Stops Vision Data Loop
 	if(a_Controller1.GetRawButton(10)) {
-		a_Gunnar.loop_stop();
+		// a_Gunnar.loop_stop();
 	}
 
 	float angleCounts = FR_SwerveModule.GetAngleRaw();
@@ -268,15 +266,15 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("Hatch Encoder:", a_HatchCollector.GetPositionRaw());
-	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_BeamBreak.GetStatus());
-	frc::SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
-	frc::SmartDashboard::PutNumber("Vision Angle:", a_Gunnar.GetAngle());
+	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_CargoCollector.GetCollectStatus());
+	// frc::SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
+	// frc::SmartDashboard::PutNumber("Vision Angle:", a_Gunnar.GetAngle());
 }
 
 void Robot::AutonomousInit(void)
 {
 	robotState = "Autonomous";
-	a_Gunnar.loop_start();
+	// a_Gunnar.loop_start();
 }
 
 void Robot::AutonomousPeriodic(void)
@@ -339,7 +337,7 @@ void Robot::TestPeriodic(void)
 	frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
-	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_BeamBreak.GetStatus());
+	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_CargoCollector.GetCollectStatus());
 }
 
 
