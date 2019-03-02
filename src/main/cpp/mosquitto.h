@@ -15,10 +15,10 @@ Contributors:
 
 
 
-/*
+*/
+
 #ifndef MOSQUITTO_H
 #define MOSQUITTO_H
-
 #ifdef __cplusplus
 extern "C" {
 #endif

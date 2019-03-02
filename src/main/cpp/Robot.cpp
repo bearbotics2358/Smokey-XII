@@ -94,19 +94,20 @@ void Robot::TeleopPeriodic(void)
 		BR_SwerveModule.ZeroEncoders();
 	}
 
-	if(targetAngle == -999)
-	{
-		targetAngle = a_Gyro.GetAngle(0);
-			if(targetAngle < 0)
-				targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
-			else
-				targetAngle = (int) targetAngle % 360;
-	}
+	
 
 
 	if(a_Joystick1.GetRawButton(2))
 	{
-		a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0));
+		a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
+		if(targetAngle == -999)
+		{
+			targetAngle = a_Gyro.GetAngle(0);
+			if(targetAngle < 0)
+				targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
+			else
+				targetAngle = (int) targetAngle % 360;
+		}
 	}
 	else if(a_Joystick1.GetRawButton(1))
 	{
@@ -117,10 +118,18 @@ void Robot::TeleopPeriodic(void)
 	}
 	else // POSITIVE Z TURNS ROBOT TO THE LEFT
 	{
+		if(targetAngle == -999)
+		{
+			targetAngle = a_Gyro.GetAngle(0);
+			if(targetAngle < 0)
+				targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
+			else
+				targetAngle = (int) targetAngle % 360;
+		}
 		// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
 		// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
 		// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
-		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0));
+		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), true);
 	}	
 
 

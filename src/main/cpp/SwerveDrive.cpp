@@ -380,7 +380,7 @@ void SwerveDrive::SetRobotAngle(float target, float current)
 	MakeshiftRotate(forJason); // TODO: Finish this and test it
 }
 
-void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue)
+void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue, bool fieldOriented)
 {
 	// ------0/360------
 	// |               |   
@@ -420,6 +420,21 @@ void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue)
 	if(radius < DEADZONE)
 		forJason = 0;
 
-	// SwerveRobotOriented(xIn, yIn, -forJason);
-	SwerveDriveUpdate(xIn, yIn, -forJason, gyroValue);
+	if(fieldOriented)
+		SwerveDriveUpdate(xIn, yIn, -forJason, gyroValue);
+	else
+		SwerveRobotOriented(0, yIn, -forJason);
 }
+
+void SwerveDrive::DriveDistanceRaw(float target, float gyroValue)
+{
+	float average = (FL_SwerveModule.GetDistanceIn() + FR_SwerveModule.GetDistanceIn() + BL_SwerveModule.GetDistanceIn() + BR_SwerveModule.GetDistanceIn())/4.0;
+	if(average >= target)
+	{
+		SwerveRobotOriented(0, 0, 0);
+	}
+	else
+	{
+		AngleLock(0, 0.3, 0, gyroValue, false); // Gyro value might matter not sure yet?
+	} // I think it does
+}// Ok it probably does

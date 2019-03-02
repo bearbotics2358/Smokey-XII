@@ -22,7 +22,9 @@ public:
 
 	void MakeshiftRotate(float input);
 	void SetRobotAngle(float target, float current);
-	void AngleLock(float xIn, float yIn, float target, float gyroValue);
+	void AngleLock(float xIn, float yIn, float target, float gyroValue, bool fieldOriented);
+
+	void DriveDistanceRaw(float target, float gyroValue);
 private:
 	float integral;
 	SwerveModule FL_SwerveModule;
