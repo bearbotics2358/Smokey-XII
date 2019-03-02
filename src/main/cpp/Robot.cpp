@@ -95,10 +95,8 @@ void Robot::TeleopPeriodic(void)
 
 	
 
-
-	if(a_Joystick1.GetRawButton(2))
+	if(a_Joystick1.GetRawButton(5))
 	{
-		a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
 		if(targetAngle == -999)
 		{
 			targetAngle = a_Gyro.GetAngle(0);
@@ -107,6 +105,33 @@ void Robot::TeleopPeriodic(void)
 			else
 				targetAngle = (int) targetAngle % 360;
 		}
+		float temp = 0;
+		float dist = a_Follower1.GetPosInches();
+
+		if((abs(dist) < 5) && ((-1.0 * dist > 0.33) || (dist > 0.33)))
+		{
+			temp = a_SwerveDrive.XForCenter(a_Follower1.GetPosInches());
+		}
+
+		frc::SmartDashboard::PutNumber("Virtual X Axis: ", temp);
+
+		if(!(abs(a_Joystick1.GetRawAxis(1)) < DEADZONE))
+		{
+			// a_SwerveDrive.AngleLock(temp, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
+		}
+	}
+	else if(a_Joystick1.GetRawButton(2))
+	{
+		// a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
+		if(targetAngle == -999)
+		{
+			targetAngle = a_Gyro.GetAngle(0);
+			if(targetAngle < 0)
+				targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
+			else
+				targetAngle = (int) targetAngle % 360;
+		}
+		a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
 	}
 	else if(a_Joystick1.GetRawButton(1))
 	{
@@ -243,34 +268,34 @@ void Robot::TeleopPeriodic(void)
 	// voltageOutput3 = FL_SwerveModule.GetVoltageOP(FL_TURN_ID);
 
 
-	frc::SmartDashboard::PutNumber("FR Rotation: ", FR_SwerveModule.GetAngleRaw());
-	frc::SmartDashboard::PutNumber("FL Rotation: ", FL_SwerveModule.GetAngle());
-	frc::SmartDashboard::PutNumber("BR Rotation: ", BR_SwerveModule.GetAngleRaw());
-	frc::SmartDashboard::PutNumber("BL Rotation: ", BL_SwerveModule.GetAngleRaw());
-	frc::SmartDashboard::PutNumber("Distance Encoder: ", distanceCounts);
+	// frc::SmartDashboard::PutNumber("FR Rotation: ", FR_SwerveModule.GetAngleRaw());
+	// frc::SmartDashboard::PutNumber("FL Rotation: ", FL_SwerveModule.GetAngle());
+	// frc::SmartDashboard::PutNumber("BR Rotation: ", BR_SwerveModule.GetAngleRaw());
+	// frc::SmartDashboard::PutNumber("BL Rotation: ", BL_SwerveModule.GetAngleRaw());
+	// frc::SmartDashboard::PutNumber("Distance Encoder: ", distanceCounts);
 	frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
 	frc::SmartDashboard::PutNumber("Distance (In): ", distanceIn);
 	frc::SmartDashboard::PutNumber("Distance (Cm): ", distanceCm);
-	frc::SmartDashboard::PutNumber("Drive Current 1: ", currentOutput1);
+	// frc::SmartDashboard::PutNumber("Drive Current 1: ", currentOutput1);
 	// frc::SmartDashboard::PutNumber("Drive Current 2: ", currentOutput2);
 	// frc::SmartDashboard::PutNumber("Turn Current: ", currentOutput3);
 	// frc::SmartDashboard::PutNumber("Drive Voltage 1: ", voltageOutput1);
 	// frc::SmartDashboard::PutNumber("Drive Voltage 2: ", voltageOutput2);
 	// frc::SmartDashboard::PutNumber("Turn Voltage: ", voltageOutput3);
-	frc::SmartDashboard::PutBoolean("Cruise Control", cruiseControl);
+	// frc::SmartDashboard::PutBoolean("Cruise Control", cruiseControl);
 	// frc::SmartDashboard::PutNumber("Gyro X:", a_Gyro.GetAngle(0));
 	// frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
 	// frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); 
 	frc::SmartDashboard::PutNumber("Gyro Angle:", ((int)(a_Gyro.GetAngle(0) * 100))/100.0); // USE THIS ONE: Clockwise is negative
-	frc::SmartDashboard::PutNumber("BL Drive Encoder:", BL_SwerveModule.GetDistanceRaw());
-	frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
-	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
-	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
+	// frc::SmartDashboard::PutNumber("BL Drive Encoder:", BL_SwerveModule.GetDistanceRaw());
+	// frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
+	// frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
+	// frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("Hatch Encoder:", a_HatchCollector.GetPositionRaw());
 	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_CargoCollector.GetCollectStatus());
 	frc::SmartDashboard::PutBoolean("data?", a_Follower1.IsThereALine());
 	frc::SmartDashboard::PutNumber("the data?", a_Follower1.GetPosInches());
-
+	frc::SmartDashboard::PutNumber("Aarman but with two extra a's", a_Joystick1.GetPOV());
 	// frc::SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
 	// frc::SmartDashboard::PutNumber("Vision Angle:", a_Gunnar.GetAngle());
 }

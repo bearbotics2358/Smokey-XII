@@ -304,6 +304,42 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
 		BR_Angle = BR_SwerveModule.GetAngle();
 		BL_Angle = BL_SwerveModule.GetAngle();
 	}
+
+	float currentFL = FL_SwerveModule.GetAngle(); // Converts angle to +/- 180
+	if(currentFL < 360 && currentFL > 180)
+		currentFL -= 360;
+	else if(currentFL > -360 && currentFL < -180)
+		currentFL += 360;
+
+	float currentFR = FR_SwerveModule.GetAngle(); // Converts angle to +/- 180
+	if(currentFR < 360 && currentFR > 180)
+		currentFR -= 360;
+	else if(currentFR > -360 && currentFR < -180)
+		currentFR += 360;
+
+	float currentBR = BR_SwerveModule.GetAngle(); // Converts angle to +/- 180
+	if(currentBR < 360 && currentBR > 180)
+		currentBR -= 360;
+	else if(currentBR > -360 && currentBR < -180)
+		currentBR += 360;
+
+	float currentBL = BL_SwerveModule.GetAngle(); // Converts angle to +/- 180
+	if(currentBL < 360 && currentBL > 180)
+		currentBL -= 360;
+	else if(currentBL > -360 && currentBL < -180)
+		currentBL += 360;
+	
+	/*
+	if(fabs(FL_SwerveModule.GetAngle() - FL_Angle) >= 90)
+	{
+		if(FL_Angle < 0)
+			FL_Angle += 180;
+		else
+			FL_Angle -= 180;
+		speed * -1;
+	}
+	*/
+
 	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
@@ -423,7 +459,7 @@ void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue,
 	if(fieldOriented)
 		SwerveDriveUpdate(xIn, yIn, -forJason, gyroValue);
 	else
-		SwerveRobotOriented(0, yIn, -forJason);
+		SwerveRobotOriented(xIn, yIn, -forJason);
 }
 
 void SwerveDrive::DriveDistanceRaw(float target, float gyroValue)
@@ -438,3 +474,29 @@ void SwerveDrive::DriveDistanceRaw(float target, float gyroValue)
 		AngleLock(0, 0.3, 0, gyroValue, false); // Gyro value might matter not sure yet?
 	} // I think it does
 }// Ok it probably does
+
+float SwerveDrive::XForCenter(float current)
+{
+	/* FL_SwerveModule.UpdateAnglePID(90);
+	FR_SwerveModule.UpdateAnglePID(90);
+	BL_SwerveModule.UpdateAnglePID(90);
+	BR_SwerveModule.UpdateAnglePID(90);
+
+	float tempAngle = FL_SwerveModule.GetAngle();
+	if(tempAngle < 0)
+		tempAngle = 360 - ((int) (-1 * tempAngle) % 360); // Limits 
+	else
+		tempAngle = (int) tempAngle % 360;
+
+	if(tempAngle - 90 < 5 || tempAngle - 90 > -5)
+	{
+		*/
+	float pGain = 0.6;
+
+	float error = (-current / 5.0); 
+	float outputMax = 0.5;
+	float forJason = outputMax * (pGain * (error)); // P * error + I * intergral + D * derivative
+
+	return forJason;
+}
+

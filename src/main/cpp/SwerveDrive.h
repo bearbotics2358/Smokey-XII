@@ -25,6 +25,7 @@ public:
 	void AngleLock(float xIn, float yIn, float target, float gyroValue, bool fieldOriented);
 
 	void DriveDistanceRaw(float target, float gyroValue);
+	float XForCenter(float current);
 private:
 	float integral;
 	SwerveModule FL_SwerveModule;
