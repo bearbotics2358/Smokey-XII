@@ -15,7 +15,7 @@ BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_SwerveDrive(),
 // a_Gunnar("RIOclient", "localhost", 1183),
-a_Feather(1)
+a_Follower1(1)
 {
 	// (>>'-')>>	
 	a_Gyro.Init();
@@ -82,7 +82,9 @@ void Robot::TeleopPeriodic(void)
 	// unsigned char rxBuf[8];
 	// frc::CANData dataOne;
 	// bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
-
+	a_Follower1.Update();
+	frc::SmartDashboard::PutBoolean("data?", a_Follower1.IsThereALine());
+	frc::SmartDashboard::PutNumber("the data?", a_Follower1.GetPosInches());
 
 	if(a_Joystick1.GetRawButton(3)) // Zero Encoders
 	{
@@ -267,6 +269,9 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
 	frc::SmartDashboard::PutNumber("Hatch Encoder:", a_HatchCollector.GetPositionRaw());
 	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_CargoCollector.GetCollectStatus());
+	frc::SmartDashboard::PutBoolean("data?", a_Follower1.IsThereALine());
+	frc::SmartDashboard::PutNumber("the data?", a_Follower1.GetPosInches());
+
 	// frc::SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
 	// frc::SmartDashboard::PutNumber("Vision Angle:", a_Gunnar.GetAngle());
 }

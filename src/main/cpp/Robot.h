@@ -5,6 +5,7 @@
 #include <HatchCollector.h>
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
+#include <LineFollower.h>
 #include <CAN.h>
 // #include <Gunnar.h>
 
@@ -52,7 +53,7 @@ private:
 	SwerveDrive a_SwerveDrive;
 	CargoCollector a_CargoCollector;
 	HatchCollector a_HatchCollector;
-	frc::CAN a_Feather;
+	LineFollower a_Follower1;
 	// Gunnar a_Gunnar; // vision over MQTT
 
 };

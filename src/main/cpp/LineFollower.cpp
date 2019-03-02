@@ -7,7 +7,7 @@
 
 LineFollower::LineFollower(int x_deviceID):
     deviceID(x_deviceID),
-    a_FeatherCAN(CAN_FOLLOWER | x_deviceID)
+    a_FeatherCAN(x_deviceID)
 {
 	// uint8_t Buff[256];
 	// lastUpdate = 0;
@@ -42,7 +42,12 @@ void LineFollower::Update()
 	frc::CANData data1;
 
 	bool ret = a_FeatherCAN.ReadPacketNew(0, &data1);
-	
+
+	if(ret)
+		printf("a\n");
+	else
+		printf("b\n");
+
 	int i;
 
 	if(ret) {
