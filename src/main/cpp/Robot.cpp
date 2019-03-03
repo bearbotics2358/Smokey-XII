@@ -1,7 +1,7 @@
 #include <frc/WPILib.h> // <WPILib.h> is deprecated
 #include <Prefs.h>
 #include <Robot.h>
-
+// o(╥﹏╥)o
 // (>-.-)>-)====>
 Robot::Robot(void):
 a_Gyro(frc::I2C::kMXP),
