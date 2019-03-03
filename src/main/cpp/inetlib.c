@@ -11,6 +11,8 @@
 
 #include "inetlib.h"
 #include <string.h>
+#include <stdlib.h>
+
 
 u_short portbase = 0;  // port base, for non-root servers
 

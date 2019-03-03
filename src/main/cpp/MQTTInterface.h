@@ -24,18 +24,15 @@ class MQTTInterface
 		float GetAngle();
 	
 	private:
-		void cleanup(void)
+		void cleanup(void);
 		void Init();
 		void Update();
 		void VisionMessageFilter(char* topic, char* msg);
 		void tcpReceived(char * smsg);
 		void bot2tcp(char *topic, char *msg);
 		void SignalHandler(int signum);
-		void PrintSocketInfo(void);
-		void CloseSocket(struct sock_info *psi);
-		void ClearSocket(struct sock_info *psi);
 		void PutString(char *s);
-		int GetString(int insock, char *s, int maxlen);
+		int GetString(int insock);
 
 	private:
 		float targetDistance = 0;

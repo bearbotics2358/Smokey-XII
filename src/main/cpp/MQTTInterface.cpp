@@ -21,7 +21,6 @@
 #include <fcntl.h> // fcntl
 #include <limits.h> // INT_MAX
 #include "inetlib.h"
-#include "mqtt_bridge.h"
 
 /* mqtt_bridge - bridge between a TCP hub server and an MQTT broker
 
@@ -48,7 +47,7 @@
 
 
 
-int GetString(int insock)
+int MQTTInterface::GetString(int insock)
 {
 	// returns true for a good character read, otherwise return false
 	// Really dumb, look at calling loop for full functionality
@@ -60,6 +59,7 @@ int GetString(int insock)
 	// printf("waiting to read ...");
 	numread = read(insock, &c, 1);
 	// printf("(%2.2X) %c\n", c, c);
+
 
 	if(numread < 0) {
 		printf("error reading from input socket: %d\n", numread);
@@ -81,7 +81,7 @@ int GetString(int insock)
 	return fGood;
 }
 
-void PutString(char *s)
+void MQTTInterface::PutString(char *s)
 {
 	int i, j;
 	char sout[MAXLEN + 2];
@@ -104,42 +104,15 @@ void PutString(char *s)
 	}
 }
 
-void ClearSocket(struct sock_info *psi)
-{
-	bzero(psi, sizeof(struct sock_info));
-}
 
-void CloseSocket(struct sock_info *psi)
-{
-	close(psi->sock);
-	ClearSocket(psi);
-}
-
-void PrintSocketInfo(void)
-{
-	int i;
-
-	printf("#\tsock\tage\tdest\n");
-	for(i = 0; i < MAX_BROWSERS; i++) {
-		printf("%d\t%d\t%d\t%s (0x%8.8X)\n", 
-					 i, 
-					 outsocks[i].sock, 
-					 outsocks[i].age, 
-					 inet_ntoa(outsocks[i].far_addr.sin_addr), 
-					 outsocks[i].far_addr.sin_addr.s_addr
-					 );
-	}
-}
-
-void SignalHandler(int signum)
+void MQTTInterface::SignalHandler(int signum)
 {
 	printf("Caught signal %d\n", signum);
-	PrintSocketInfo();
 	fflush(stdout);
 }
 
 // Build string based on MQTT message and send to TCP client
-void bot2tcp(char *topic, char *msg)
+void MQTTInterface::bot2tcp(char *topic, char *msg)
 {
 	char s1[255];
 
@@ -150,7 +123,7 @@ void bot2tcp(char *topic, char *msg)
 }
 
 // Parse string into topic and msg and sent to mqtt broker
-void tcpReceived(char * smsg)
+void MQTTInterface::tcpReceived(char * smsg)
 {
 	char topic[255];
 	char msg[255];
@@ -169,7 +142,7 @@ void tcpReceived(char * smsg)
 
 }
 
-void VisionMessageFilter(char* topic, char* msg) 
+void MQTTInterface::VisionMessageFilter(char* topic, char* msg) 
 {
 	char buf[255];
 
@@ -186,7 +159,7 @@ void VisionMessageFilter(char* topic, char* msg)
 	}
 }
 
-void cleanup(void)
+void MQTTInterface::cleanup(void)
 {	
 	if(sock) {
 		close(sock);
@@ -218,10 +191,12 @@ void MQTTInterface::Init()
 		rxbuf[i] = 0;
 	}
 
-	atexit(cleanup);
+	/* 
+	// We pray we never need this
+	// atexit(cleanup);
 
-	signal(SIGINT, handle_signal);
-	signal(SIGTERM, handle_signal);
+	// signal(SIGINT, handle_signal);
+	// signal(SIGTERM, handle_signal);
 
 	if(signal(SIGPIPE, &SignalHandler) == SIG_ERR) {
 		printf("Couldn't register signal handler for SIGPIPE\n");
@@ -231,6 +206,7 @@ void MQTTInterface::Init()
 		printf("Couldn't register signal handler for SIGHUP\n");
 	}
 
+	*/
 
 	// initialize socket so that cleanup() can determine if they are assigned
 	sock = 0;

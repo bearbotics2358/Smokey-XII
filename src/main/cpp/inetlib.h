@@ -16,6 +16,7 @@
 #include <errno.h>
 
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 // following lines not needed, in <netinet/in.h>
 // #ifndef INADDR_NONE
