@@ -48,39 +48,37 @@
 
 
 
-int GetString(int insock, char *s, int maxlen)
+int GetString(int insock)
 {
-	// return string in s without CRLF, number of characters in string
-	// as return value;
-	int totread = 0;
+	// returns true for a good character read, otherwise return false
+	// Really dumb, look at calling loop for full functionality
 	int numread;
-	int ret;
 	char c;
 	int fGood = false;
-	char *ps = s;
 
-	while(totread < maxlen) {
-		// printf("waiting to read ...");
-		numread = read(insock, &c, 1);
-		// printf("(%2.2X) %c\n", c, c);
-		if(numread < 0) {
-			printf("error reading from input socket: %d\n", numread);
-			break;
-		}
+	
+	// printf("waiting to read ...");
+	numread = read(insock, &c, 1);
+	// printf("(%2.2X) %c\n", c, c);
+
+	if(numread < 0) {
+		printf("error reading from input socket: %d\n", numread);
+	} else {
+		// Ok, read a character
 		if((c == CR) || (c == LF)) {
 			fGood = true;
-			break;
+		} else {
+			// Good character
+			rxbuf[rxbuf_index] = c;
+			rxbuf_index++;
+			// Need to ensure buffer does not overflow (which shouldnt happen anyway, but oh well)
+			if(rxbuf_index >= RXBUF_MAX) {
+				rxbuf_index = RXBUF_MAX - 1;
+			}
 		}
-		*ps++ = c;
-		totread++;
 	}
-	if(!fGood) {
-		// clear string & report error
-		ps = s;
-		totread = -1;
-	}
-	*ps = 0;
-	return totread;
+
+	return fGood;
 }
 
 void PutString(char *s)
@@ -152,7 +150,7 @@ void bot2tcp(char *topic, char *msg)
 }
 
 // Parse string into topic and msg and sent to mqtt broker
-void tcpRecieved(char * smsg)
+void tcpReceived(char * smsg)
 {
 	char topic[255];
 	char msg[255];
@@ -214,6 +212,12 @@ void MQTTInterface::Init()
 	clientport = DEFAULT_PORT;
 	char stemp[256];
 
+	// Clear out buffers
+	rxbuf_index = 0;
+	for(int i = 0; i < RXBUF_MAX; i++) {
+		rxbuf[i] = 0;
+	}
+
 	atexit(cleanup);
 
 	signal(SIGINT, handle_signal);
@@ -273,33 +277,36 @@ void MQTTInterface::Update()
 
 	FD_ZERO(&orig_fdset);
 	FD_SET(sock, &orig_fdset);
+	while(1) {
 
-	/* Restore watch set as appropriate. */
-	bcopy(&orig_fdset, &fdset, sizeof(orig_fdset));
 
-	// need to sleep sometime, so just set timeout to 100 usec
-	timeout.tv_sec = 0;
-	timeout.tv_usec = 100;
-	ret = select(nfds, &fdset, NULL, NULL, &timeout);
-	if(ret != 0) {
-		printf("select returned %d\n", ret);
-	}
-	if(ret > 0) {
-		// process input from TCP connection
-		
-		if(sock && FD_ISSET(sock, &fdset)) {
-			printf("Client has data - fd: %d\n", sock);
-			if((ret = GetString(sock, scmd, MAXLEN)) >= 0) {
-				if(ret > 0) {
-					// Parse and send to MQTT broker
-					tcp2mqtt(scmd);
-				}
-			} else {
-				printf("GetString() returned (%d) < 0\n", ret);
-			}
+		/* Restore watch set as appropriate. */
+		bcopy(&orig_fdset, &fdset, sizeof(orig_fdset));
+
+		// need to sleep sometime, so just set timeout to 100 usec
+		timeout.tv_sec = 0;
+		timeout.tv_usec = 100;
+		ret = select(nfds, &fdset, NULL, NULL, &timeout);
+		if(ret != 0) {
+			printf("select returned %d\n", ret);
 		}
-	}		
+		if(ret > 0) {
+			// process input from TCP connection
+			if(sock && FD_ISSET(sock, &fdset)) {
+				printf("Client has data - fd: %d\n", sock);
+				ret = GetString(sock);
+				// Did we find a full message?
+				if(ret && (rxbuf_index > 0)) {
+					// Parse and interpret message from MQTT Bridge
+					tcpReceived(scmd);
+					// Finished message, reset buffer for next message
+					rxbuf_index = 0;
+				} 
+			}
+		}	
 
+
+	}
 } 
 
 float MQTTInterface::GetDistance()

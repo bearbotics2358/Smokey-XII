@@ -12,7 +12,7 @@
 
 #define MAXLEN 255
 
-
+#define RXBUF_MAX 1024
 
 class MQTTInterface
 {
@@ -28,7 +28,7 @@ class MQTTInterface
 		void Init();
 		void Update();
 		void VisionMessageFilter(char* topic, char* msg);
-		void tcpRecieved(char * smsg);
+		void tcpReceived(char * smsg);
 		void bot2tcp(char *topic, char *msg);
 		void SignalHandler(int signum);
 		void PrintSocketInfo(void);
@@ -43,6 +43,9 @@ class MQTTInterface
 		// sockets are global so cleanup can close them
 		int sock; // socket for communicating with mqtt bridge
 		int clientport;
+		char rxbuf[RXBUF_MAX];
+		int rxbuf_index;
+
 };
 
 
