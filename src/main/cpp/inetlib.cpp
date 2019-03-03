@@ -13,6 +13,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+extern "C" {
+
 
 u_short portbase = 0;  // port base, for non-root servers
 
@@ -218,5 +220,5 @@ int passiveUDP (char *service)
 	return passivesock(service, "udp", 0);
 }
 
-
+}
 
