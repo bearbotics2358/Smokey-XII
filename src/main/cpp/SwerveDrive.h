@@ -27,6 +27,7 @@ public:
 	void DriveDistanceRaw(float target, float gyroValue);
 	float XForCenter(float current);
 private:
+	bool NeedsAngOpt(float current, float target);
 	float integral;
 	SwerveModule FL_SwerveModule;
 	SwerveModule FR_SwerveModule;

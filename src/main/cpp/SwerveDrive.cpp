@@ -207,6 +207,44 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
     BR_Speed *= scalar;
     BL_Speed *= scalar;
 
+	float currentFL = FL_SwerveModule.GetAngle(); 
+	float currentFR = FR_SwerveModule.GetAngle();
+	float currentBR = BR_SwerveModule.GetAngle(); 
+	float currentBL = BL_SwerveModule.GetAngle();
+
+	if(NeedsAngOpt(currentFL, FL_Angle))
+	{
+		if(FL_Angle < 0)
+			FL_Angle += 180;
+		else
+			FL_Angle -= 180;
+		FL_Speed *= -1;
+	}
+	if(NeedsAngOpt(currentFR, FR_Angle))
+	{
+		if(FR_Angle < 0)
+			FR_Angle += 180;
+		else
+			FR_Angle -= 180;
+		FR_Speed *= -1;
+	}
+	if(NeedsAngOpt(currentBR, BR_Angle))
+	{
+		if(BR_Angle < 0)
+			BR_Angle += 180;
+		else
+			BR_Angle -= 180;
+		BR_Speed *= -1;
+	}
+	if(NeedsAngOpt(currentBL, BL_Angle))
+	{
+		if(BL_Angle < 0)
+			BL_Angle += 180;
+		else
+			BL_Angle -= 180;
+		BL_Speed *= -1;
+	}
+
 	if(inDeadzone && zIn == 0)
 	{
 		FR_Speed = 0;
@@ -292,6 +330,44 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
     BR_Speed *= scalar;
     BL_Speed *= scalar;
 
+	float currentFL = FL_SwerveModule.GetAngle(); 
+	float currentFR = FR_SwerveModule.GetAngle();
+	float currentBR = BR_SwerveModule.GetAngle(); 
+	float currentBL = BL_SwerveModule.GetAngle();
+
+	if(NeedsAngOpt(currentFL, FL_Angle))
+	{
+		if(FL_Angle < 0)
+			FL_Angle += 180;
+		else
+			FL_Angle -= 180;
+		FL_Speed *= -1;
+	}
+	if(NeedsAngOpt(currentFR, FR_Angle))
+	{
+		if(FR_Angle < 0)
+			FR_Angle += 180;
+		else
+			FR_Angle -= 180;
+		FR_Speed *= -1;
+	}
+	if(NeedsAngOpt(currentBR, BR_Angle))
+	{
+		if(BR_Angle < 0)
+			BR_Angle += 180;
+		else
+			BR_Angle -= 180;
+		BR_Speed *= -1;
+	}
+	if(NeedsAngOpt(currentBL, BL_Angle))
+	{
+		if(BL_Angle < 0)
+			BL_Angle += 180;
+		else
+			BL_Angle -= 180;
+		BL_Speed *= -1;
+	}
+
 	if(inDeadzone && zIn == 0)
 	{
 		FR_Speed = 0;
@@ -305,52 +381,7 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
 		BL_Angle = BL_SwerveModule.GetAngle();
 	}
 
-	float currentFL = FL_SwerveModule.GetAngle(); // Converts angle to +/- 180
-	if(currentFL < 360 && currentFL > 180)
-		currentFL -= 360;
-	else if(currentFL > -360 && currentFL < -180)
-		currentFL += 360;
 
-	float currentFR = FR_SwerveModule.GetAngle(); // Converts angle to +/- 180
-	if(currentFR < 360 && currentFR > 180)
-		currentFR -= 360;
-	else if(currentFR > -360 && currentFR < -180)
-		currentFR += 360;
-
-	float currentBR = BR_SwerveModule.GetAngle(); // Converts angle to +/- 180
-	if(currentBR < 360 && currentBR > 180)
-		currentBR -= 360;
-	else if(currentBR > -360 && currentBR < -180)
-		currentBR += 360;
-
-	float currentBL = BL_SwerveModule.GetAngle(); // Converts angle to +/- 180
-	if(currentBL < 360 && currentBL > 180)
-		currentBL -= 360;
-	else if(currentBL > -360 && currentBL < -180)
-		currentBL += 360;
-	
-	//           0
-	// 
-	// 90                -90
-	//	       
-	//       180 or -180
-
-	
-	if(fabs(currentFL) < 90 && fabs(FL_Angle) < 90)
-	{
-		if(fabs(currentFL - FL_Angle) > 90)
-		{
-			// reverse motor code
-		}
-	}
-		/*
-		if(FL_Angle < 0)
-			FL_Angle += 180;
-		else
-			FL_Angle -= 180;
-		FL_Speed *= -1;
-		*/
-	
 	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
@@ -511,3 +542,60 @@ float SwerveDrive::XForCenter(float current)
 	return forJason;
 }
 
+bool SwerveDrive::NeedsAngOpt(float current, float target)
+{
+	float currentFL = current;
+	float FL_Angle = target;
+	if(currentFL < 360 && currentFL > 180)
+		currentFL -= 360;
+	else if(currentFL > -360 && currentFL < -180)
+		currentFL += 360;
+
+	
+	//           0
+	// 
+	// 90                -90
+	//	       
+	//       180 or -180
+
+	
+	if(fabs(currentFL) < 90 && fabs(FL_Angle) < 90)
+	{
+		if(fabs(currentFL - FL_Angle) > 90)
+		{
+			return true;
+		}
+	}
+	else if((fabs(currentFL) >= 90 && fabs(FL_Angle) < 90) || (fabs(FL_Angle) >= 90 && fabs(currentFL) < 90))
+	{
+		if(fabs(currentFL - FL_Angle) > 90)
+		{
+			return true;
+		}
+	}
+	else
+	{
+		if(currentFL < 0 && FL_Angle > 0)
+		{
+			if(fabs((360 + currentFL) - FL_Angle) > 90)
+			{
+				return true;
+			}
+		} 
+		else if(currentFL > 0 && FL_Angle < 0)
+		{
+			if(fabs((360 + FL_Angle) - currentFL) > 90)
+			{
+				return true;
+			}
+		}
+	}
+		/*
+		if(FL_Angle < 0)
+			FL_Angle += 180;
+		else
+			FL_Angle -= 180;
+		FL_Speed *= -1;
+		*/
+	return false;
+}
