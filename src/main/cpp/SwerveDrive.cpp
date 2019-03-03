@@ -329,17 +329,28 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
 	else if(currentBL > -360 && currentBL < -180)
 		currentBL += 360;
 	
-	/*
-	if(fabs(FL_SwerveModule.GetAngle() - FL_Angle) >= 90)
+	//           0
+	// 
+	// 90                -90
+	//	       
+	//       180 or -180
+
+	
+	if(fabs(currentFL) < 90 && fabs(FL_Angle) < 90)
 	{
+		if(fabs(currentFL - FL_Angle) > 90)
+		{
+			// reverse motor code
+		}
+	}
+		/*
 		if(FL_Angle < 0)
 			FL_Angle += 180;
 		else
 			FL_Angle -= 180;
-		speed * -1;
-	}
-	*/
-
+		FL_Speed *= -1;
+		*/
+	
 	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
