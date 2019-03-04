@@ -5,25 +5,25 @@
 
 
 Climber::Climber():
-a_VertiMotor(VERTI_ID),
-a_HoriMotor(HORI_ID)
+a_VertiMotor(VERTI_ID)
+// a_HoriMotor(HORI_ID)
 
 {
     a_VertiMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Relative, 0, 0);
 
-    a_HoriMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Relative, 0, 0);
+   // a_HoriMotor.ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Relative, 0, 0);
 
 }
 
-void Climber::Lift(int val){
+void Climber::Lift(float val){
 
-a_VertiMotor.Set(ControlMode::PercentOutput, val);
+a_VertiMotor.Set(val);
 
 }
 
-void Climber::Forward(int val){
+void Climber::Forward(float val){
 
-a_HoriMotor.Set(ControlMode::PercentOutput, val);
+// a_HoriMotor.Set(ControlMode::PercentOutput, val);
 
 }
 
@@ -35,7 +35,7 @@ a_VertiMotor.Set(ControlMode::Position, LIFTER_UP_POS);
 
 void Climber::ForwardAuto(void){
 
-a_HoriMotor.Set(ControlMode::Position, LIFTER_FORWARD_POS);
+// a_HoriMotor.Set(ControlMode::Position, LIFTER_FORWARD_POS);
 
 }
 
@@ -47,16 +47,15 @@ a_VertiMotor.Set(ControlMode::Position, LIFTER_FINAl_POS);
 
 float Climber::GetPositionRaw(int motor){
 
-float ret;
+float ret = 0;
 if(motor == HORI_ID){
-ret = a_HoriMotor.GetSelectedSensorPosition(0);
+// ret = a_HoriMotor.GetSelectedSensorPosition(0);
 }
 else if(motor == VERTI_ID)
 {
 ret = a_VertiMotor.GetSelectedSensorPosition(0);
 }
-else{
-}
+
 
 return ret;
 

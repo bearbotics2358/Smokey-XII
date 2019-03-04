@@ -9,8 +9,8 @@ class Climber
 { 
 public:
     Climber(void);
-    void Lift(int val);     // ONLY FOR TESTING
-    void Forward(int val);  // ONCE VALUES ARE FINALIZED THEN USE THE AUTO METHODS PLZ
+    void Lift(float val);     // ONLY FOR TESTING
+    void Forward(float val);  // ONCE VALUES ARE FINALIZED THEN USE THE AUTO METHODS PLZ
     void LiftAuto(void);
     void ForwardAuto(void);
     void EndLiftAuto(void);
@@ -21,7 +21,7 @@ public:
 private:
 
 WPI_TalonSRX a_VertiMotor;
-WPI_TalonSRX a_HoriMotor;
+// WPI_TalonSRX a_HoriMotor;
 
 
 };

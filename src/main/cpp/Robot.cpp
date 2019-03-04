@@ -14,6 +14,7 @@ FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
 BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_SwerveDrive(),
+a_Climber(),
 // a_Gunnar("RIOclient", "localhost", 1183),
 a_Follower1(1)
 {
@@ -117,7 +118,7 @@ void Robot::TeleopPeriodic(void)
 
 		if(!(abs(a_Joystick1.GetRawAxis(1)) < DEADZONE))
 		{
-			// a_SwerveDrive.AngleLock(temp, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
+			a_SwerveDrive.AngleLock(temp, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
 		}
 	}
 	else if(a_Joystick1.GetRawButton(2))
@@ -235,6 +236,19 @@ void Robot::TeleopPeriodic(void)
 		a_HatchCollector.UpdateAngle(HATCH_POS_MID);
 	}
 	
+
+	float ClimberScalar = 0.6;
+
+	if(a_Controller1.GetRawButton(7))
+	{
+		a_Climber.Lift(ClimberScalar * a_Controller1.GetRawAxis(1));
+	}
+	else
+	{
+		a_Climber.Lift(0);
+	}
+
+
 	/*
 	if(a_Controller1.GetRawButton(5))
 	{
@@ -250,10 +264,7 @@ void Robot::TeleopPeriodic(void)
 	
 	// a_HatchCollector.UpdateRaw(crabbySpeed * a_Controller1.GetRawAxis(1));
 
-	// Stops Vision Data Loop
-	if(a_Controller1.GetRawButton(10)) {
-		// a_Gunnar.loop_stop();
-	}
+
 
 	float angleCounts = FR_SwerveModule.GetAngleRaw();
 	float distanceCounts = FL_SwerveModule.GetDistanceRaw();
