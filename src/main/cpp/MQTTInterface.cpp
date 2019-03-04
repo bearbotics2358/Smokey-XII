@@ -253,9 +253,8 @@ void MQTTInterface::Update()
 
 	FD_ZERO(&orig_fdset);
 	FD_SET(sock, &orig_fdset);
-	while(1) {
-
-
+	ret = 0;
+	while(!ret) {
 		/* Restore watch set as appropriate. */
 		bcopy(&orig_fdset, &fdset, sizeof(orig_fdset));
 
@@ -274,7 +273,7 @@ void MQTTInterface::Update()
 				// Did we find a full message?
 				if(ret && (rxbuf_index > 0)) {
 					// Parse and interpret message from MQTT Bridge
-					tcpReceived(scmd);
+					tcpReceived(rxbuf);
 					// Finished message, reset buffer for next message
 					rxbuf_index = 0;
 				} 
