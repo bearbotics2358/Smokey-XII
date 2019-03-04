@@ -22,6 +22,12 @@ class MQTTInterface
 
 		float GetDistance();
 		float GetAngle();
+		void ClawVision();
+		void ClawViewing();
+		void ClawOff();
+		void CargoVision();
+		void CargoViewing();
+		void CargoOff();
 	
 	private:
 		void cleanup(void);

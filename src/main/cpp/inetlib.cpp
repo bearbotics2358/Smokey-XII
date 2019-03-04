@@ -86,8 +86,11 @@ int connectsock (char *host, char *service, char *protocol)
 	// Allocate a socket
 	s = socket(PF_INET, type, ppe->p_proto);
 	if(s < 0)
-		errexit("can't create socket: %s\n", strerror(errno));
-
+	{
+		printf("can't create socket: %s\n", strerror(errno));
+		close(s);
+		
+	}
 	// Connect the socket
 	if(connect(s, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
 		printf("can't connect to %s.%s: %s\n", host, service, strerror(errno));

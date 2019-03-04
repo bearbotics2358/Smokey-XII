@@ -167,6 +167,30 @@ void MQTTInterface::cleanup(void)
 	}
 }
 
+void MQTTInterface::ClawVision()
+{
+	bot2tcp("/camera/controls/claw/", "vision");
+}
+void MQTTInterface::ClawViewing()
+{ 
+	bot2tcp("/camera/controls/claw/", "view");
+}
+void MQTTInterface::ClawOff()
+{
+	bot2tcp("/camera/controls/claw/", "off");
+}
+void MQTTInterface::CargoVision()
+{
+	bot2tcp("/camera/controls/cargo/", "vision");
+}
+void MQTTInterface::CargoViewing()
+{
+	bot2tcp("/camera/controls/cargo/", "view");
+}
+void MQTTInterface::CargoOff() 
+{
+	bot2tcp("/camera/controls/cargo/", "off");
+}
 
 
 MQTTInterface::MQTTInterface(const char *host, int port)
