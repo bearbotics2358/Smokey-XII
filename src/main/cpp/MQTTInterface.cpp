@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <stdlib.h> // random(), exit
 #include <errno.h>
+#include <Prefs.h>
 
 #include <sys/select.h>
 #include <sys/socket.h>

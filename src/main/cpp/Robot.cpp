@@ -15,6 +15,7 @@ BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_SwerveDrive(),
 a_Climber(),
+a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
 a_Follower1(1)
 {
@@ -28,6 +29,8 @@ a_Follower1(1)
 	driveSpeed = 0;
 	rotationSpeed = 0;
 	targetAngle = -999;
+	clawCamCirco = 1;
+	cargoCamCirco = 0;
 	frc::SmartDashboard::init();
 }
 
@@ -39,6 +42,9 @@ void Robot::RobotInit(void)
 	BL_SwerveModule.ZeroEncoders();
 	BR_SwerveModule.ZeroEncoders();
 	*/
+
+	a_Interface.CargoOff();
+	a_Interface.ClawViewing();
 
 	FL_SwerveModule.SetTurnPID(0.9, 0, 1);
 	FL_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
@@ -203,7 +209,7 @@ void Robot::TeleopPeriodic(void)
 		a_CargoCollector.CargoAbort();
 	}
 
-	float crabbySpeed = 0.3;
+	float crabbySpeed = 0.5;
 
 	if(a_Controller1.GetRawAxis(3) == 0)
 	{
@@ -249,6 +255,58 @@ void Robot::TeleopPeriodic(void)
 	}
 
 
+
+	if(a_Joystick1.GetRawButton(7))
+	{
+		if(clawCamCirco != 2)
+		{
+			clawCamCirco = 2;
+			a_Interface.ClawViewing();
+		}
+	}
+	if(a_Joystick1.GetRawButton(8))
+	{
+		if(cargoCamCirco != 2)
+		{
+			cargoCamCirco = 2;
+			a_Interface.CargoViewing();
+		}	
+	}
+	if(a_Joystick1.GetRawButton(9))
+	{
+		if(clawCamCirco != 1)
+		{
+			clawCamCirco = 1;
+			a_Interface.ClawVision();
+		}
+	}
+	if(a_Joystick1.GetRawButton(10))
+	{
+		if(cargoCamCirco != 1)
+		{
+			cargoCamCirco = 1;
+			a_Interface.CargoVision();
+		}	
+	}
+	if(a_Joystick1.GetRawButton(11))
+	{
+		if(clawCamCirco != 0)
+		{
+			clawCamCirco = 0;
+			a_Interface.ClawOff();
+		}
+	}
+	if(a_Joystick1.GetRawButton(12))
+	{
+		if(cargoCamCirco != 0)
+		{
+			cargoCamCirco = 0;
+			a_Interface.CargoOff();
+		}
+		
+	}
+
+
 	/*
 	if(a_Controller1.GetRawButton(5))
 	{
@@ -260,7 +318,7 @@ void Robot::TeleopPeriodic(void)
 		a_HatchCollector.UpdateAngle(HATCH_POS_MAX);
 	}
 	*/
-	// hello -Jawad
+	// hello - Jawad
 	
 	// a_HatchCollector.UpdateRaw(crabbySpeed * a_Controller1.GetRawAxis(1));
 
@@ -302,13 +360,15 @@ void Robot::TeleopPeriodic(void)
 	// frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
 	// frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
 	// frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("hatch camera", clawCamCirco);
+	frc::SmartDashboard::PutNumber("cargo camera", cargoCamCirco);
 	frc::SmartDashboard::PutNumber("Hatch Encoder:", a_HatchCollector.GetPositionRaw());
 	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_CargoCollector.GetCollectStatus());
 	frc::SmartDashboard::PutBoolean("data?", a_Follower1.IsThereALine());
 	frc::SmartDashboard::PutNumber("the data?", a_Follower1.GetPosInches());
 	frc::SmartDashboard::PutNumber("Aarman but with two extra a's", a_Joystick1.GetPOV());
-	// frc::SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
-	// frc::SmartDashboard::PutNumber("Vision Angle:", a_Gunnar.GetAngle());
+	frc::SmartDashboard::PutNumber("Vision Distance:", a_Interface.GetDistance());
+	frc::SmartDashboard::PutNumber("Vision Angle:", a_Interface.GetAngle());
 }
 
 void Robot::AutonomousInit(void)

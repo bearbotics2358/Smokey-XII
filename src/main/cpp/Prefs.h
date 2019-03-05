@@ -24,6 +24,12 @@
 #define HORI_ID 6
 
 
+// Vision
+#define bridge_host "10.23.58.26"
+#define DEFAULT_PORT 9122
+#define bridge_port DEFAULT_PORT
+
+
 
 #define COLLECT_SPEED -0.5
 // Will change with testing

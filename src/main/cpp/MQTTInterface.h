@@ -3,9 +3,7 @@
 #define SRC_MQTTINTERFACE_H_
 
 // for mqtt bridge
-#define bridge_host "localhost"
-#define DEFAULT_PORT 9122
-#define bridge_port DEFAUT_PORT
+
 
 #define CR 0x0d
 #define LF 0x0a

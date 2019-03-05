@@ -7,6 +7,7 @@
 #include <JrimmyGyro.h>
 #include <LineFollower.h>
 #include <Climber.h>
+#include <MQTTInterface.h>
 #include <CAN.h>
 // #include <Gunnar.h>
 
@@ -43,6 +44,8 @@ private:
 	float driveSpeed;
 	float rotationSpeed;
 	float targetAngle;
+	int clawCamCirco;
+	int cargoCamCirco;
 
 	JrimmyGyro a_Gyro;
 	frc::Joystick a_Joystick1;
@@ -55,8 +58,8 @@ private:
 	CargoCollector a_CargoCollector;
 	HatchCollector a_HatchCollector;
 	LineFollower a_Follower1;
-	Climber a_Climber;
-	// Gunnar a_Gunnar; // vision over MQTT
+	Climber a_Climber;	
+	MQTTInterface a_Interface;
 
 };
 
