@@ -19,7 +19,10 @@ a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
 a_Follower1(1)
 {
-	// (>>'-')>>	
+	// (>>'-')>> (Runs MQTT Broker on the RoboRio)
+	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background!
+	int q = system(commandString);
+	printf("The number is: %d", q);
 	a_Gyro.Init();
 	cruiseControl = false;
 	crabToggle = false;
@@ -28,7 +31,7 @@ a_Follower1(1)
 	cargoDirection = true;
 	driveSpeed = 0;
 	rotationSpeed = 0;
-	targetAngle = -999;
+	targetAngle = 0;
 	clawCamCirco = 1;
 	cargoCamCirco = 0;
 	frc::SmartDashboard::init();
@@ -42,6 +45,8 @@ void Robot::RobotInit(void)
 	BL_SwerveModule.ZeroEncoders();
 	BR_SwerveModule.ZeroEncoders();
 	*/
+
+	a_Interface.Init();
 
 	a_Interface.CargoOff();
 	a_Interface.ClawViewing();
@@ -65,6 +70,7 @@ void Robot::RobotInit(void)
 void Robot::RobotPeriodic(void)
 {
 	a_Gyro.Update();
+	
 }
 
 void Robot::DisabledInit(void)
@@ -85,21 +91,13 @@ void Robot::TeleopInit(void)
 void Robot::TeleopPeriodic(void)
 {
 	robotState = "Teleoperated";
+	if(a_Joystick1.GetRawButton(3))
+		a_Interface.Update();
 
 	// unsigned char rxBuf[8];
 	// frc::CANData dataOne;
 	// bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
 	a_Follower1.Update();
-
-
-	if(a_Joystick1.GetRawButton(3)) // Zero Encoders
-	{
-		FL_SwerveModule.ZeroEncoders();
-		FR_SwerveModule.ZeroEncoders();
-		BL_SwerveModule.ZeroEncoders();
-		BR_SwerveModule.ZeroEncoders();
-	}
-
 	
 
 	if(a_Joystick1.GetRawButton(5))
@@ -174,7 +172,8 @@ void Robot::TeleopPeriodic(void)
 	{
 		cargoDirection = false;
 	}
-	else if(a_Controller1.GetRawButton(4))
+	else if(a_Controller1.GetRawButton(4
+	))
 	{
 		cargoDirection = true;
 	}
@@ -379,7 +378,7 @@ void Robot::AutonomousInit(void)
 
 void Robot::AutonomousPeriodic(void)
 {
-
+	TeleopPeriodic();
 }
 
 void Robot::TestInit(void)

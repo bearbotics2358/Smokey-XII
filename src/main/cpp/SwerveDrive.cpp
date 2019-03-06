@@ -489,7 +489,7 @@ void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue,
 			target -=360;
 		}
 	}
-	float error = (current - target) / 360.0; // Positive should be counter-clockwise
+	float error = (current - target) / 180; // Positive should be counter-clockwise
 	integral += (error * 0.02);
 	float outputMax = 0.75;
 	float forJason = outputMax * (pGain * (error) + (iGain * integral)); // P * error + I * intergral + D * derivative

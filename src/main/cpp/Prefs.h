@@ -26,7 +26,7 @@
 
 // Vision
 #define bridge_host "10.23.58.26"
-#define DEFAULT_PORT 9122
+#define DEFAULT_PORT 1185
 #define bridge_port DEFAULT_PORT
 
 

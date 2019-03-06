@@ -100,11 +100,11 @@ void LineFollower::decodeLineFollowerMsg()
   printf("pos (as sent): %d\n", i16);
 
   fpos = (i16 * 8.0)/25.4; // convert to inches - 8mm per sensor
-  printf("pos (inches): %6.2f", fpos);
+  // printf("pos (inches): %6.2f", fpos);
 
   // decode time of flight distance
   tof_distance = (rxBuf[6] << 8) | rxBuf[7];
-  printf("tof_distance: %d\n", tof_distance);
+  // printf("tof_distance: %d\n", tof_distance);
 }
 
 bool LineFollower::IsThereALine()

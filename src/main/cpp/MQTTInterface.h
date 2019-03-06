@@ -26,11 +26,11 @@ class MQTTInterface
 		void CargoVision();
 		void CargoViewing();
 		void CargoOff();
+		void Init();
+		void Update();
 	
 	private:
 		void cleanup(void);
-		void Init();
-		void Update();
 		void VisionMessageFilter(char* topic, char* msg);
 		void tcpReceived(char * smsg);
 		void bot2tcp(char *topic, char *msg);
