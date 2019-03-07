@@ -2,6 +2,9 @@
 #ifndef SRC_MQTTINTERFACE_H_
 #define SRC_MQTTINTERFACE_H_
 
+#include <sys/time.h>
+#include "inetlib.h"
+
 // for mqtt bridge
 
 
@@ -30,23 +33,26 @@ class MQTTInterface
 		void Update();
 	
 	private:
+		double gettime_d();
 		void cleanup(void);
 		void VisionMessageFilter(char* topic, char* msg);
 		void tcpReceived(char * smsg);
 		void bot2tcp(char *topic, char *msg);
 		void SignalHandler(int signum);
 		void PutString(char *s);
-		int GetString(int insock);
+		int GetString();
 
 	private:
 		float targetDistance = 0;
 		float targetAngle = 0;
 		// sockets are global so cleanup can close them
-		int sock; // socket for communicating with mqtt bridge
+		struct sock_info sock; // socket for communicating with mqtt bridge
 		int clientport;
 		char rxbuf[RXBUF_MAX];
 		int rxbuf_index;
-
+		double t0;
+		double tnow;
+		
 };
 
 
