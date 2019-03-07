@@ -21,7 +21,6 @@
 #include <arpa/inet.h> // inet_ntoa
 #include <fcntl.h> // fcntl
 #include <limits.h> // INT_MAX
-#include "inetlib.h"
 
 /* mqtt_bridge - bridge between a TCP hub server and an MQTT broker
 
@@ -46,9 +45,21 @@
 
 
 
+double MQTTInterface::gettime_d(){
+	// return time in seconds as a double
+	double t0;
+	struct timeval tv0;
 
+	gettimeofday(&tv0, NULL);
+	t0 = 1.0 * tv0.tv_sec + (1.0 * tv0.tv_usec) / 1000000.0;
+	// printf("seconds: %ld\n", tv0.tv_sec);
+	// printf("usecs:   %ld\n", tv0.tv_usec);
+	// printf("time:    %lf\n", t0);
 
-int MQTTInterface::GetString(int insock)
+	return t0;
+}
+
+int MQTTInterface::GetString()
 {
 	// returns true for a good character read, otherwise return false
 	// Really dumb, look at calling loop for full functionality
@@ -56,38 +67,38 @@ int MQTTInterface::GetString(int insock)
 	char c;
 	int fGood = false;
 
-	
-	// printf("waiting to read ...");
-	numread = read(insock, &c, 1);
-	// printf("(%2.2X) %c\n", c, c);
+	if(sock.status == SOCK_OPEN) {
+		// printf("waiting to read ...");
+		numread = read(sock.sock, &c, 1);
+		// printf("(%2.2X) %c\n", c, c);
 
 
-	if(numread < 0) {
-		printf("error reading from input socket: %d\n", numread);
-	} else {
-		// Ok, read a character
-		if((c == CR) || (c == LF)) {
-			fGood = true;
+		if(numread < 0) {
+			printf("error reading from input socket: %d\n", numread);
 		} else {
-			// Good character
-			rxbuf[rxbuf_index] = c;
-			rxbuf_index++;
-			// Need to ensure buffer does not overflow (which shouldnt happen anyway, but oh well)
-			if(rxbuf_index >= RXBUF_MAX) {
-				rxbuf_index = RXBUF_MAX - 1;
+			// Ok, read a character
+			if((c == CR) || (c == LF)) {
+				fGood = true;
+			} else {
+				// Good character
+				rxbuf[rxbuf_index] = c;
+				rxbuf_index++;
+				// Need to ensure buffer does not overflow (which shouldnt happen anyway, but oh well)
+				if(rxbuf_index >= RXBUF_MAX) {
+					rxbuf_index = RXBUF_MAX - 1;
+				}
 			}
 		}
 	}
-
+	
 	return fGood;
 }
 
 void MQTTInterface::PutString(char *s)
 {
-	int i, j;
+	int i;
 	char sout[MAXLEN + 2];
 	int ret;
-	int max_age_reached = 0;
 
 	// printf("Send string to [%d:%d]: *%s*\n", i, sock, s);
 
@@ -99,9 +110,11 @@ void MQTTInterface::PutString(char *s)
 	sout[i + 2] = 0;
 
 	// Now send to mqtt bridge
-	ret = write(sock, sout, strlen(sout));
-	if(ret < 0) {
-		printf("error(%d) writing to socket: %s\n", ret, strerror(errno));
+	if(sock.status == SOCK_OPEN) {
+		ret = write(sock.sock, sout, strlen(sout));
+		if(ret < 0) {
+			printf("error(%d) writing to socket: %s\n", ret, strerror(errno));
+		}
 	}
 }
 
@@ -129,7 +142,6 @@ void MQTTInterface::tcpReceived(char * smsg)
 	char topic[255];
 	char msg[255];
 	char *p1;
-	int rc;
 
 	// parse smsg, breaking into topic and msg at the ","
 	p1 = strtok(smsg, ",");
@@ -139,8 +151,6 @@ void MQTTInterface::tcpReceived(char * smsg)
 	printf("From mqtt bridge: topic: %s  msg: %s\n", topic, msg);
 	
 	VisionMessageFilter(topic, msg);
-
-
 }
 
 void MQTTInterface::VisionMessageFilter(char* topic, char* msg) 
@@ -156,16 +166,13 @@ void MQTTInterface::VisionMessageFilter(char* topic, char* msg)
 		sscanf(buf, "%f %f", &distance, &angle);
 		targetDistance = distance;
 		targetAngle = angle;
-		printf("vision data is %f in and %f degrees", distance, angle);
+		printf("vision data is %f in and %f degrees\n", distance, angle);
 	}
 }
 
 void MQTTInterface::cleanup(void)
 {	
-	if(sock) {
-		close(sock);
-		sock = 0;
-	}
+	closesock(sock);
 }
 
 void MQTTInterface::ClawVision()
@@ -196,7 +203,7 @@ void MQTTInterface::CargoOff()
 
 MQTTInterface::MQTTInterface(const char *host, int port)
 {
-	Init();
+	Init();	
 }
 
 
@@ -233,80 +240,165 @@ void MQTTInterface::Init()
 
 	*/
 
+	t0 = tnow = gettime_d();
+	
 	// initialize socket so that cleanup() can determine if they are assigned
-	sock = 0;
+	initsock(sock);
 
 	// Initialize TCP connection
 	sprintf(stemp, "%d", clientport);
 
-	sock = connectTCP(bridge_host, stemp);
-	if(sock) {
-		// make it async so that select() return that is not from an outstanding connection can 
-		// be ignored
-		fcntl(sock, F_SETFL, O_NONBLOCK);
-	}	
+	connectTCPnew(sock, bridge_host, stemp);
 }
 
 void MQTTInterface::Update()
 {
 	
-	int alen; // from address length
-	char scmd[MAXLEN]; // string from client
-	int i, j;
+	int i;
 	char stemp[256];
 	int ret;
-	char *pstr;
 	struct timeval timeout;
+	int so_error;
+	socklen_t len;
+	long arg;
 	
 	fd_set orig_fdset, fdset;
 	int nfds = getdtablesize(); // number of file descriptors
 
-	if(sock == 0){
-		// If no socket, try an open cnnection
+	tnow = gettime_d();
+
+	if(sock.status == SOCK_CLOSED) {
+		// try to open a connection
+		
+		// make sure this doesn't run too often
+		if(tnow < t0 + 0.5) {
+			return;
+		}
+		t0 = tnow;
+		
 		// Initialize TCP connection
 		sprintf(stemp, "%d", clientport);
 
-		sock = connectTCP(bridge_host, stemp);
-		if(sock) {
-			// make it async so that select() return that is not from an outstanding connection can 
-			// be ignored
-			fcntl(sock, F_SETFL, O_NONBLOCK);
-		}	else {
+		connectTCPnew(sock, bridge_host, stemp);
+	}
+
+	if(sock.status == SOCK_CONNECTING) {
+		// see if connection is complete
+
+		// make sure this doesn't run too often
+		if(tnow < t0 + 0.5) {
+			return;
+		}
+		t0 = tnow;
+
+		printf("socket connecting\n");
+		
+		FD_ZERO(&fdset);
+		FD_SET(sock.sock, &fdset);
+
+		timeout.tv_sec = 0;
+		timeout.tv_usec = 100;
+
+		// use select on writeable to see if connection is complete
+		ret = select(nfds, NULL, &fdset, NULL, &timeout); 
+		if(ret == 0) {
+			// timeout - try again next time
+			return;
+		}
+		
+		if(ret > 0) { 
+			// Socket selected for write
+			len = sizeof(so_error);
+			ret = getsockopt(sock.sock, SOL_SOCKET, SO_ERROR, &so_error, &len); 
+			if(ret < 0) { 
+				fprintf(stderr, "Error in getsockopt() %d - %s\n", errno, strerror(errno)); 
+				// close the socket and start over
+				closesock(sock);
+				return;
+			}
+
+			// Check the value returned... 
+			if(so_error == 0) { 
+				// no errors, can continue with socket
+
+				// Set to blocking mode again...
+				ret = (arg = fcntl(sock.sock, F_GETFL, NULL));
+				if(ret < 0) { 
+					fprintf(stderr, "Error fcntl(..., F_GETFL) (%s)\n", strerror(errno)); 
+					// close the socket and start over
+					closesock(sock);
+					return;
+				}
+				arg &= (~O_NONBLOCK); 
+				if( fcntl(sock.sock, F_SETFL, arg) < 0) { 
+					fprintf(stderr, "Error fcntl(..., F_SETFL) (%s)\n", strerror(errno)); 
+					// close the socket and start over
+					closesock(sock);
+					return;
+				}
+				sock.status = SOCK_OPEN;
+				
+			} else {
+				fprintf(stderr, "Socket error in delayed connection() %d - %s\n", so_error, strerror(so_error)); 
+				// close the socket and start over
+				closesock(sock);
+				return;
+			}
+		} else {
+			// error
+			printf("connecting select returned an error %s\n", strerror(errno));
 			return;
 		}
 	}
 
-	FD_ZERO(&orig_fdset);
-	FD_SET(sock, &orig_fdset);
-	ret = 0;
-	while(!ret) {
-		/* Restore watch set as appropriate. */
-		bcopy(&orig_fdset, &fdset, sizeof(orig_fdset));
+	if(sock.status == SOCK_OPEN) {
+		FD_ZERO(&orig_fdset);
+		FD_SET(sock.sock, &orig_fdset);
+		ret = 0;
+		// read all available characters
+		while(1) {
+			/* Restore watch set as appropriate. */
+			bcopy(&orig_fdset, &fdset, sizeof(orig_fdset));
 
-		// need to sleep sometime, so just set timeout to 100 usec
-		timeout.tv_sec = 0;
-		timeout.tv_usec = 100;
-		ret = select(nfds, &fdset, NULL, NULL, &timeout);
-		if(ret != 0) {
-			printf("select returned %d\n", ret);
-		}
-		if(ret > 0) {
-			// process input from TCP connection
-			if(sock && FD_ISSET(sock, &fdset)) {
-				printf("Client has data - fd: %d\n", sock);
-				ret = GetString(sock);
-				// Did we find a full message?
-				if(ret && (rxbuf_index > 0)) {
-					// Parse and interpret message from MQTT Bridge
-					tcpReceived(rxbuf);
-					// Finished message, reset buffer for next message
-					rxbuf_index = 0;
-				} 
+			// need to sleep sometime, so just set timeout to 100 usec
+			timeout.tv_sec = 0;
+			timeout.tv_usec = 100;
+			ret = select(nfds, &fdset, NULL, NULL, &timeout);
+			/*  0 - timeout
+					>0 - number of file descriptors that are ready
+					-1 - error
+			*/
+			if(ret == 0) {
+				// timeout
+				break;
 			}
-		}	
 
-
+			// debug
+			if(ret != 0) {
+				// printf("select returned %d\n", ret);
+			}
+		
+			if(ret > 0) {
+				// process input from TCP connection
+				if((sock.status == SOCK_OPEN) && FD_ISSET(sock.sock, &fdset)) {
+					// printf("Client has data - fd: %d\n", sock.sock);
+					ret = GetString();
+					// Did we find a full message?
+					if(ret && (rxbuf_index > 0)) {
+						// Parse and interpret message from MQTT Bridge
+						tcpReceived(rxbuf);
+						// Finished message, reset buffer for next message
+						rxbuf_index = 0;
+					} 
+				}
+			} else {
+				// error
+				printf("select returned an error %s\n", strerror(errno));
+				break;
+			}
+		}
 	}
+	
 } 
 
 float MQTTInterface::GetDistance()
