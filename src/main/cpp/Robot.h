@@ -9,6 +9,7 @@
 #include <Climber.h>
 #include <MQTTInterface.h>
 #include <CAN.h>
+#include <LightRingController.h>
 // #include <Gunnar.h>
 
 #ifndef SRC_ROBOT_H_
@@ -60,6 +61,8 @@ private:
 	LineFollower a_Follower1;
 	Climber a_Climber;	
 	MQTTInterface a_Interface;
+	LightRingController a_LightRing;
+
 
 };
 

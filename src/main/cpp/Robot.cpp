@@ -17,7 +17,8 @@ a_SwerveDrive(),
 a_Climber(),
 a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
-a_Follower1(1)
+a_Follower1(1),
+a_LightRing()
 {
 	// (>>'-')>> (Runs MQTT Broker on the RoboRio)
 	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background!
@@ -46,7 +47,15 @@ void Robot::RobotInit(void)
 	BR_SwerveModule.ZeroEncoders();
 	*/
 
-	a_Interface.Init();
+	// a_Interface.Init();
+
+	a_LightRing.SetColor(3, 0, 50 , 0);
+	a_LightRing.SetColor(2, 0 ,50 , 0);
+	a_LightRing.SetColor(1, 0, 50 , 0);
+
+	
+
+
 
 	a_Interface.CargoOff();
 	a_Interface.ClawViewing();
@@ -80,6 +89,7 @@ void Robot::DisabledInit(void)
 
 void Robot::DisabledPeriodic(void)
 {
+	a_Follower1.Update();
 
 }
 
@@ -91,8 +101,8 @@ void Robot::TeleopInit(void)
 void Robot::TeleopPeriodic(void)
 {
 	robotState = "Teleoperated";
-	if(a_Joystick1.GetRawButton(3))
-		a_Interface.Update();
+//	if(a_Joystick1.GetRawButton(3))
+//		a_Interface.Update();
 
 	// unsigned char rxBuf[8];
 	// frc::CANData dataOne;
@@ -110,7 +120,8 @@ void Robot::TeleopPeriodic(void)
 			else
 				targetAngle = (int) targetAngle % 360;
 		}
-		float temp = 0;
+		a_SwerveDrive.CenterOnLine(a_Follower1.GetPosInches());
+		/* float temp = 0;
 		float dist = a_Follower1.GetPosInches();
 
 		if((abs(dist) < 5) && ((-1.0 * dist > 0.33) || (dist > 0.33)))
@@ -120,10 +131,11 @@ void Robot::TeleopPeriodic(void)
 
 		frc::SmartDashboard::PutNumber("Virtual X Axis: ", temp);
 
-		if(!(abs(a_Joystick1.GetRawAxis(1)) < DEADZONE))
+		if(!(abs(a_Joystick1.GetRawAxis(1)) < 0.))
 		{
 			a_SwerveDrive.AngleLock(temp, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
 		}
+		*/
 	}
 	else if(a_Joystick1.GetRawButton(2))
 	{
@@ -168,18 +180,23 @@ void Robot::TeleopPeriodic(void)
 	}
 
 
-	if(a_Controller1.GetRawButton(3))
+	if(a_Controller1.GetRawButton(3)) // X Button - Collect from Top
 	{
-		cargoDirection = false;
+		// cargoDirection = false;
+		a_CargoCollector.CargoRun(false);
 	}
-	else if(a_Controller1.GetRawButton(4
-	))
+	else if(a_Controller1.GetRawButton(4)) // Y Button - Spit out 
 	{
-		cargoDirection = true;
+	 	// cargoDirection = true;
+		 a_CargoCollector.CargoRun(true);
+	}
+	else
+	{
+		a_CargoCollector.CargoAbort();
 	}
 
 
-	if(a_Controller1.GetRawButton(2)) // Annoying logic for a toggle for our collector.
+	/* if(a_Controller1.GetRawButton(2)) // Annoying logic for a toggle for our collector.
 	{
 		if(!cargoLastInput)
 		{
@@ -198,7 +215,7 @@ void Robot::TeleopPeriodic(void)
 	{
 		cargoLastInput = false;
 	}
-
+	
 	if(cargoToggle)
 	{
 		a_CargoCollector.CargoCollectBB(a_Controller1.GetRawButton(1), cargoDirection);
@@ -207,8 +224,10 @@ void Robot::TeleopPeriodic(void)
 	{
 		a_CargoCollector.CargoAbort();
 	}
+	*/
 
-	float crabbySpeed = 0.5;
+
+	float crabbySpeed = 0.45;
 
 	if(a_Controller1.GetRawAxis(3) == 0)
 	{
@@ -223,7 +242,7 @@ void Robot::TeleopPeriodic(void)
 		a_HatchCollector.Disable();
 	}
 	
-	if(a_Controller1.GetRawButton(6))
+	/* if(a_Controller1.GetRawButton(6))
  	{
 		if(a_HatchCollector.GetPositionRaw() > HATCH_POS_MID)
 		{
@@ -240,9 +259,9 @@ void Robot::TeleopPeriodic(void)
 		a_HatchCollector.SetHatchPID(0.4, 0.00014, 0);
 		a_HatchCollector.UpdateAngle(HATCH_POS_MID);
 	}
-	
+	*/
 
-	float ClimberScalar = 0.6;
+	float ClimberScalar = 0.75;
 
 	if(a_Controller1.GetRawButton(7))
 	{

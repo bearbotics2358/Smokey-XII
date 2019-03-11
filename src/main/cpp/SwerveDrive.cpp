@@ -536,10 +536,37 @@ float SwerveDrive::XForCenter(float current)
 	float pGain = 0.6;
 
 	float error = (-current / 5.0); 
-	float outputMax = 0.5;
+	float outputMax = 0.2;
 	float forJason = outputMax * (pGain * (error)); // P * error + I * intergral + D * derivative
 
 	return forJason;
+}
+
+void SwerveDrive::CenterOnLine(float current)
+{
+	FL_SwerveModule.UpdateAnglePID(90);
+	FR_SwerveModule.UpdateAnglePID(90);
+	BL_SwerveModule.UpdateAnglePID(90);
+	BR_SwerveModule.UpdateAnglePID(90);
+
+	float tempAngle = FL_SwerveModule.GetAngle();
+	if(tempAngle < 0)
+		tempAngle = 360 - ((int) (-1 * tempAngle) % 360); // Limits 
+	else
+		tempAngle = (int) tempAngle % 360;
+
+	if(tempAngle - 90 < 5 || tempAngle - 90 > -5)
+	{
+		float pGain = 0.6;
+		float error = (-current / 5.0); 
+		float outputMax = 0.2;
+		float forJason = outputMax * (pGain * (error)); // P * error + I * intergral + D * derivative
+		
+		FL_SwerveModule.UpdateSpeed(forJason);
+		FR_SwerveModule.UpdateSpeed(forJason);
+		BR_SwerveModule.UpdateSpeed(forJason);
+		BL_SwerveModule.UpdateSpeed(forJason);
+	}
 }
 
 bool SwerveDrive::NeedsAngOpt(float current, float target)
