@@ -43,11 +43,11 @@ void LineFollower::Update()
 
 	bool ret = a_FeatherCAN.ReadPacketNew(0, &data1);
 
-	if(ret)
+/*	if(ret)
 		printf("a\n");
 	else
 		printf("b\n");
-
+*/
 	int i;
 
 	if(ret) {
@@ -90,14 +90,15 @@ void LineFollower::decodeLineFollowerMsg()
     }
   }
   for(i = 0; i < NUM_SENSORS; i++) {
-		printf(" %d ", sensorOutput[i]);
+	//	printf(" %d ", sensorOutput[i]);
   }
-  printf("\n");
+  // printf("\n");
 
   // decode position
   // first, get the value as sent
   i16 = (rxBuf[4] << 8) | rxBuf[5];
-  printf("pos (as sent): %d\n", i16);
+   
+// printf("pos (as sent): %d\n", i16);
 
   fpos = (i16 * 8.0)/25.4; // convert to inches - 8mm per sensor
   // printf("pos (inches): %6.2f", fpos);

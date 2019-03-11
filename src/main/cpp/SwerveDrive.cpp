@@ -201,7 +201,7 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
     	BR_Speed /= max;
     	BL_Speed /= max;
     }
-	double scalar = 0.65;
+	double scalar = 0.75;
 	FR_Speed *= scalar;
     FL_Speed *= scalar;
     BR_Speed *= scalar;
@@ -324,7 +324,7 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
     	BR_Speed /= max;
     	BL_Speed /= max;
     }
-	double scalar = 0.65;
+	double scalar = 0.75;
 	FR_Speed *= scalar;
     FL_Speed *= scalar;
     BR_Speed *= scalar;

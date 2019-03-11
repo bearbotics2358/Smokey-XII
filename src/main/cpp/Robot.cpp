@@ -17,7 +17,8 @@ a_SwerveDrive(),
 a_Climber(),
 a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
-a_Follower1(1)
+a_Follower1(1),
+a_Light()
 {
 	// (>>'-')>> (Runs MQTT Broker on the RoboRio)
 	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background!
@@ -47,6 +48,9 @@ void Robot::RobotInit(void)
 	*/
 
 	a_Interface.Init();
+	a_Light.SetColor(3, 0, 50, 0);
+	a_Light.SetColor(2, 0, 50, 0);
+	a_Light.SetColor(1, 0, 50, 0);
 
 	a_Interface.CargoOff();
 	a_Interface.ClawViewing();
@@ -80,7 +84,9 @@ void Robot::DisabledInit(void)
 
 void Robot::DisabledPeriodic(void)
 {
-
+ 	// a_Follower1.Update();
+	a_Interface.Update();
+	
 }
 
 void Robot::TeleopInit(void)
@@ -91,7 +97,6 @@ void Robot::TeleopInit(void)
 void Robot::TeleopPeriodic(void)
 {
 	robotState = "Teleoperated";
-	if(a_Joystick1.GetRawButton(3))
 		a_Interface.Update();
 
 	// unsigned char rxBuf[8];
@@ -110,7 +115,7 @@ void Robot::TeleopPeriodic(void)
 			else
 				targetAngle = (int) targetAngle % 360;
 		}
-		float temp = 0;
+		/* float temp = 0;
 		float dist = a_Follower1.GetPosInches();
 
 		if((abs(dist) < 5) && ((-1.0 * dist > 0.33) || (dist > 0.33)))
@@ -124,6 +129,7 @@ void Robot::TeleopPeriodic(void)
 		{
 			a_SwerveDrive.AngleLock(temp, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
 		}
+		*/
 	}
 	else if(a_Joystick1.GetRawButton(2))
 	{
@@ -141,8 +147,15 @@ void Robot::TeleopPeriodic(void)
 	else if(a_Joystick1.GetRawButton(1))
 	{
 		targetAngle = -999;
-		// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);				
-		a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -0.45 * a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(0));
+		// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);
+		if(a_Joystick1.GetRawButton(3))
+		{
+			a_SwerveDrive.SwerveRobotOriented(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -0.6 * a_Joystick1.GetRawAxis(2));
+		}
+		else
+		{
+			a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -0.6 * a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(0));
+		}
 		// a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 90, a_Gyro.GetAngle(0));
 	}
 	else // POSITIVE Z TURNS ROBOT TO THE LEFT
@@ -167,13 +180,25 @@ void Robot::TeleopPeriodic(void)
 		a_Gyro.Cal();
 	}
 
-
 	if(a_Controller1.GetRawButton(3))
+	{
+		a_CargoCollector.CargoRun(false);
+	
+	}
+	else if(a_Controller1.GetRawButton(4))
+	{
+		a_CargoCollector.CargoRun(true);
+	}
+	else
+	{
+		a_CargoCollector.CargoAbort();
+	}
+
+	/* if(a_Controller1.GetRawButton(3))
 	{
 		cargoDirection = false;
 	}
-	else if(a_Controller1.GetRawButton(4
-	))
+	else if(a_Controller1.GetRawButton(4))
 	{
 		cargoDirection = true;
 	}
@@ -206,7 +231,7 @@ void Robot::TeleopPeriodic(void)
 	else
 	{
 		a_CargoCollector.CargoAbort();
-	}
+	} */
 
 	float crabbySpeed = 0.5;
 
@@ -242,7 +267,7 @@ void Robot::TeleopPeriodic(void)
 	}
 	
 
-	float ClimberScalar = 0.6;
+	float ClimberScalar = 0.85;
 
 	if(a_Controller1.GetRawButton(7))
 	{
