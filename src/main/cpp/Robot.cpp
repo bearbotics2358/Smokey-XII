@@ -97,7 +97,7 @@ void Robot::TeleopInit(void)
 void Robot::TeleopPeriodic(void)
 {
 	robotState = "Teleoperated";
-		a_Interface.Update();
+	a_Interface.Update(); // a_vision.run(PNEUMATICS_FLUID);
 
 	// unsigned char rxBuf[8];
 	// frc::CANData dataOne;
@@ -107,41 +107,14 @@ void Robot::TeleopPeriodic(void)
 
 	if(a_Joystick1.GetRawButton(5))
 	{
-		if(targetAngle == -999)
-		{
-			targetAngle = a_Gyro.GetAngle(0);
-			if(targetAngle < 0)
-				targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
-			else
-				targetAngle = (int) targetAngle % 360;
-		}
-		/* float temp = 0;
-		float dist = a_Follower1.GetPosInches();
-
-		if((abs(dist) < 5) && ((-1.0 * dist > 0.33) || (dist > 0.33)))
-		{
-			temp = a_SwerveDrive.XForCenter(a_Follower1.GetPosInches());
-		}
-
-		frc::SmartDashboard::PutNumber("Virtual X Axis: ", temp);
-
-		if(!(abs(a_Joystick1.GetRawAxis(1)) < DEADZONE))
-		{
-			a_SwerveDrive.AngleLock(temp, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
-		}
-		*/
+		targetAngle = MBWOCFFHS(targetAngle);
+		a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_SwerveDrive.VisionZAxis(a_Interface.GetAngle()), a_Gyro.GetAngle(0));
+		
 	}
 	else if(a_Joystick1.GetRawButton(2))
 	{
 		// a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
-		if(targetAngle == -999)
-		{
-			targetAngle = a_Gyro.GetAngle(0);
-			if(targetAngle < 0)
-				targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
-			else
-				targetAngle = (int) targetAngle % 360;
-		}
+		targetAngle = MBWOCFFHS(targetAngle);
 		a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
 	}
 	else if(a_Joystick1.GetRawButton(1))
@@ -160,14 +133,7 @@ void Robot::TeleopPeriodic(void)
 	}
 	else // POSITIVE Z TURNS ROBOT TO THE LEFT
 	{
-		if(targetAngle == -999)
-		{
-			targetAngle = a_Gyro.GetAngle(0);
-			if(targetAngle < 0)
-				targetAngle = 360 - ((int) (-1 * targetAngle) % 360); // Limits 
-			else
-				targetAngle = (int) targetAngle % 360;
-		}
+		targetAngle = MBWOCFFHS(targetAngle);
 		// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
 		// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
 		// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
@@ -464,5 +430,17 @@ void Robot::TestPeriodic(void)
 	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_CargoCollector.GetCollectStatus());
 }
 
+int Robot::MBWOCFFHS(int targetAng)
+{
+	if(targetAng == -999)
+	{
+		targetAng = a_Gyro.GetAngle(0);
+		if(targetAng < 0)
+			targetAng = 360 - ((int) (-1 * targetAng) % 360); // Limits 
+		else
+			targetAng = (int) targetAng % 360;
+	}
+	return targetAng;
+}
 
 START_ROBOT_CLASS(Robot) // TODO: write our own main as this is deprecated

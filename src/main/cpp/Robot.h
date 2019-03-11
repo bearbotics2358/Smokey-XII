@@ -34,8 +34,9 @@ public:
 
 	void TestInit(void);
 	void TestPeriodic(void);
-
+	int MBWOCFFHS(int targetAng);
 private:
+	
 	std::string robotState;
 	bool cruiseControl;
 	bool crabToggle;
@@ -44,7 +45,7 @@ private:
 	bool cargoDirection;
 	float driveSpeed;
 	float rotationSpeed;
-	float targetAngle;
+	int targetAngle;
 	int clawCamCirco;
 	int cargoCamCirco;
 

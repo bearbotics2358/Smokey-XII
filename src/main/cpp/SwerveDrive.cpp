@@ -542,6 +542,15 @@ float SwerveDrive::XForCenter(float current)
 	return forJason;
 }
 
+float SwerveDrive::VisionZAxis(float visionError)
+{
+	float pGain = 0.7;
+	float outputMax = 0.65;
+
+	float forKJason = (outputMax * (pGain * (-visionError / 10.0)));
+	return forKJason;
+}
+
 bool SwerveDrive::NeedsAngOpt(float current, float target)
 {
 	float currentFL = current;

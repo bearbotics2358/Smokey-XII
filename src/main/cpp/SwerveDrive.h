@@ -26,6 +26,7 @@ public:
 
 	void DriveDistanceRaw(float target, float gyroValue);
 	float XForCenter(float current);
+	float VisionZAxis(float visionError);
 private:
 	bool NeedsAngOpt(float current, float target);
 	float integral;
