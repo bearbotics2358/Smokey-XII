@@ -443,4 +443,4 @@ int Robot::MBWOCFFHS(int targetAng)
 	return targetAng;
 }
 
-START_ROBOT_CLASS(Robot) // TODO: write our own main as this is deprecated
+int main() { return frc::StartRobot<Robot>(); } // TODO: write our own main as this is deprecated
