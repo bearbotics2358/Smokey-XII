@@ -201,7 +201,7 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
     	BR_Speed /= max;
     	BL_Speed /= max;
     }
-	double scalar = 0.75;
+	double scalar = 1;
 	FR_Speed *= scalar;
     FL_Speed *= scalar;
     BR_Speed *= scalar;
@@ -260,27 +260,32 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
 	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
-	frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
+	// frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
 	// FR_SwerveModule.UpdateAngle(FR_Angle);
 
 	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
  	FL_SwerveModule.UpdateSpeed(FL_Speed);
 	FL_SwerveModule.UpdateAnglePID(FL_Angle);
-	frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
+	// frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
 	// FL_SwerveModule.UpdateAngle(FL_Angle);
 
 	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
 	BL_SwerveModule.UpdateSpeed(BL_Speed);
 	BL_SwerveModule.UpdateAnglePID(BL_Angle);
-	frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
+	// frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
 	// BL_SwerveModule.UpdateAngle(BL_Angle);
 
 	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
 	BR_SwerveModule.UpdateSpeed(BR_Speed);
 	BR_SwerveModule.UpdateAnglePID(BR_Angle);
-	frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
+	// frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
 	// BR_SwerveModule.UpdateAngle(BR_Angle);
-
+	
+	/*frc::SmartDashboard::PutNumber("Test Speed (FL): ", FL_SwerveModule.GetVelocity());
+	frc::SmartDashboard::PutNumber("Test Speed (BL): ", BL_SwerveModule.GetVelocity());
+	frc::SmartDashboard::PutNumber("Test Speed (BR): ", BR_SwerveModule.GetVelocity());
+	frc::SmartDashboard::PutNumber("Test Speed (FR): ", FR_SwerveModule.GetVelocity());
+	*/ // 450 is max velocity
 }
 
 void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
@@ -385,25 +390,25 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
 	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
-	frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
+	// frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
 	// FR_SwerveModule.UpdateAngle(FR_Angle);
 
 	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
  	FL_SwerveModule.UpdateSpeed(FL_Speed);
 	FL_SwerveModule.UpdateAnglePID(FL_Angle);
-	frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
+	// frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
 	// FL_SwerveModule.UpdateAngle(FL_Angle);
 
 	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
 	BL_SwerveModule.UpdateSpeed(BL_Speed);
 	BL_SwerveModule.UpdateAnglePID(BL_Angle);
-	frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
+	// frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
 	// BL_SwerveModule.UpdateAngle(BL_Angle);
 
 	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
 	BR_SwerveModule.UpdateSpeed(BR_Speed);
 	BR_SwerveModule.UpdateAnglePID(BR_Angle);
-	frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
+	// frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
 	// BR_SwerveModule.UpdateAngle(BR_Angle);
 
 }
@@ -475,7 +480,13 @@ void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue,
 	else
 		current = (int) current % 360;
 
-	float pGain = 2.25;
+	if(target < 0)
+		target = 360 - ((int) (-1 * target) % 360); // Limits 
+	else
+		target = (int) target % 360;
+
+
+	float pGain = 3.5;
 	float iGain = 0.5;
 
 	if(abs(target - current) >= 180)
@@ -491,11 +502,11 @@ void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue,
 	}
 	float error = (current - target) / 180; // Positive should be counter-clockwise
 	integral += (error * 0.02);
-	float outputMax = 0.75;
-	float forJason = outputMax * (pGain * (error) + (iGain * integral)); // P * error + I * intergral + D * derivative
-
+	float outputMax = 1;
+	float forJason = outputMax * (pGain * (error)); // P * error + I * intergral + D * derivative
+	
 	double radius = sqrt(pow(xIn, 2) + pow(yIn, 2));  // to polar coords
-	if(radius < DEADZONE)
+	if(radius < 0.1)
 		forJason = 0;
 
 	if(fieldOriented)

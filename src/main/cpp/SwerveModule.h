@@ -27,8 +27,11 @@ public:
 	float GetCurrentOP(int id);
 	float GetVoltageOP(int id);
 
+	float GetVelocity(void);
+
 	void SetTurnPID(float p, float i, float d);
 	void SetDrivePIDF(float p, float i, float d, float f);
+
 
 	~SwerveModule(void);
 private:

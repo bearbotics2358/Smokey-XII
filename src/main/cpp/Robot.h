@@ -34,7 +34,7 @@ public:
 
 	void TestInit(void);
 	void TestPeriodic(void);
-	int MBWOCFFHS(int targetAng);
+	int MBWOCFFHS(int targetAng); // MeBeingWorkingOnCodeForFiveHoursStraight
 private:
 	
 	std::string robotState;
@@ -48,6 +48,7 @@ private:
 	int targetAngle;
 	int clawCamCirco;
 	int cargoCamCirco;
+	int counter;
 
 	JrimmyGyro a_Gyro;
 	frc::Joystick a_Joystick1;

@@ -1,8 +1,18 @@
+
 #include <frc/WPILib.h> // <WPILib.h> is deprecated
 #include <Prefs.h>
 #include <Robot.h>
 // o(╥﹏╥)o
 // (>-.-)>-)====>
+// <(0 w  0<)
+//\(^u^)/
+//^  ^
+//  W
+//   _________
+//  / (0)  (0)\
+// |      L    |
+//  \____3____/
+// ( * 3*) 
 Robot::Robot(void):
 a_Gyro(frc::I2C::kMXP),
 a_Joystick1(JOYSTICK_PORT_ONE),
@@ -32,9 +42,10 @@ a_Light()
 	cargoDirection = true;
 	driveSpeed = 0;
 	rotationSpeed = 0;
-	targetAngle = 0;
+	targetAngle = -999;
 	clawCamCirco = 1;
 	cargoCamCirco = 0;
+	counter = 0;
 	frc::SmartDashboard::init();
 }
 
@@ -107,18 +118,21 @@ void Robot::TeleopPeriodic(void)
 
 	if(a_Joystick1.GetRawButton(5))
 	{
+		counter = 0;
 		targetAngle = MBWOCFFHS(targetAngle);
 		a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_SwerveDrive.VisionZAxis(a_Interface.GetAngle()), a_Gyro.GetAngle(0));
 		
 	}
 	else if(a_Joystick1.GetRawButton(2))
 	{
+		counter = 0;
 		// a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
 		targetAngle = MBWOCFFHS(targetAngle);
 		a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
 	}
 	else if(a_Joystick1.GetRawButton(1))
 	{
+		counter = 0;
 		targetAngle = -999;
 		// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);
 		if(a_Joystick1.GetRawButton(3))
@@ -131,20 +145,39 @@ void Robot::TeleopPeriodic(void)
 		}
 		// a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 90, a_Gyro.GetAngle(0));
 	}
-	else // POSITIVE Z TURNS ROBOT TO THE LEFT
+	/*else if(a_Joystick1.GetRawButton(3))
 	{
 		targetAngle = MBWOCFFHS(targetAngle);
-		// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
-		// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
-		// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
-		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), true);
+		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
+	}*/
+	else // POSITIVE Z TURNS ROBOT TO THE LEFT
+	{
+		
+		if(counter < 1)
+		{
+			a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
+			counter++;
+
+		} 
+		else
+		{
+			targetAngle = MBWOCFFHS(targetAngle);
+			// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
+			// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
+			// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+			a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), true);
+		}
+
 	}	
 
 
 	if(a_Joystick1.GetRawButton(6))
 	{
 		a_Gyro.Cal();
+		a_Gyro.Zero();
+		targetAngle = 0;
 	}
+	
 
 	if(a_Controller1.GetRawButton(3))
 	{
@@ -158,8 +191,12 @@ void Robot::TeleopPeriodic(void)
 	else
 	{
 		a_CargoCollector.CargoAbort();
-	}
-
+	}	
+		targetAngle = MBWOCFFHS(targetAngle);
+		// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
+		// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
+		// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
+		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), true);
 	/* if(a_Controller1.GetRawButton(3))
 	{
 		cargoDirection = false;
@@ -327,10 +364,10 @@ void Robot::TeleopPeriodic(void)
 	// voltageOutput3 = FL_SwerveModule.GetVoltageOP(FL_TURN_ID);
 
 
-	// frc::SmartDashboard::PutNumber("FR Rotation: ", FR_SwerveModule.GetAngleRaw());
-	// frc::SmartDashboard::PutNumber("FL Rotation: ", FL_SwerveModule.GetAngle());
-	// frc::SmartDashboard::PutNumber("BR Rotation: ", BR_SwerveModule.GetAngleRaw());
-	// frc::SmartDashboard::PutNumber("BL Rotation: ", BL_SwerveModule.GetAngleRaw());
+	frc::SmartDashboard::PutNumber("FR Rotation: ", FR_SwerveModule.GetAngle());
+	frc::SmartDashboard::PutNumber("FL Rotation: ", FL_SwerveModule.GetAngle());
+	frc::SmartDashboard::PutNumber("BR Rotation: ", BR_SwerveModule.GetAngle());
+	frc::SmartDashboard::PutNumber("BL Rotation: ", BL_SwerveModule.GetAngle());
 	// frc::SmartDashboard::PutNumber("Distance Encoder: ", distanceCounts);
 	frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
 	frc::SmartDashboard::PutNumber("Distance (In): ", distanceIn);
@@ -346,11 +383,11 @@ void Robot::TeleopPeriodic(void)
 	// frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
 	// frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); 
 	frc::SmartDashboard::PutNumber("Gyro Angle:", ((int)(a_Gyro.GetAngle(0) * 100))/100.0); // USE THIS ONE: Clockwise is negative
-	// frc::SmartDashboard::PutNumber("BL Drive Encoder:", BL_SwerveModule.GetDistanceRaw());
-	// frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
-	// frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
-	// frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
-	frc::SmartDashboard::PutNumber("hatch camera", clawCamCirco);
+	frc::SmartDashboard::PutNumber("BL Drive Encoder:", BL_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("BR Drive Encoder:", BR_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("FL Drive Encoder:", FL_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("FR Drive Encoder:", FR_SwerveModule.GetDistanceRaw());
+	/*frc::SmartDashboard::PutNumber("hatch camera", clawCamCirco);
 	frc::SmartDashboard::PutNumber("cargo camera", cargoCamCirco);
 	frc::SmartDashboard::PutNumber("Hatch Encoder:", a_HatchCollector.GetPositionRaw());
 	frc::SmartDashboard::PutBoolean("Beam Break?!?!??!?:", a_CargoCollector.GetCollectStatus());
@@ -359,6 +396,7 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("Aarman but with two extra a's", a_Joystick1.GetPOV());
 	frc::SmartDashboard::PutNumber("Vision Distance:", a_Interface.GetDistance());
 	frc::SmartDashboard::PutNumber("Vision Angle:", a_Interface.GetAngle());
+	*/
 }
 
 void Robot::AutonomousInit(void)
@@ -435,11 +473,12 @@ int Robot::MBWOCFFHS(int targetAng)
 	if(targetAng == -999)
 	{
 		targetAng = a_Gyro.GetAngle(0);
-		if(targetAng < 0)
+		/*if(targetAng < 0)
 			targetAng = 360 - ((int) (-1 * targetAng) % 360); // Limits 
 		else
-			targetAng = (int) targetAng % 360;
+			targetAng = (int) targetAng % 360;*/
 	}
+	frc::SmartDashboard::PutNumber("Gyro Set Target: ",  targetAngle);
 	return targetAng;
 }
 
