@@ -4,8 +4,8 @@
 #include <Prefs.h>
 
 
-HatchCollector::HatchCollector():
-a_HatchMotor(HATCH_ID)
+HatchCollector::HatchCollector(int hatchyboi):
+a_HatchMotor(hatchyboi)
 // a_Potentiometer(0)
 
 {

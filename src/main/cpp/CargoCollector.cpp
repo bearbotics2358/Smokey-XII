@@ -1,12 +1,11 @@
 #include <frc/WPILib.h>
 #include <BeamBreak.h>
 #include <CargoCollector.h>
-#include <Prefs.h>
 
 
-CargoCollector::CargoCollector():
-a_CargoMotor1(CARGO_FRONT_ID),
-a_CargoMotor2(CARGO_BACK_ID),
+CargoCollector::CargoCollector(int front, int back ):
+a_CargoMotor1(front),
+a_CargoMotor2(back),
 a_BeamBreak()
 
 {

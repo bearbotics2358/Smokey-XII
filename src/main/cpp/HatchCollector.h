@@ -10,7 +10,7 @@ class HatchCollector
 { 
 public:
     
-    HatchCollector(void);
+    HatchCollector(int hatchyboi);
     void SetHatchPID(float p, float i, float d);
     void UpdateRaw(float val); 
     void UpdateAngle(int angle);

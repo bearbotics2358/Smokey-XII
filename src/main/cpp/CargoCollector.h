@@ -9,7 +9,7 @@
 class CargoCollector 
 { 
 public:
-    CargoCollector(void);
+    CargoCollector(int front, int back);
     void CargoCollectBB(bool runOverride, bool dir);
     void CargoRun(bool dir);
     void CargoAbort(void);
