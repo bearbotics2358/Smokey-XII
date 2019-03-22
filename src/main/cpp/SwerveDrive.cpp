@@ -261,25 +261,30 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
 	// frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
+	frc::SmartDashboard::PutNumber("FR speed: ", FR_Speed);
 	// FR_SwerveModule.UpdateAngle(FR_Angle);
 
 	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
  	FL_SwerveModule.UpdateSpeed(FL_Speed);
 	FL_SwerveModule.UpdateAnglePID(FL_Angle);
 	// frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
+	frc::SmartDashboard::PutNumber("FL speed: ", FL_Speed);
 	// FL_SwerveModule.UpdateAngle(FL_Angle);
 
 	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
 	BL_SwerveModule.UpdateSpeed(BL_Speed);
 	BL_SwerveModule.UpdateAnglePID(BL_Angle);
 	// frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
+	frc::SmartDashboard::PutNumber("BL speed: ", BL_Speed);
 	// BL_SwerveModule.UpdateAngle(BL_Angle);
 
 	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
 	BR_SwerveModule.UpdateSpeed(BR_Speed);
 	BR_SwerveModule.UpdateAnglePID(BR_Angle);
 	// frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
+	frc::SmartDashboard::PutNumber("BR speed: ", BR_Speed);
 	// BR_SwerveModule.UpdateAngle(BR_Angle);
+
 	
 	/*frc::SmartDashboard::PutNumber("Test Speed (FL): ", FL_SwerveModule.GetVelocity());
 	frc::SmartDashboard::PutNumber("Test Speed (BL): ", BL_SwerveModule.GetVelocity());
@@ -391,24 +396,28 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
 	FR_SwerveModule.UpdateSpeed(FR_Speed);
 	FR_SwerveModule.UpdateAnglePID(FR_Angle);
 	// frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
+	frc::SmartDashboard::PutNumber("FR speed: ", FR_Speed);
 	// FR_SwerveModule.UpdateAngle(FR_Angle);
 
 	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
  	FL_SwerveModule.UpdateSpeed(FL_Speed);
 	FL_SwerveModule.UpdateAnglePID(FL_Angle);
 	// frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
+	frc::SmartDashboard::PutNumber("FL speed: ", FL_Speed);
 	// FL_SwerveModule.UpdateAngle(FL_Angle);
 
 	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
 	BL_SwerveModule.UpdateSpeed(BL_Speed);
 	BL_SwerveModule.UpdateAnglePID(BL_Angle);
 	// frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
+	frc::SmartDashboard::PutNumber("BL speed: ", BL_Speed);
 	// BL_SwerveModule.UpdateAngle(BL_Angle);
 
 	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
 	BR_SwerveModule.UpdateSpeed(BR_Speed);
 	BR_SwerveModule.UpdateAnglePID(BR_Angle);
 	// frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
+	frc::SmartDashboard::PutNumber("BR speed: ", BR_Speed);
 	// BR_SwerveModule.UpdateAngle(BR_Angle);
 
 }

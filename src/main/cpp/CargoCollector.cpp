@@ -48,13 +48,13 @@ void CargoCollector::CargoRun(bool dir)
    //  a_CargoMotor1.Set(ControlMode::Velocity, COLLECT_SPEED);
    //  a_CargoMotor2.Set(ControlMode::Velocity, COLLECT_SPEED);
     if(dir){
-        a_CargoMotor1.Set(COLLECT_SPEED);
-        a_CargoMotor2.Set(COLLECT_SPEED);
+        a_CargoMotor1.Set(COLLECT_FRONTSPEED);
+        a_CargoMotor2.Set(COLLECT_BACKSPEED);
     }
     else
     {
-        a_CargoMotor1.Set(-1 * COLLECT_SPEED);
-        a_CargoMotor2.Set(-1 * COLLECT_SPEED);
+        a_CargoMotor1.Set(-1 * COLLECT_FRONTSPEED);
+        a_CargoMotor2.Set(-1 * COLLECT_BACKSPEED);
     }
     
 

@@ -24,8 +24,8 @@ void SwerveModule::UpdateRaw(float driveSpeed, float rotationSpeed)
 
 void SwerveModule::UpdateSpeed(float driveSpeed)
 {
-	float scalar = 0.75; // Full Speed is 1.0
-	a_DriveMotorOne.Set(scalar * driveSpeed);
+	float scalar = 0.9; // Full Speed is 1.0
+	a_DriveMotorOne.Set(ControlMode::PercentOutput, scalar * driveSpeed);
 }
 
 void SwerveModule::UpdateSpeedPID(float driveSpeed) // Velocity PID-Based Closed Control Loop
@@ -33,8 +33,9 @@ void SwerveModule::UpdateSpeedPID(float driveSpeed) // Velocity PID-Based Closed
 	//    Rev     sec     COUNTS
 	// 5 ----- * ----- *  -------
 	//    Sec     10        Rev
-	double scalar = -0.75;
-	double speed = scalar * driveSpeed * ((5.0 / 10.0) * COUNTS_PER_DRIVE_ROTATION);
+	float scalar = 0.75;
+	int maxSpeed = 450;
+	float speed = scalar * driveSpeed * (maxSpeed);
 	a_DriveMotorOne.Set(ControlMode::Velocity, driveSpeed);
 }
 

@@ -31,7 +31,8 @@
 
 
 
-#define COLLECT_SPEED -0.65
+#define COLLECT_FRONTSPEED -0.8
+#define COLLECT_BACKSPEED -0.9
 // Will change with testing
 #define HATCH_POS_MAX 4650.0 // DO NOT FORGET TO CHANGE
 #define HATCH_POS_MID 4500.0

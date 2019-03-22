@@ -34,7 +34,6 @@ a_Light()
 	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background!
 	int q = system(commandString);
 	printf("The number is: %d", q);
-	a_Gyro.Init();
 	cruiseControl = false;
 	crabToggle = false;
 	cargoToggle = false;
@@ -59,6 +58,8 @@ void Robot::RobotInit(void)
 	*/
 
 	a_Interface.Init();
+	a_Gyro.Init();
+
 	a_Light.SetColor(3, 0, 50, 0);
 	a_Light.SetColor(2, 0, 50, 0);
 	a_Light.SetColor(1, 0, 50, 0);
@@ -153,11 +154,10 @@ void Robot::TeleopPeriodic(void)
 	else // POSITIVE Z TURNS ROBOT TO THE LEFT
 	{
 		
-		if(counter < 1)
+		if(counter < 2)
 		{
 			a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
 			counter++;
-
 		} 
 		else
 		{
@@ -192,11 +192,7 @@ void Robot::TeleopPeriodic(void)
 	{
 		a_CargoCollector.CargoAbort();
 	}	
-		targetAngle = MBWOCFFHS(targetAngle);
-		// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
-		// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
-		// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
-		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), true);
+		
 	/* if(a_Controller1.GetRawButton(3))
 	{
 		cargoDirection = false;
@@ -236,7 +232,7 @@ void Robot::TeleopPeriodic(void)
 		a_CargoCollector.CargoAbort();
 	} */
 
-	float crabbySpeed = 0.5;
+	float crabbySpeed = 0.45;
 
 	if(a_Controller1.GetRawAxis(3) == 0)
 	{
@@ -401,7 +397,11 @@ void Robot::TeleopPeriodic(void)
 
 void Robot::AutonomousInit(void)
 {
+	frc::SmartDashboard::PutNumber("Calibrated? ", 0);
 	robotState = "Autonomous";
+	a_Gyro.Cal();
+	a_Gyro.Zero();
+	frc::SmartDashboard::PutNumber("Calibrated? ", 1);
 	// a_Gunnar.loop_start();
 }
 
