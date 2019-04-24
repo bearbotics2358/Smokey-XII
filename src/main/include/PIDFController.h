@@ -30,6 +30,7 @@ class PIDFController // PID Controller class to allow us to do PID-based positio
         float GetCycle(void);
         void SetCycle(float inCycle);
 
+        void ResetError(void);
         // float PIDKill(float target);
 };
 

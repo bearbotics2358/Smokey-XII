@@ -41,3 +41,8 @@ void PIDManager::UpdateAngLock(float target, float current) // Current: raw gyro
 	}
     a_AngleLockPID.Update(target, current);
 }
+
+void PIDManager::ResetAngLock(void)
+{
+    a_AngleLockPID.ResetError();
+}

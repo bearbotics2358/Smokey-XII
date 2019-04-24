@@ -2,17 +2,7 @@
 #include <frc/WPILib.h> // <WPILib.h> is deprecated
 #include <Prefs.h>
 #include <Robot.h>
-// o(╥﹏╥)o
-// (>-.-)>-)====>
-// <(0 w  0<)
-//\(^u^)/
-//^  ^
-//  W
-//   _________
-//  / (0)  (0)\
-// |      L    |
-//  \____3____/
-// ( * 3*) 
+
 Robot::Robot(void):
 a_Gyro(frc::I2C::kMXP),
 a_Joystick1(JOYSTICK_PORT_ONE),
@@ -31,7 +21,7 @@ a_Light(),
 a_PIDLoops()
 {
 	// (>>'-')>> (Runs MQTT Broker on the RoboRio)
-	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background!
+	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background
 	int q = system(commandString);
 	printf("The number is: %d", q);
 	a_Gyro.Init();
@@ -51,13 +41,6 @@ a_PIDLoops()
 
 void Robot::RobotInit(void)
 {
-	
-	/*FL_SwerveModule.ZeroEncoders();
-	FR_SwerveModule.ZeroEncoders();
-	BL_SwerveModule.ZeroEncoders();
-	BR_SwerveModule.ZeroEncoders();
-	*/
-
 	a_Interface.Init();
 	a_Light.SetColor(3, 0, 50, 0);
 	a_Light.SetColor(2, 0, 50, 0);
@@ -85,7 +68,6 @@ void Robot::RobotInit(void)
 void Robot::RobotPeriodic(void)
 {
 	a_Gyro.Update();
-	
 }
 
 void Robot::DisabledInit(void)
@@ -117,20 +99,28 @@ void Robot::TeleopPeriodic(void)
 	
 	if(!(a_Joystick1.GetRawButton(1)))
 	{
-		MBWOCFFHS(targetAngle);
+		if(counter < 1)
+		{
+			a_PIDLoops.ResetAngLock();
+			counter++;
+		}
+		else
+		{
+			MBWOCFFHS(targetAngle);
+		}
+
+		if(targetAngle != -99999)
+		{
+			a_PIDLoops.UpdateAngLock(targetAngle, a_Gyro.GetAngle(0));
+		}
 	}
 	else
 	{
-		targetAngle = -999;
-	}
-
-	if(a_Joystick1.GetRawButton(5))
-	{
-		counter = 0;
-		a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_SwerveDrive.VisionZAxis(a_Interface.GetAngle()), a_Gyro.GetAngle(0));
+		targetAngle = -99999;
 		
 	}
-	else if(a_Joystick1.GetRawButton(2))
+
+	if(a_Joystick1.GetRawButton(2))
 	{
 		counter = 0;
 		// a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);		
@@ -185,13 +175,7 @@ void Robot::TeleopPeriodic(void)
 	else
 	{
 		a_CargoCollector.CargoAbort();
-	}	
-		targetAngle = MBWOCFFHS(targetAngle);
-		// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
-		// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
-		// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
-		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), true);
-	
+	}		
 
 	float crabbySpeed = 0.5;
 
@@ -206,24 +190,6 @@ void Robot::TeleopPeriodic(void)
 	else
 	{
 		a_HatchCollector.Disable();
-	}
-	
-	if(a_Controller1.GetRawButton(6))
- 	{
-		if(a_HatchCollector.GetPositionRaw() > HATCH_POS_MID)
-		{
-			a_HatchCollector.SetHatchPID(0.5, 0.025, 3);
-		}
-		else
-		{
-			a_HatchCollector.SetHatchPID(0.4, 0.00014, 0);
-		}
-		a_HatchCollector.UpdateAngle((HATCH_POS_MAX) + 100);
- 	}
-	else if(a_Controller1.GetRawButton(5))
-	{
-		a_HatchCollector.SetHatchPID(0.4, 0.00014, 0);
-		a_HatchCollector.UpdateAngle(HATCH_POS_MID);
 	}
 
 	if(a_Joystick1.GetRawButton(7))
@@ -413,7 +379,7 @@ void Robot::TestPeriodic(void)
 
 int Robot::MBWOCFFHS(int targetAng)
 {
-	if(targetAng == -999)
+	if(targetAng == -99999)
 	{
 		targetAng = a_Gyro.GetAngle(0);
 		/*if(targetAng < 0)

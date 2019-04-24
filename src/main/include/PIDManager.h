@@ -13,6 +13,7 @@ class PIDManager
         PIDManager(void);
         float GetAngLock(void);
         void UpdateAngLock(float target, float current);
+        void ResetAngLock(void);
 };
 
 #endif

@@ -127,4 +127,17 @@
 #define LIGHT_RING_CONTROLLER_ADDRESS 0x4
 #define IR_RECEIVER_PORT 1 
 
+// o(╥﹏╥)o
+// (>-.-)>-)====>
+// <(0 w  0<)
+//\(^u^)/
+//^  ^
+//  W
+//   _________
+//  / (0)  (0)\
+// |      L    |
+//  \____3____/
+// ( * 3*) 
+
+
 #endif

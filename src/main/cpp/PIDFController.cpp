@@ -67,3 +67,10 @@ void PIDFController::SetCycle(float inCycle)
 {
     cycle = inCycle;
 }
+
+void PIDFController::ResetError(void)
+{
+    error = 0;
+    integral = 0;
+    derivative = 0;
+}
