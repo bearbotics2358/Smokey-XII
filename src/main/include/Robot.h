@@ -6,7 +6,6 @@
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
 #include <LineFollower.h>
-#include <Climber.h>
 #include <MQTTInterface.h>
 #include <CAN.h>
 #include <LightRingController.h>
@@ -62,7 +61,6 @@ private:
 	CargoCollector a_CargoCollector;
 	HatchCollector a_HatchCollector;
 	LineFollower a_Follower1;
-	Climber a_Climber;	
 	MQTTInterface a_Interface;
 	LightRingController a_Light;
 	PIDManager a_PIDLoops;

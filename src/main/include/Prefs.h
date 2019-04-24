@@ -41,11 +41,6 @@
 
 #define HATCH_ID 4
 
-//=========================//
-
-#define VERTI_ID 5
-#define HORI_ID 6
-
 /********** PID CONTROLLER VALUES **********/
 
 #define FL_TURN_P 0.9

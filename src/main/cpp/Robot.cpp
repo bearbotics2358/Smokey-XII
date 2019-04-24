@@ -24,7 +24,6 @@ FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
 BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
 a_SwerveDrive(),
-a_Climber(),
 a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
 a_Follower1(1),
@@ -70,7 +69,7 @@ void Robot::RobotInit(void)
 	FL_SwerveModule.SetTurnPID(FL_TURN_P, FL_TURN_I, FL_TURN_D);
 	FL_SwerveModule.SetDrivePIDF(FL_DRIVE_P, 0, 0, FL_DRIVE_F);
 
-	FR_SwerveModule.SetTurnPID(FR_TURN_P, FR_TURN_I, FR_TURN_D;
+	FR_SwerveModule.SetTurnPID(FR_TURN_P, FR_TURN_I, FR_TURN_D);
 	FR_SwerveModule.SetDrivePIDF(FR_DRIVE_P, 0, 0, FR_DRIVE_F);
 
 	BL_SwerveModule.SetTurnPID(BL_TURN_P, BL_TURN_I, BL_TURN_D);
@@ -226,20 +225,6 @@ void Robot::TeleopPeriodic(void)
 		a_HatchCollector.SetHatchPID(0.4, 0.00014, 0);
 		a_HatchCollector.UpdateAngle(HATCH_POS_MID);
 	}
-	
-
-	float ClimberScalar = 0.85;
-
-	if(a_Controller1.GetRawButton(7))
-	{
-		a_Climber.Lift(ClimberScalar * a_Controller1.GetRawAxis(1));
-	}
-	else
-	{
-		a_Climber.Lift(0);
-	}
-
-
 
 	if(a_Joystick1.GetRawButton(7))
 	{
