@@ -28,7 +28,8 @@ a_Climber(),
 a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
 a_Follower1(1),
-a_Light()
+a_Light(),
+a_PIDLoops()
 {
 	// (>>'-')>> (Runs MQTT Broker on the RoboRio)
 	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background!
@@ -66,17 +67,17 @@ void Robot::RobotInit(void)
 	a_Interface.CargoOff();
 	a_Interface.ClawViewing();
 
-	FL_SwerveModule.SetTurnPID(0.9, 0, 1);
-	FL_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
+	FL_SwerveModule.SetTurnPID(FL_TURN_P, FL_TURN_I, FL_TURN_D);
+	FL_SwerveModule.SetDrivePIDF(FL_DRIVE_P, 0, 0, FL_DRIVE_F);
 
-	FR_SwerveModule.SetTurnPID(0.9, 0, 1);
-	FR_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
+	FR_SwerveModule.SetTurnPID(FR_TURN_P, FR_TURN_I, FR_TURN_D;
+	FR_SwerveModule.SetDrivePIDF(FR_DRIVE_P, 0, 0, FR_DRIVE_F);
 
-	BL_SwerveModule.SetTurnPID(0.9, 0, 1);
-	BL_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
+	BL_SwerveModule.SetTurnPID(BL_TURN_P, BL_TURN_I, BL_TURN_D);
+	BL_SwerveModule.SetDrivePIDF(BL_DRIVE_P, 0, 0, BL_DRIVE_F);
 
-	BR_SwerveModule.SetTurnPID(0.9, 0, 1);
-	BR_SwerveModule.SetDrivePIDF(0.4, 0, 0, 1);
+	BR_SwerveModule.SetTurnPID(BR_TURN_P, BR_TURN_I, BR_TURN_D);
+	BR_SwerveModule.SetDrivePIDF(BR_DRIVE_P, 0, 0, BR_DRIVE_F);
 
 
 	a_HatchCollector.SetHatchPID(0.4, 0.00014, 0);
@@ -115,26 +116,30 @@ void Robot::TeleopPeriodic(void)
 	// bool dataFound = a_Feather.ReadPacketNew(0, &dataOne);	
 	a_Follower1.Update();
 	
+	if(!(a_Joystick1.GetRawButton(1)))
+	{
+		MBWOCFFHS(targetAngle);
+	}
+	else
+	{
+		targetAngle = -999;
+	}
 
 	if(a_Joystick1.GetRawButton(5))
 	{
 		counter = 0;
-		targetAngle = MBWOCFFHS(targetAngle);
 		a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_SwerveDrive.VisionZAxis(a_Interface.GetAngle()), a_Gyro.GetAngle(0));
 		
 	}
 	else if(a_Joystick1.GetRawButton(2))
 	{
 		counter = 0;
-		// a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
-		targetAngle = MBWOCFFHS(targetAngle);
-		a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
+		// a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);		
+		a_SwerveDrive.SwerveRobotOriented(0, -1 * a_Joystick1.GetRawAxis(1), a_PIDLoops.GetAngLock());
 	}
 	else if(a_Joystick1.GetRawButton(1))
 	{
 		counter = 0;
-		targetAngle = -999;
-		// a_SwerveDrive.MakeshiftRotate(a_Joystick1.GetRawAxis(2) * 0.2);
 		if(a_Joystick1.GetRawButton(3))
 		{
 			a_SwerveDrive.SwerveRobotOriented(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -0.6 * a_Joystick1.GetRawAxis(2));
@@ -143,13 +148,7 @@ void Robot::TeleopPeriodic(void)
 		{
 			a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), -0.6 * a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(0));
 		}
-		// a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 90, a_Gyro.GetAngle(0));
 	}
-	/*else if(a_Joystick1.GetRawButton(3))
-	{
-		targetAngle = MBWOCFFHS(targetAngle);
-		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);
-	}*/
 	else // POSITIVE Z TURNS ROBOT TO THE LEFT
 	{
 		
@@ -161,10 +160,6 @@ void Robot::TeleopPeriodic(void)
 		} 
 		else
 		{
-			targetAngle = MBWOCFFHS(targetAngle);
-			// a_SwerveDrive.SwerveDriveUpdate(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), 0, a_Gyro.GetAngle(0));
-			// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
-			// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
 			a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), true);
 		}
 
@@ -197,44 +192,7 @@ void Robot::TeleopPeriodic(void)
 		// a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
 		// a_SwerveDrive.CrabDrivePID(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2));
 		a_SwerveDrive.AngleLock(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), true);
-	/* if(a_Controller1.GetRawButton(3))
-	{
-		cargoDirection = false;
-	}
-	else if(a_Controller1.GetRawButton(4))
-	{
-		cargoDirection = true;
-	}
-
-
-	if(a_Controller1.GetRawButton(2)) // Annoying logic for a toggle for our collector.
-	{
-		if(!cargoLastInput)
-		{
-			if(!cargoToggle)
-			{
-				cargoToggle = true;
-			}
-			else
-			{
-				cargoToggle = false;
-			}
-		}
-		cargoLastInput = true;
-	}
-	else
-	{
-		cargoLastInput = false;
-	}
-
-	if(cargoToggle)
-	{
-		a_CargoCollector.CargoCollectBB(a_Controller1.GetRawButton(1), cargoDirection);
-	}
-	else
-	{
-		a_CargoCollector.CargoAbort();
-	} */
+	
 
 	float crabbySpeed = 0.5;
 

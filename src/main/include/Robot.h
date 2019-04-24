@@ -10,6 +10,7 @@
 #include <MQTTInterface.h>
 #include <CAN.h>
 #include <LightRingController.h>
+#include <PIDManager.h>
 // #include <Gunnar.h>
 
 #ifndef SRC_ROBOT_H_
@@ -64,6 +65,7 @@ private:
 	Climber a_Climber;	
 	MQTTInterface a_Interface;
 	LightRingController a_Light;
+	PIDManager a_PIDLoops;
 
 };
 

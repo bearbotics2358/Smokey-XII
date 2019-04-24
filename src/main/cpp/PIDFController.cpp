@@ -11,6 +11,8 @@ PIDFController::PIDFController(float p, float i, float d, float f)
     error = 0;
     integral = 0;
     derivative = 0;
+
+    cycle = 1;
 }
 
 PIDFController::PIDFController(float p, float i, float d)
@@ -23,6 +25,8 @@ PIDFController::PIDFController(float p, float i, float d)
     error = 0;
     integral = 0;
     derivative = 0;
+
+    cycle = 1;
 }
 
 PIDFController::~PIDFController()
@@ -42,7 +46,7 @@ float PIDFController::GetError(void)
     return error;
 }
 
-void PIDFController::Update(float current, float target, float cycle) // Method to update error, integral, and derivative values
+void PIDFController::Update(float target,float current) // Method to update error, integral, and derivative values
 {
     float lastError = error;
     error = (current - target) / cycle;
@@ -52,4 +56,14 @@ void PIDFController::Update(float current, float target, float cycle) // Method 
     // I assume that it has been 20 ms, or 0.02 of a second as it is 17.5 +/- 2.5 ms per cycle and I is slow anyway 
 
     derivative =  error - lastError; // Approximates derivative as a straight line between current and last cycle's error
+}
+
+float PIDFController::GetCycle(void)
+{
+    return cycle;
+}
+
+void PIDFController::SetCycle(float inCycle)
+{
+    cycle = inCycle;
 }

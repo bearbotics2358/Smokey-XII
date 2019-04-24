@@ -14,6 +14,8 @@ class PIDFController // PID Controller class to allow us to do PID-based positio
         float integral; // for I value
         float derivative; // for D value
         // TODO: Add f value
+
+        float cycle;
     public:
         PIDFController(float p, float i, float d, float f);
         PIDFController(float p, float i, float d);
@@ -23,8 +25,11 @@ class PIDFController // PID Controller class to allow us to do PID-based positio
         float GetOutput(void);
         float GetError(void);
 
-        void Update(float current, float target, float cycle); // Call every cycle to update error, integral and derivative values
+        void Update(float target, float current); // Call every iteration to update error, integral and derivative values
         
+        float GetCycle(void);
+        void SetCycle(float inCycle);
+
         // float PIDKill(float target);
 };
 
