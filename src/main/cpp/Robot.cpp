@@ -59,6 +59,8 @@ void Robot::RobotInit(void)
 
 	a_Interface.Init();
 	a_Gyro.Init();
+	a_Gyro.Cal();
+	a_Gyro.Zero();
 
 	a_Light.SetColor(3, 0, 50, 0);
 	a_Light.SetColor(2, 0, 50, 0);
@@ -234,6 +236,15 @@ void Robot::TeleopPeriodic(void)
 
 	float crabbySpeed = 0.45;
 
+	if(a_Controller1.GetRawButton(8))
+	{
+		crabbySpeed = 0.6;
+	}
+	else
+	{
+		crabbySpeed = 0.45;
+	}
+
 	if(a_Controller1.GetRawAxis(3) == 0)
 	{
 		a_HatchCollector.UpdateRaw(crabbySpeed * a_Controller1.GetRawAxis(2)); 
@@ -399,7 +410,7 @@ void Robot::AutonomousInit(void)
 {
 	frc::SmartDashboard::PutNumber("Calibrated? ", 0);
 	robotState = "Autonomous";
-	a_Gyro.Cal();
+	//a_Gyro.Cal();
 	a_Gyro.Zero();
 	frc::SmartDashboard::PutNumber("Calibrated? ", 1);
 	// a_Gunnar.loop_start();
