@@ -1,12 +1,16 @@
+
+#pragma once
+
 #include <frc/WPILib.h>
 #include "ctre/Phoenix.h"
+#include "PIDManager.h"
 
 #ifndef SRC_SWEREMODULE_H_
 #define SRC_SWEREMODULE_H_
 
 class SwerveModule {
 public:
-	SwerveModule(int driveMotorOne, int turnMotor); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
+	SwerveModule(int driveMotorOne, int turnMotor, ); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
 
 	void UpdateSpeed(float driveSpeed);
 	void UpdateSpeedPID(float driveSpeed);

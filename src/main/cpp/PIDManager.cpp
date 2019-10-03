@@ -3,7 +3,11 @@
 #include <Prefs.h>
 
 PIDManager::PIDManager(void):
-a_AngleLockPID(LOCK_P_GAIN, LOCK_I_GAIN, LOCK_D_GAIN, LOCK_F_GAIN)
+a_AngleLockPID(LOCK_P_GAIN, LOCK_I_GAIN, LOCK_D_GAIN, LOCK_F_GAIN),
+a_WheelFL(0, 0, 0, 0),
+a_WheelFR(0, 0, 0, 0),
+a_WheelBL(0, 0, 0, 0),
+a_WheelBR(0, 0, 0, 0)
 {
     a_AngleLockPID.SetCycle(180);
 }

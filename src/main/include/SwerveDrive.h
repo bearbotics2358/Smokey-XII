@@ -6,6 +6,7 @@
 // #include <CAN.h>
 #include "ctre\Phoenix.h"
 #include <SwerveModule.h>
+#include "PIDFController.h"
 
 class SwerveDrive
 {

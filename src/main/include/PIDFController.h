@@ -5,10 +5,10 @@
 class PIDFController // PID Controller class to allow us to do PID-based position/velocity closed loops
 { // NOTE: FIRST has a PIDController class so I had to name it PIDFController so it would compile correctly. Sorry!
     private:
-        float pGain;
-        float iGain;
-        float dGain;
-        float fGain; // While called a PID Controller, this class will also allow the use of an f gain eventually.
+        float pGain; // Scales the proportional rate of the loop; adjust this first
+        float iGain; // Helps increase the maximum value one can reach
+        float dGain; // Help reduce oscilattion after reaching the target value
+        float fGain; // Provides a minimum output level; useful for mechanisms that may struggle - think friction
 
         float error; // Between (-1, 1), represents percent error
         float integral; // for I value

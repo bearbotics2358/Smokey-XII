@@ -93,7 +93,7 @@ void SwerveModule::UpdateAnglePID(float angle)
 	}
 
 	int calculatedValue = counts + (revolutions * COUNTS_PER_ROTATION);
-	a_TurnMotor.Set(ControlMode::Position, calculatedValue);
+	// a_TurnMotor.Set(ControlMode::Position, calculatedValue);
 }
 
 void SwerveModule::UpdateTraj(float deltaDist, float angle)
