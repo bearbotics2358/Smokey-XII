@@ -63,7 +63,7 @@ private:
 	LineFollower a_Follower1;
 	MQTTInterface a_Interface;
 	LightRingController a_Light;
-	PIDManager a_PIDLoops;
+	PIDManager a_PIDManager;
 
 };
 

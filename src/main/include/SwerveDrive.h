@@ -12,7 +12,7 @@ class SwerveDrive
 {
 public:
 
-	SwerveDrive(void);
+	SwerveDrive(SwerveModule *FL, SwerveModule *FR, SwerveModule *BL, SwerveModule *BR);
 	~SwerveDrive(void);
 
 	void CrabDrive(double xIn, double yIn, double zIn); // Crab - Can drive in any X-Y Direction
@@ -31,10 +31,10 @@ public:
 private:
 	bool NeedsAngOpt(float current, float target);
 	float integral;
-	SwerveModule FL_SwerveModule;
-	SwerveModule FR_SwerveModule;
-	SwerveModule BL_SwerveModule;
-	SwerveModule BR_SwerveModule;
+	SwerveModule *FL_SwerveModule;
+	SwerveModule *FR_SwerveModule;
+	SwerveModule *BL_SwerveModule;
+	SwerveModule *BR_SwerveModule;
 
 	// frc::CAN a_Feather;
 };

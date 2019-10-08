@@ -2,12 +2,12 @@
 #include <PIDManager.h>
 #include <Prefs.h>
 
-PIDManager::PIDManager(void):
+PIDManager::PIDManager(void): // consider making pid loops public so they can actually be used.
 a_AngleLockPID(LOCK_P_GAIN, LOCK_I_GAIN, LOCK_D_GAIN, LOCK_F_GAIN),
-a_WheelFL(0, 0, 0, 0),
-a_WheelFR(0, 0, 0, 0),
-a_WheelBL(0, 0, 0, 0),
-a_WheelBR(0, 0, 0, 0)
+a_WheelFL(FL_TURN_P, FL_TURN_I, FL_TURN_D, 0),
+a_WheelFR(FR_TURN_P, FR_TURN_I, FR_TURN_D, 0),
+a_WheelBL(BL_TURN_P, BL_TURN_I, BL_TURN_D, 0),
+a_WheelBR(BR_TURN_P, BR_TURN_I, BR_TURN_D, 0)
 {
     a_AngleLockPID.SetCycle(180);
 }

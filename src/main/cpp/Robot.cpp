@@ -9,18 +9,19 @@ a_Joystick1(JOYSTICK_PORT_ONE),
 a_Controller1(CONTROLLER_PORT_ONE),
 a_CargoCollector(),
 a_HatchCollector(),
-FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
-FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
-BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
-BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID),
+a_PIDManager(),
+FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID, &a_PIDManager),
+FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID, &a_PIDManager),
+BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID, &a_PIDManager),
+BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID, &a_PIDManager),
 a_SwerveDrive(),
 a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
 a_Follower1(1),
 a_Light(),
-a_PIDLoops()
+
 {
-	// (>>'-')>> (Runs MQTT Broker on the RoboRio)
+	// Runs MQTT Broker on the RoboRio
 	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background
 	int q = system(commandString);
 	printf("The number is: %d", q);

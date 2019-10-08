@@ -1,15 +1,15 @@
 
 #include <frc/WPILib.h>
 #include "ctre\Phoenix.h"
-#include <SwerveDrive.h>
+#include "SwerveDrive.h"
 #include <SwerveModule.h>
 #include <Prefs.h>
 
-SwerveDrive::SwerveDrive(void):
-FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID),
-FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID),
-BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID),
-BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID)
+SwerveDrive::SwerveDrive(SwerveModule *FL, SwerveModule *FR, SwerveModule *BL, SwerveModule *BR):
+FL_SwerveModule(FL),
+FR_SwerveModule(FR),
+BL_SwerveModule(BL),
+BR_SwerveModule(BR)
 // a_Feather(1)
 {
 	integral = 0;
@@ -45,17 +45,17 @@ void SwerveDrive::CrabDrive(double xIn, double yIn, double zIn)
 
 	// SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
-	// FL_SwerveModule.UpdateSpeed(radius);
-	FL_SwerveModule.UpdateAngle(theta);
+	// FL_SwerveModule->UpdateSpeed(radius);
+	FL_SwerveModule->UpdateAngle(theta);
 
-	// FR_SwerveModule.UpdateSpeed(radius);
-	FR_SwerveModule.UpdateAngle(theta);
+	// FR_SwerveModule->UpdateSpeed(radius);
+	FR_SwerveModule->UpdateAngle(theta);
 
-	// BL_SwerveModule.UpdateSpeed(radius);
-	BL_SwerveModule.UpdateAngle(theta);
+	// BL_SwerveModule->UpdateSpeed(radius);
+	BL_SwerveModule->UpdateAngle(theta);
 
-	// BR_SwerveModule.UpdateSpeed(radius);
-	BR_SwerveModule.UpdateAngle(theta);
+	// BR_SwerveModule->UpdateSpeed(radius);
+	BR_SwerveModule->UpdateAngle(theta);
 }
 
 void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
@@ -89,21 +89,21 @@ void SwerveDrive::CrabDrivePID(double xIn, double yIn, double zIn)
 	frc::SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
-	// FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	// FL_SwerveModule.UpdateSpeed(radius);
-	FL_SwerveModule.UpdateAnglePID(theta);
+	// FL_SwerveModule->UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FL_SwerveModule->UpdateSpeed(radius);
+	FL_SwerveModule->UpdateAnglePID(theta);
 
-	// FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	// FR_SwerveModule.UpdateSpeed(radius);
-	FR_SwerveModule.UpdateAnglePID(theta);
+	// FR_SwerveModule->UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FR_SwerveModule->UpdateSpeed(radius);
+	FR_SwerveModule->UpdateAnglePID(theta);
 
-	// BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	// BL_SwerveModule.UpdateSpeed(radius);
-	BL_SwerveModule.UpdateAnglePID(theta);
+	// BL_SwerveModule->UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// BL_SwerveModule->UpdateSpeed(radius);
+	BL_SwerveModule->UpdateAnglePID(theta);
 
-	// BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	// BR_SwerveModule.UpdateSpeed(radius);
-	BR_SwerveModule.UpdateAnglePID(theta);
+	// BR_SwerveModule->UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// BR_SwerveModule->UpdateSpeed(radius);
+	BR_SwerveModule->UpdateAnglePID(theta);
 }
 
 void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
@@ -137,21 +137,21 @@ void SwerveDrive::CrabGyro(double xIn, double yIn, double zIn, double gyroValue)
 	frc::SmartDashboard::PutNumber("Theta: ", theta);
 	// SmartDashboard::PutNumber("Radius: ", radius);
 
-	FL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	// FL_SwerveModule.UpdateSpeed(radius);
-	FL_SwerveModule.UpdateAnglePID(theta);
+	FL_SwerveModule->UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FL_SwerveModule->UpdateSpeed(radius);
+	FL_SwerveModule->UpdateAnglePID(theta);
 
-	FR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	// FR_SwerveModule.UpdateSpeed(radius);
-	FR_SwerveModule.UpdateAnglePID(theta);
+	FR_SwerveModule->UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// FR_SwerveModule->UpdateSpeed(radius);
+	FR_SwerveModule->UpdateAnglePID(theta);
 
-	BL_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	// BL_SwerveModule.UpdateSpeed(radius);
-	BL_SwerveModule.UpdateAnglePID(theta);
+	BL_SwerveModule->UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// BL_SwerveModule->UpdateSpeed(radius);
+	BL_SwerveModule->UpdateAnglePID(theta);
 
-	BR_SwerveModule.UpdateSpeedPID(radius*500.0 * 4096 / 600);
-	// BR_SwerveModule.UpdateSpeed(radius);
-	BR_SwerveModule.UpdateAnglePID(theta);
+	BR_SwerveModule->UpdateSpeedPID(radius*500.0 * 4096 / 600);
+	// BR_SwerveModule->UpdateSpeed(radius);
+	BR_SwerveModule->UpdateAnglePID(theta);
 }
 
 void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double gyroValue)
@@ -207,10 +207,10 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
     BR_Speed *= scalar;
     BL_Speed *= scalar;
 
-	float currentFL = FL_SwerveModule.GetAngle(); 
-	float currentFR = FR_SwerveModule.GetAngle();
-	float currentBR = BR_SwerveModule.GetAngle(); 
-	float currentBL = BL_SwerveModule.GetAngle();
+	float currentFL = FL_SwerveModule->GetAngle(); 
+	float currentFR = FR_SwerveModule->GetAngle();
+	float currentBR = BR_SwerveModule->GetAngle(); 
+	float currentBL = BL_SwerveModule->GetAngle();
 
 	if(NeedsAngOpt(currentFL, FL_Angle))
 	{
@@ -252,39 +252,39 @@ void SwerveDrive::SwerveDriveUpdate(double xIn, double yIn, double zIn, double g
 		BR_Speed = 0;
 		BL_Speed = 0;
 
-		FR_Angle = FR_SwerveModule.GetAngle();
-		FL_Angle = FL_SwerveModule.GetAngle();
-		BR_Angle = BR_SwerveModule.GetAngle();
-		BL_Angle = BL_SwerveModule.GetAngle();
+		FR_Angle = FR_SwerveModule->GetAngle();
+		FL_Angle = FL_SwerveModule->GetAngle();
+		BR_Angle = BR_SwerveModule->GetAngle();
+		BL_Angle = BL_SwerveModule->GetAngle();
 	}
-	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
-	FR_SwerveModule.UpdateSpeed(FR_Speed);
-	FR_SwerveModule.UpdateAnglePID(FR_Angle);
+	// FR_SwerveModule->UpdateSpeedPID(FR_Speed);
+	FR_SwerveModule->UpdateSpeed(FR_Speed);
+	FR_SwerveModule->UpdateAnglePID(FR_Angle);
 	// frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
-	// FR_SwerveModule.UpdateAngle(FR_Angle);
+	// FR_SwerveModule->UpdateAngle(FR_Angle);
 
-	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
- 	FL_SwerveModule.UpdateSpeed(FL_Speed);
-	FL_SwerveModule.UpdateAnglePID(FL_Angle);
+	// FL_SwerveModule->UpdateSpeedPID(FL_Speed);
+ 	FL_SwerveModule->UpdateSpeed(FL_Speed);
+	FL_SwerveModule->UpdateAnglePID(FL_Angle);
 	// frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
-	// FL_SwerveModule.UpdateAngle(FL_Angle);
+	// FL_SwerveModule->UpdateAngle(FL_Angle);
 
-	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
-	BL_SwerveModule.UpdateSpeed(BL_Speed);
-	BL_SwerveModule.UpdateAnglePID(BL_Angle);
+	// BL_SwerveModule->UpdateSpeedPID(BL_Speed);
+	BL_SwerveModule->UpdateSpeed(BL_Speed);
+	BL_SwerveModule->UpdateAnglePID(BL_Angle);
 	// frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
-	// BL_SwerveModule.UpdateAngle(BL_Angle);
+	// BL_SwerveModule->UpdateAngle(BL_Angle);
 
-	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
-	BR_SwerveModule.UpdateSpeed(BR_Speed);
-	BR_SwerveModule.UpdateAnglePID(BR_Angle);
+	// BR_SwerveModule->UpdateSpeedPID(BR_Speed);
+	BR_SwerveModule->UpdateSpeed(BR_Speed);
+	BR_SwerveModule->UpdateAnglePID(BR_Angle);
 	// frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
-	// BR_SwerveModule.UpdateAngle(BR_Angle);
+	// BR_SwerveModule->UpdateAngle(BR_Angle);
 	
-	/*frc::SmartDashboard::PutNumber("Test Speed (FL): ", FL_SwerveModule.GetVelocity());
-	frc::SmartDashboard::PutNumber("Test Speed (BL): ", BL_SwerveModule.GetVelocity());
-	frc::SmartDashboard::PutNumber("Test Speed (BR): ", BR_SwerveModule.GetVelocity());
-	frc::SmartDashboard::PutNumber("Test Speed (FR): ", FR_SwerveModule.GetVelocity());
+	/*frc::SmartDashboard::PutNumber("Test Speed (FL): ", FL_SwerveModule->GetVelocity());
+	frc::SmartDashboard::PutNumber("Test Speed (BL): ", BL_SwerveModule->GetVelocity());
+	frc::SmartDashboard::PutNumber("Test Speed (BR): ", BR_SwerveModule->GetVelocity());
+	frc::SmartDashboard::PutNumber("Test Speed (FR): ", FR_SwerveModule->GetVelocity());
 	*/ // 450 is max velocity
 }
 
@@ -335,10 +335,10 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
     BR_Speed *= scalar;
     BL_Speed *= scalar;
 
-	float currentFL = FL_SwerveModule.GetAngle(); 
-	float currentFR = FR_SwerveModule.GetAngle();
-	float currentBR = BR_SwerveModule.GetAngle(); 
-	float currentBL = BL_SwerveModule.GetAngle();
+	float currentFL = FL_SwerveModule->GetAngle(); 
+	float currentFR = FR_SwerveModule->GetAngle();
+	float currentBR = BR_SwerveModule->GetAngle(); 
+	float currentBL = BL_SwerveModule->GetAngle();
 
 	if(NeedsAngOpt(currentFL, FL_Angle))
 	{
@@ -380,51 +380,51 @@ void SwerveDrive::SwerveRobotOriented(double xIn, double yIn, double zIn)
 		BR_Speed = 0;
 		BL_Speed = 0;
 
-		FR_Angle = FR_SwerveModule.GetAngle();
-		FL_Angle = FL_SwerveModule.GetAngle();
-		BR_Angle = BR_SwerveModule.GetAngle();
-		BL_Angle = BL_SwerveModule.GetAngle();
+		FR_Angle = FR_SwerveModule->GetAngle();
+		FL_Angle = FL_SwerveModule->GetAngle();
+		BR_Angle = BR_SwerveModule->GetAngle();
+		BL_Angle = BL_SwerveModule->GetAngle();
 	}
 
 
-	// FR_SwerveModule.UpdateSpeedPID(FR_Speed);
-	FR_SwerveModule.UpdateSpeed(FR_Speed);
-	FR_SwerveModule.UpdateAnglePID(FR_Angle);
+	// FR_SwerveModule->UpdateSpeedPID(FR_Speed);
+	FR_SwerveModule->UpdateSpeed(FR_Speed);
+	FR_SwerveModule->UpdateAnglePID(FR_Angle);
 	// frc::SmartDashboard::PutNumber("FR Angle: ", FR_Angle);
-	// FR_SwerveModule.UpdateAngle(FR_Angle);
+	// FR_SwerveModule->UpdateAngle(FR_Angle);
 
-	// FL_SwerveModule.UpdateSpeedPID(FL_Speed);
- 	FL_SwerveModule.UpdateSpeed(FL_Speed);
-	FL_SwerveModule.UpdateAnglePID(FL_Angle);
+	// FL_SwerveModule->UpdateSpeedPID(FL_Speed);
+ 	FL_SwerveModule->UpdateSpeed(FL_Speed);
+	FL_SwerveModule->UpdateAnglePID(FL_Angle);
 	// frc::SmartDashboard::PutNumber("FL Angle: ", FL_Angle);
-	// FL_SwerveModule.UpdateAngle(FL_Angle);
+	// FL_SwerveModule->UpdateAngle(FL_Angle);
 
-	// BL_SwerveModule.UpdateSpeedPID(BL_Speed);
-	BL_SwerveModule.UpdateSpeed(BL_Speed);
-	BL_SwerveModule.UpdateAnglePID(BL_Angle);
+	// BL_SwerveModule->UpdateSpeedPID(BL_Speed);
+	BL_SwerveModule->UpdateSpeed(BL_Speed);
+	BL_SwerveModule->UpdateAnglePID(BL_Angle);
 	// frc::SmartDashboard::PutNumber("BL Angle: ", BL_Angle);
-	// BL_SwerveModule.UpdateAngle(BL_Angle);
+	// BL_SwerveModule->UpdateAngle(BL_Angle);
 
-	// BR_SwerveModule.UpdateSpeedPID(BR_Speed);
-	BR_SwerveModule.UpdateSpeed(BR_Speed);
-	BR_SwerveModule.UpdateAnglePID(BR_Angle);
+	// BR_SwerveModule->UpdateSpeedPID(BR_Speed);
+	BR_SwerveModule->UpdateSpeed(BR_Speed);
+	BR_SwerveModule->UpdateAnglePID(BR_Angle);
 	// frc::SmartDashboard::PutNumber("BR Angle: ", BR_Angle);
-	// BR_SwerveModule.UpdateAngle(BR_Angle);
+	// BR_SwerveModule->UpdateAngle(BR_Angle);
 
 }
 
 void SwerveDrive::MakeshiftRotate(float input)
 {
 
-	FL_SwerveModule.UpdateAnglePID(-45);
-	BL_SwerveModule.UpdateAnglePID(45);
-	FR_SwerveModule.UpdateAnglePID(-135);
-	BR_SwerveModule.UpdateAnglePID(135);
+	FL_SwerveModule->UpdateAnglePID(-45);
+	BL_SwerveModule->UpdateAnglePID(45);
+	FR_SwerveModule->UpdateAnglePID(-135);
+	BR_SwerveModule->UpdateAnglePID(135);
 
-	FL_SwerveModule.UpdateSpeed(input);
-	BL_SwerveModule.UpdateSpeed(input);
-	FR_SwerveModule.UpdateSpeed(input);
-	BR_SwerveModule.UpdateSpeed(input);
+	FL_SwerveModule->UpdateSpeed(input);
+	BL_SwerveModule->UpdateSpeed(input);
+	FR_SwerveModule->UpdateSpeed(input);
+	BR_SwerveModule->UpdateSpeed(input);
 }
 
 void SwerveDrive::SetRobotAngle(float target, float current)
@@ -517,7 +517,7 @@ void SwerveDrive::AngleLock(float xIn, float yIn, float target, float gyroValue,
 
 void SwerveDrive::DriveDistanceRaw(float target, float gyroValue)
 {
-	float average = (FL_SwerveModule.GetDistanceIn() + FR_SwerveModule.GetDistanceIn() + BL_SwerveModule.GetDistanceIn() + BR_SwerveModule.GetDistanceIn())/4.0;
+	float average = (FL_SwerveModule->GetDistanceIn() + FR_SwerveModule->GetDistanceIn() + BL_SwerveModule->GetDistanceIn() + BR_SwerveModule->GetDistanceIn())/4.0;
 	if(average >= target)
 	{
 		SwerveRobotOriented(0, 0, 0);
@@ -530,12 +530,12 @@ void SwerveDrive::DriveDistanceRaw(float target, float gyroValue)
 
 float SwerveDrive::XForCenter(float current)
 {
-	/* FL_SwerveModule.UpdateAnglePID(90);
-	FR_SwerveModule.UpdateAnglePID(90);
-	BL_SwerveModule.UpdateAnglePID(90);
-	BR_SwerveModule.UpdateAnglePID(90);
+	/* FL_SwerveModule->UpdateAnglePID(90);
+	FR_SwerveModule->UpdateAnglePID(90);
+	BL_SwerveModule->UpdateAnglePID(90);
+	BR_SwerveModule->UpdateAnglePID(90);
 
-	float tempAngle = FL_SwerveModule.GetAngle();
+	float tempAngle = FL_SwerveModule->GetAngle();
 	if(tempAngle < 0)
 		tempAngle = 360 - ((int) (-1 * tempAngle) % 360); // Limits 
 	else

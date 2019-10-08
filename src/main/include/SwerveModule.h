@@ -10,7 +10,7 @@
 
 class SwerveModule {
 public:
-	SwerveModule(int driveMotorOne, int turnMotor, ); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
+	SwerveModule(int driveMotorOne, int turnMotor, PIDManager *pidLoops); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
 
 	void UpdateSpeed(float driveSpeed);
 	void UpdateSpeedPID(float driveSpeed);
@@ -42,6 +42,7 @@ private:
 	WPI_TalonSRX a_DriveMotorOne;
 	WPI_TalonSRX a_TurnMotor;
 
+	PIDManager a_PIDManager;
 };
 
 
