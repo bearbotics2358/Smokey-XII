@@ -14,7 +14,7 @@ FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID, &a_PIDManager),
 FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID, &a_PIDManager),
 BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID, &a_PIDManager),
 BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID, &a_PIDManager),
-a_SwerveDrive(),
+a_SwerveDrive(&FL_SwerveModule, &FR_SwerveModule, &BL_SwerveModule, &BR_SwerveModule),
 a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
 a_Follower1(1),
@@ -102,7 +102,7 @@ void Robot::TeleopPeriodic(void)
 	{
 		if(counter < 1)
 		{
-			a_PIDLoops.ResetAngLock();
+			a_PIDManager.ResetAngLock();
 			counter++;
 		}
 		else
@@ -112,7 +112,7 @@ void Robot::TeleopPeriodic(void)
 
 		if(targetAngle != -99999)
 		{
-			a_PIDLoops.UpdateAngLock(targetAngle, a_Gyro.GetAngle(0));
+			a_PIDManager.UpdateAngLock(targetAngle, a_Gyro.GetAngle(0));
 		}
 	}
 	else
@@ -125,7 +125,7 @@ void Robot::TeleopPeriodic(void)
 	{
 		counter = 0;
 		// a_SwerveDrive.AngleLock(0, -1 * a_Joystick1.GetRawAxis(1), targetAngle, a_Gyro.GetAngle(0), false);		
-		a_SwerveDrive.SwerveRobotOriented(0, -1 * a_Joystick1.GetRawAxis(1), a_PIDLoops.GetAngLock());
+		a_SwerveDrive.SwerveRobotOriented(0, -1 * a_Joystick1.GetRawAxis(1), a_PIDManager.GetAngLock());
 	}
 	else if(a_Joystick1.GetRawButton(1))
 	{

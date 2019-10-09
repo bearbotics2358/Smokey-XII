@@ -3,7 +3,7 @@
 #include <SwerveModule.h>
 #include <Prefs.h>
 
-SwerveModule::SwerveModule(int driveMotorOne, int turnMotor):
+SwerveModule::SwerveModule(int driveMotorOne, int turnMotor, PIDManager *a_PIDManager):
 a_DriveMotorOne(driveMotorOne),
 a_TurnMotor(turnMotor)
 {
