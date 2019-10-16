@@ -5,11 +5,13 @@
 #include <SwerveModule.h>
 #include <Prefs.h>
 
-SwerveDrive::SwerveDrive(SwerveModule *FL, SwerveModule *FR, SwerveModule *BL, SwerveModule *BR):
+SwerveDrive::SwerveDrive(SwerveModule *FL, SwerveModule *FR, SwerveModule *BL, SwerveModule *BR, PIDManager *manager):
+a_PIDManager(manager),
 FL_SwerveModule(FL),
 FR_SwerveModule(FR),
 BL_SwerveModule(BL),
 BR_SwerveModule(BR)
+
 // a_Feather(1)
 {
 	integral = 0;

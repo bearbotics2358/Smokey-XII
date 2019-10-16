@@ -10,16 +10,15 @@ a_Controller1(CONTROLLER_PORT_ONE),
 a_CargoCollector(),
 a_HatchCollector(),
 a_PIDManager(),
-FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID, &a_PIDManager),
-FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID, &a_PIDManager),
-BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID, &a_PIDManager),
-BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID, &a_PIDManager),
-a_SwerveDrive(&FL_SwerveModule, &FR_SwerveModule, &BL_SwerveModule, &BR_SwerveModule),
+FL_SwerveModule(FL_DRIVE_ONE_ID, FL_TURN_ID, &a_PIDManager.a_WheelFL),
+FR_SwerveModule(FR_DRIVE_ONE_ID, FR_TURN_ID, &a_PIDManager.a_WheelFR),
+BL_SwerveModule(BL_DRIVE_ONE_ID, BL_TURN_ID, &a_PIDManager.a_WheelBL),
+BR_SwerveModule(BR_DRIVE_ONE_ID, BR_TURN_ID, &a_PIDManager.a_WheelBR),
+a_SwerveDrive(&FL_SwerveModule, &FR_SwerveModule, &BL_SwerveModule, &BR_SwerveModule, &a_PIDManager),
 a_Interface(bridge_host, bridge_port),
 // a_Gunnar("RIOclient", "localhost", 1183),
 a_Follower1(1),
-a_Light(),
-
+a_Light()
 {
 	// Runs MQTT Broker on the RoboRio
 	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background
@@ -282,13 +281,7 @@ void Robot::TeleopPeriodic(void)
 	frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
 	frc::SmartDashboard::PutNumber("Distance (In): ", distanceIn);
 	frc::SmartDashboard::PutNumber("Distance (Cm): ", distanceCm);
-	// frc::SmartDashboard::PutNumber("Drive Current 1: ", currentOutput1);
-	// frc::SmartDashboard::PutNumber("Drive Current 2: ", currentOutput2);
-	// frc::SmartDashboard::PutNumber("Turn Current: ", currentOutput3);
-	// frc::SmartDashboard::PutNumber("Drive Voltage 1: ", voltageOutput1);
-	// frc::SmartDashboard::PutNumber("Drive Voltage 2: ", voltageOutput2);
-	// frc::SmartDashboard::PutNumber("Turn Voltage: ", voltageOutput3);
-	// frc::SmartDashboard::PutBoolean("Cruise Control", cruiseControl);
+
 	// frc::SmartDashboard::PutNumber("Gyro X:", a_Gyro.GetAngle(0));
 	// frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
 	// frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); 
@@ -329,45 +322,18 @@ void Robot::TestInit(void)
 void Robot::TestPeriodic(void)
 {
 	a_SwerveDrive.CrabGyro(-1 * a_Joystick1.GetRawAxis(0), -1 * a_Joystick1.GetRawAxis(1), a_Joystick1.GetRawAxis(2), a_Gyro.GetAngle(2));
-	float angleCounts;
-	float distanceCounts;
-	float calibratedAngle;
-	float distanceIn;
-	float distanceCm;
-	float currentOutput1;
-	// float currentOutput2;
-	// float currentOutput3;
-	// float voltageOutput1;
-	// float voltageOutput2;
-	// float voltageOutput3;
 
-
-
-	angleCounts = FR_SwerveModule.GetAngleRaw();
-	distanceCounts = FL_SwerveModule.GetDistanceRaw();
-	calibratedAngle = FR_SwerveModule.GetAngle();
-	distanceIn = FL_SwerveModule.GetDistanceIn();
-	distanceCm = FL_SwerveModule.GetDistanceCm();
-	currentOutput1 = FR_SwerveModule.GetCurrentOP(FR_DRIVE_ONE_ID);
-	// currentOutput2 = FL_SwerveModule.GetCurrentOP(FL_DRIVE_TWO_ID);
-	// currentOutput3 = FL_SwerveModule.GetCurrentOP(FL_TURN_ID);
-	// voltageOutput1 = FL_SwerveModule.GetVoltageOP(FL_DRIVE_ONE_ID);
-	// voltageOutput2 = FL_SwerveModule.GetVoltageOP(FL_DRIVE_TWO_ID);
-	// voltageOutput3 = FL_SwerveModule.GetVoltageOP(FL_TURN_ID);
-
-
-	frc::SmartDashboard::PutNumber("Rotation Encoder: ", angleCounts);
-	frc::SmartDashboard::PutNumber("Distance Encoder: ", distanceCounts);
-	frc::SmartDashboard::PutNumber("Calculated Angle: ", calibratedAngle);
-	frc::SmartDashboard::PutNumber("Distance (In): ", distanceIn);
-	frc::SmartDashboard::PutNumber("Distance (Cm): ", distanceCm);
-	frc::SmartDashboard::PutNumber("Drive Current 1: ", currentOutput1);
+	frc::SmartDashboard::PutNumber("Rotation Encoder: ", FR_SwerveModule.GetAngleRaw());
+	frc::SmartDashboard::PutNumber("Distance Encoder: ", FL_SwerveModule.GetDistanceRaw());
+	frc::SmartDashboard::PutNumber("Calculated Angle: ", FR_SwerveModule.GetAngle());
+	frc::SmartDashboard::PutNumber("Distance (In): ", FL_SwerveModule.GetDistanceIn());
+	frc::SmartDashboard::PutNumber("Distance (Cm): ", FL_SwerveModule.GetDistanceCm());
+	frc::SmartDashboard::PutNumber("Drive Current 1: ", FR_SwerveModule.GetCurrentOP(FR_DRIVE_ONE_ID));
 	// frc::SmartDashboard::PutNumber("Drive Current 2: ", currentOutput2);
 	// frc::SmartDashboard::PutNumber("Turn Current: ", currentOutput3);
 	// frc::SmartDashboard::PutNumber("Drive Voltage 1: ", voltageOutput1);
 	// frc::SmartDashboard::PutNumber("Drive Voltage 2: ", voltageOutput2);
 	// frc::SmartDashboard::PutNumber("Turn Voltage: ", voltageOutput3);
-	frc::SmartDashboard::PutBoolean("Cruise Control", cruiseControl);
 	frc::SmartDashboard::PutNumber("Gyro X:", a_Gyro.GetAngle(0));
 	frc::SmartDashboard::PutNumber("Gyro Y:", a_Gyro.GetAngle(1));
 	frc::SmartDashboard::PutNumber("Gyro Z:", a_Gyro.GetAngle(2)); // USE THIS ONE: Clockwise is negative
@@ -393,3 +359,4 @@ int Robot::MBWOCFFHS(int targetAng)
 }
 
 int main() { return frc::StartRobot<Robot>(); } // TODO: write our own main as this is deprecated
+// ez

@@ -3,9 +3,10 @@
 #include <SwerveModule.h>
 #include <Prefs.h>
 
-SwerveModule::SwerveModule(int driveMotorOne, int turnMotor, PIDManager *a_PIDManager):
+SwerveModule::SwerveModule(int driveMotorOne, int turnMotor, PIDFController *controller):
 a_DriveMotorOne(driveMotorOne),
-a_TurnMotor(turnMotor)
+a_TurnMotor(turnMotor),
+a_PIDController(controller)
 {
 	a_DriveMotorOne.ConfigSelectedFeedbackSensor(QuadEncoder, 0, 0);
 	a_DriveMotorOne.ConfigFeedbackNotContinuous(false, 0);
@@ -93,7 +94,37 @@ void SwerveModule::UpdateAnglePID(float angle)
 	}
 
 	int calculatedValue = counts + (revolutions * COUNTS_PER_ROTATION);
-	// a_TurnMotor.Set(ControlMode::Position, calculatedValue);
+	a_TurnMotor.Set(ControlMode::Position, calculatedValue);
+}
+
+void SwerveModule::UpdateAngleNewPID(float angle)
+{
+	if(abs(angle - GetAngle()) > 180) // find coterminal if distance is greater than 180
+	{
+		if((GetAngle() > 180 && angle >= 0)  || (GetAngle() > -180 && angle < 0))
+		{
+			angle+=360; 
+		}
+		else
+		{
+			angle -=360;
+		}
+	}
+	int counts = angle * (COUNTS_PER_ROTATION / 360); // Goal for rotation
+	int revolutions;
+
+	if(GetAngleRaw() > 0)
+	{
+		revolutions = GetAngleRaw() / COUNTS_PER_ROTATION; // Uses integer divison to find revolutions
+	}
+	else // This if/else should handle the weird negative integer division in c++
+	{
+		revolutions = (-1 * GetAngleRaw()) / COUNTS_PER_ROTATION; 
+		revolutions = -1 * revolutions;
+	}
+
+	int calculatedValue = counts + (revolutions * COUNTS_PER_ROTATION);
+	
 }
 
 void SwerveModule::UpdateTraj(float deltaDist, float angle)

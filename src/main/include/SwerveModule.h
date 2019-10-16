@@ -3,14 +3,14 @@
 
 #include <frc/WPILib.h>
 #include "ctre/Phoenix.h"
-#include "PIDManager.h"
+#include "PIDFController.h"
 
 #ifndef SRC_SWEREMODULE_H_
 #define SRC_SWEREMODULE_H_
 
-class SwerveModule {
+class SwerveModule { 
 public:
-	SwerveModule(int driveMotorOne, int turnMotor, PIDManager *a_PIDManager); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
+	SwerveModule(int driveMotorOne, int turnMotor, PIDFController *controller); // Takes CAN IDs for the different talons so this class can be reused for more than one module.
 
 	void UpdateSpeed(float driveSpeed);
 	void UpdateSpeedPID(float driveSpeed);
@@ -18,6 +18,7 @@ public:
 	void UpdateRaw(float driveSpeed, float rotationSpeed); // Method for mechanically testing swerve modules, will literally set the drive talons to a specific speed.
 	void UpdateAngle(float desiredAngle); // Angle in degrees
 	void UpdateAnglePID(float angle);
+	void UpdateAngleNewPID(float angle);
 	void UpdateTraj(float deltaDist, float angle);
 
 	void ZeroEncoders(void);
@@ -42,7 +43,7 @@ private:
 	WPI_TalonSRX a_DriveMotorOne;
 	WPI_TalonSRX a_TurnMotor;
 
-	PIDManager a_PIDManager;
+	PIDFController *a_PIDController;
 };
 
 

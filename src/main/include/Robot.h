@@ -6,8 +6,8 @@
 #include <SwerveDrive.h>
 #include <JrimmyGyro.h>
 #include <LineFollower.h>
-#include <MQTTInterface.h>
-#include <CAN.h>
+#include "MQTTInterface.h"
+#include <frc/CAN.h>
 #include <LightRingController.h>
 #include <PIDManager.h>
 // #include <Gunnar.h>
@@ -15,7 +15,7 @@
 #ifndef SRC_ROBOT_H_
 #define SRC_ROBOT_H_
 
-class Robot : public frc::IterativeRobot
+class Robot : public frc::TimedRobot
 {
 public:
 	Robot(void);

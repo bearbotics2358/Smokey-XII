@@ -6,13 +6,13 @@
 // #include <CAN.h>
 #include "ctre\Phoenix.h"
 #include <SwerveModule.h>
-#include "PIDFController.h"
+#include "PIDManager.h"
 
 class SwerveDrive
 {
 public:
 
-	SwerveDrive(SwerveModule *FL, SwerveModule *FR, SwerveModule *BL, SwerveModule *BR);
+	SwerveDrive(SwerveModule *FL, SwerveModule *FR, SwerveModule *BL, SwerveModule *BR, PIDManager *manager);
 	~SwerveDrive(void);
 
 	void CrabDrive(double xIn, double yIn, double zIn); // Crab - Can drive in any X-Y Direction
@@ -36,6 +36,7 @@ private:
 	SwerveModule *BL_SwerveModule;
 	SwerveModule *BR_SwerveModule;
 
+	PIDManager *a_PIDManager;
 	// frc::CAN a_Feather;
 };
 

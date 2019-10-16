@@ -8,9 +8,7 @@
 
 */
 
-#ifndef _INETLIB_H
-#define _INETLIB_H
-
+#pragma once
 // for connectsock:
 
 #include <sys/types.h>
@@ -84,4 +82,4 @@ extern "C" {
 }
 #endif
 
-#endif _INETLIB_H
+
